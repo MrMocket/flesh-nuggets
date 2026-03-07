@@ -20,6 +20,8 @@
       --green-main: #a5ff76;
       --green-soft: #d9ffbd;
       --green-dim: #7bd455;
+      --green-deep: #163816;
+      --green-dark: #0f2510;
 
       --text-main: #f4e9e9;
       --text-dim: #ccbaba;
@@ -222,9 +224,9 @@
     }
 
     .wallet-top-btn {
-      background: linear-gradient(180deg, #eb4b4b, #a22020);
-      color: #fff;
-      border: 2px solid #ff8c8c;
+      background: linear-gradient(180deg, #244b24, #102710);
+      color: #d9ffbd;
+      border: 2px solid #8dff8d;
       border-radius: var(--radius-pill);
       padding: 11px 20px;
       font-size: 11px;
@@ -235,8 +237,8 @@
         box-shadow var(--ease-main),
         background var(--ease-main);
       box-shadow:
-        0 0 0 2px rgba(59, 16, 16, 0.92),
-        0 0 20px rgba(202,53,53,0.18);
+        0 0 0 2px rgba(10, 20, 10, 0.95),
+        0 0 18px rgba(165,255,118,0.18);
       position: relative;
       overflow: hidden;
     }
@@ -245,17 +247,17 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.15) 50%, transparent 80%);
+      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.14) 50%, transparent 80%);
       transform: translateX(-130%);
       transition: transform 450ms ease;
     }
 
     .wallet-top-btn:hover {
       transform: translateY(-2px) scale(1.02);
-      background: linear-gradient(180deg, #ff5c5c, #be2626);
+      background: linear-gradient(180deg, #2f5f2f, #163816);
       box-shadow:
-        0 0 0 2px rgba(59, 16, 16, 1),
-        0 0 24px rgba(255,133,133,0.25);
+        0 0 0 2px rgba(10, 20, 10, 1),
+        0 0 24px rgba(165,255,118,0.28);
     }
 
     .wallet-top-btn:hover::before {
@@ -315,7 +317,7 @@
       background: linear-gradient(180deg, #5d2727, #361616);
       border: 2px solid #7b4444;
       box-shadow: 0 6px 14px rgba(0,0,0,0.22);
-      z-index: 2;
+      z-index: 4;
       animation: chipPulse 2.8s ease-in-out infinite;
     }
 
@@ -357,7 +359,7 @@
     }
 
     .hero-content {
-      max-width: 900px;
+      max-width: 980px;
       position: relative;
       z-index: 1;
       animation: heroFloat 5.5s ease-in-out infinite;
@@ -376,14 +378,39 @@
       text-transform: uppercase;
     }
 
+    .hero-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .hero-title-nugget {
+      width: 72px;
+      height: auto;
+      animation: nuggetFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22));
+    }
+
+    .hero-title-nugget.right {
+      animation-delay: 0.35s;
+    }
+
+    @keyframes nuggetFloat {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-6px) rotate(2deg); }
+    }
+
     .glitch-title {
       font-size: clamp(3rem, 7vw, 6rem);
       line-height: 0.92;
-      margin-bottom: 16px;
       color: #fff8f8;
       text-shadow:
         4px 4px 0 var(--red-main),
         0 0 16px rgba(202,53,53,0.12);
+      position: relative;
     }
 
     .hero-copy {
@@ -466,6 +493,19 @@
         0 8px 0 #0b0a0a,
         0 16px 26px rgba(0,0,0,0.28),
         0 0 18px rgba(165,255,118,0.08);
+    }
+
+    .glitch-btn:hover {
+      animation: glitchBtn 0.32s linear;
+    }
+
+    @keyframes glitchBtn {
+      0%   { transform: translate(0, 0); filter: hue-rotate(0deg); }
+      20%  { transform: translate(-2px, 1px); filter: hue-rotate(8deg); }
+      40%  { transform: translate(2px, -1px); filter: hue-rotate(-8deg); }
+      60%  { transform: translate(-1px, 2px); filter: hue-rotate(6deg); }
+      80%  { transform: translate(1px, -2px); filter: hue-rotate(-6deg); }
+      100% { transform: translate(0, 0); filter: hue-rotate(0deg); }
     }
 
     .section-title {
@@ -625,6 +665,7 @@
       border-radius: var(--radius-lg);
       box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
       transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      position: relative;
     }
 
     .info-card:hover,
@@ -657,6 +698,7 @@
       justify-content: center;
       overflow: hidden;
       transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      position: relative;
     }
 
     .cube-image-box:hover,
@@ -724,7 +766,6 @@
     .carousel-shell {
       overflow: hidden;
       padding: 0;
-      position: relative;
     }
 
     .carousel-viewport {
@@ -937,6 +978,66 @@
       transform: translateY(-1px);
     }
 
+    .lab-creature,
+    .blood-accent {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
+    }
+
+    .lab-creature {
+      width: 120px;
+      opacity: 0.95;
+      animation: creatureFloat 5s ease-in-out infinite;
+    }
+
+    .blood-accent {
+      width: 170px;
+      opacity: 0.78;
+      animation: creatureFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes creatureFloat {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    .creature-hero {
+      top: 34px;
+      right: 28px;
+      width: 130px;
+      z-index: 1;
+    }
+
+    .creature-play {
+      bottom: -18px;
+      left: -16px;
+      width: 120px;
+      z-index: 2;
+    }
+
+    .creature-future {
+      top: -22px;
+      right: -8px;
+      width: 122px;
+      z-index: 2;
+    }
+
+    .blood-screens {
+      bottom: -26px;
+      right: 10%;
+      z-index: 1;
+    }
+
+    .nugget-cube {
+      top: 18px;
+      left: 18px;
+      width: 74px;
+      z-index: 2;
+      opacity: 0.96;
+    }
+
     @media (max-width: 1080px) {
       .topbar-inner {
         grid-template-columns: 1fr;
@@ -989,6 +1090,17 @@
       #hero {
         min-height: 52vh;
       }
+
+      .creature-hero,
+      .creature-play,
+      .creature-future,
+      .blood-screens {
+        width: 90px;
+      }
+
+      .hero-title-nugget {
+        width: 56px;
+      }
     }
 
     @media (max-width: 640px) {
@@ -1034,6 +1146,19 @@
         width: 40px;
         height: 40px;
       }
+
+      .hero-title-row {
+        gap: 10px;
+      }
+
+      .hero-title-nugget {
+        width: 42px;
+      }
+
+      .lab-creature,
+      .blood-accent {
+        opacity: 0.72;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1075,14 +1200,22 @@
 
     <section id="hero">
       <div class="section-chip">Lab Feed Active</div>
+      <img class="lab-creature creature-hero" src="images/cube-drool.png" alt="" />
       <div class="hero-content">
         <div class="eyebrow">Memory Cube Uplink // Fuji Testnet MVP</div>
-        <h1 class="glitch-title">Flesh Nuggets</h1>
+
+        <div class="hero-title-row">
+          <img class="hero-title-nugget left" src="images/flesh-nugget.png" alt="" />
+          <h1 class="glitch-title">Flesh Nuggets</h1>
+          <img class="hero-title-nugget right" src="images/flesh-nugget.png" alt="" />
+        </div>
+
         <p class="hero-copy">
           Flesh Nuggets is a browser-playable top-down roguelike where disposable flesh bodies are sent into hostile lab runs by a persistent Memory Cube AI.
         </p>
+
         <div class="button-row">
-          <a href="#play" class="btn">Enter The Vats</a>
+          <a href="#play" class="btn glitch-btn">Enter The Vats</a>
           <a href="#cube" class="btn secondary">What Is A Memory Cube?</a>
         </div>
       </div>
@@ -1090,6 +1223,8 @@
 
     <section id="play">
       <div class="section-chip">Playable Browser Build</div>
+      <img class="lab-creature creature-play" src="images/enemy-angry.png" alt="" />
+
       <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
       <p class="section-intro">
         The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Flesh bodies are expendable. The Memory Cube remains stable.
@@ -1169,6 +1304,8 @@
 
     <section id="screens">
       <div class="section-chip">Visual Feed // Current MVP</div>
+      <img class="blood-accent blood-screens" src="images/blood-splat.png" alt="" />
+
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
         A quick visual pass through the current MVP. The slideshow rotates slowly on its own, and viewers can flick through manually with the arrows.
@@ -1216,6 +1353,8 @@
 
     <section id="about">
       <div class="section-chip">Creator Log // Solo Build</div>
+      <img class="lab-creature nugget-cube" src="images/cube-smug.png" alt="" />
+
       <h2 class="section-title">About The Project</h2>
       <p class="section-intro">
         Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
@@ -1243,20 +1382,22 @@
 
     <section id="future">
       <div class="section-chip">Expansion Path // Post MVP</div>
+      <img class="lab-creature creature-future" src="images/cube-smug.png" alt="" />
+
       <h2 class="section-title">Future Systems</h2>
       <p class="section-intro">
         These are planned beyond the current MVP and show where the Memory Cube system can expand next.
       </p>
 
       <div class="grid-2">
-        <div class="future-card">
+        <div class="future-card info-card">
           <div class="future-copy">
             <h3>Memory Cube Progression</h3>
             <p>Persistent identity, unlocks, and future upgrades tied to the Cube instead of the disposable body.</p>
           </div>
         </div>
 
-        <div class="future-card">
+        <div class="future-card info-card">
           <div class="future-copy">
             <h3>Leaderboards</h3>
             <p>Competitive score tracking, run depth, and community recognition tied to future events and repeat play.</p>
@@ -1265,14 +1406,14 @@
       </div>
 
       <div class="grid-2" style="margin-top: 18px;">
-        <div class="future-card">
+        <div class="future-card info-card">
           <div class="future-copy">
             <h3>Tournaments</h3>
             <p>Community challenge runs, prize structures, and competitive events built around the core lab-run loop.</p>
           </div>
         </div>
 
-        <div class="future-card">
+        <div class="future-card info-card">
           <div class="future-copy">
             <h3>Web3 Expansion</h3>
             <p>Wallet-linked identity, mint flow, future unlocks, and on-chain Memory Cube progression beyond the MVP state.</p>
