@@ -378,8 +378,12 @@
 
     .hero-title-wrap {
       position: relative;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
       margin-bottom: 16px;
+      flex-wrap: nowrap;
     }
 
     .glitch-title {
@@ -392,6 +396,11 @@
       position: relative;
       z-index: 2;
       animation: titleGlitch 4.5s infinite;
+      text-align: center;
+    }
+
+    .glitch-title .line {
+      display: block;
     }
 
     .glitch-title::before,
@@ -404,6 +413,7 @@
       overflow: hidden;
       pointer-events: none;
       opacity: 0;
+      white-space: nowrap;
     }
 
     .glitch-title::before {
@@ -442,30 +452,16 @@
     }
 
     .hero-title-nugget {
-      position: absolute;
       width: 90px;
       height: auto;
       z-index: 3;
       filter: drop-shadow(0 8px 12px rgba(0,0,0,0.24));
-      animation: nuggetFloat 3s ease-in-out infinite;
-    }
-
-    .hero-title-nugget.left {
-      left: -118px;
-      top: 50%;
-      transform: translateY(-50%);
+      animation: decorativeFloat 3s ease-in-out infinite;
+      flex: 0 0 auto;
     }
 
     .hero-title-nugget.right {
-      right: -118px;
-      top: 50%;
-      transform: translateY(-50%);
       animation-delay: 0.35s;
-    }
-
-    @keyframes nuggetFloat {
-      0%, 100% { margin-top: 0px; }
-      50% { margin-top: -6px; }
     }
 
     .hero-copy {
@@ -677,12 +673,17 @@
       right: 18px;
     }
 
+    .game-frame-shell {
+      position: relative;
+    }
+
     .game-frame {
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
       position: relative;
       overflow: hidden;
+      max-height: 78vh;
     }
 
     .game-frame iframe {
@@ -691,6 +692,57 @@
       height: 100%;
       border: none;
       background: #000;
+      pointer-events: none;
+    }
+
+    .game-frame.active iframe {
+      pointer-events: auto;
+    }
+
+    .game-frame-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(rgba(6, 6, 6, 0.32), rgba(6, 6, 6, 0.62));
+      backdrop-filter: blur(3px);
+    }
+
+    .game-frame-overlay.hidden {
+      display: none;
+    }
+
+    .game-overlay-card {
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      padding: 24px;
+      border-radius: 18px;
+      border: 2px solid #5f3636;
+      background: linear-gradient(180deg, rgba(17,10,10,0.94), rgba(10,8,8,0.96));
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.35),
+        0 0 20px rgba(202,53,53,0.08);
+    }
+
+    .game-overlay-card h3 {
+      margin-bottom: 10px;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .game-overlay-card p {
+      color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+
+    .game-controls-row {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
     }
 
     .status-line {
@@ -1044,6 +1096,11 @@
       transform: translateY(-1px);
     }
 
+    @keyframes decorativeFloat {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -8px; }
+    }
+
     .footer-blood {
       position: absolute;
       left: 50%;
@@ -1053,7 +1110,7 @@
       opacity: 0.9;
       z-index: 1;
       pointer-events: none;
-      animation: driftY 4s ease-in-out infinite;
+      animation: decorativeFloat 4s ease-in-out infinite;
     }
 
     .footer-nugget {
@@ -1062,7 +1119,7 @@
       width: 60px;
       z-index: 2;
       pointer-events: none;
-      animation: nuggetFloat 3.4s ease-in-out infinite;
+      animation: decorativeFloat 3.4s ease-in-out infinite;
     }
 
     .footer-nugget.left {
@@ -1079,7 +1136,7 @@
       pointer-events: auto;
       z-index: 2;
       filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
-      animation: driftY 5s ease-in-out infinite;
+      animation: decorativeFloat 5s ease-in-out infinite;
       will-change: transform;
     }
 
@@ -1092,11 +1149,6 @@
       will-change: transform;
       user-select: none;
       -webkit-user-drag: none;
-    }
-
-    @keyframes driftY {
-      0%, 100% { margin-top: 0px; }
-      50% { margin-top: -10px; }
     }
 
     .asset-hero-right {
@@ -1128,7 +1180,7 @@
       z-index: 1;
       pointer-events: none;
       opacity: 0.78;
-      animation: driftY 6s ease-in-out infinite;
+      animation: decorativeFloat 6s ease-in-out infinite;
       filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
     }
 
@@ -1185,16 +1237,13 @@
         min-height: 52vh;
       }
 
+      .hero-title-wrap {
+        flex-direction: column;
+        gap: 10px;
+      }
+
       .hero-title-nugget {
         width: 58px;
-      }
-
-      .hero-title-nugget.left {
-        left: -72px;
-      }
-
-      .hero-title-nugget.right {
-        right: -72px;
       }
 
       .asset-hero-right,
@@ -1256,27 +1305,73 @@
         height: 40px;
       }
 
+      .eyebrow {
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .hero-title-wrap {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+      }
+
       .hero-title-nugget {
-        width: 44px;
+        width: 42px;
+        justify-self: center;
       }
 
-      .hero-title-nugget.left,
-      .hero-title-nugget.right {
-        top: auto;
-        bottom: -40px;
+      .glitch-title {
+        font-size: clamp(2.6rem, 12vw, 4rem);
+        line-height: 0.9;
       }
 
-      .hero-title-nugget.left {
-        left: calc(50% - 68px);
+      .glitch-title::before,
+      .glitch-title::after {
+        content: "FLESH NUGGETS";
+        white-space: normal;
       }
 
-      .hero-title-nugget.right {
-        right: calc(50% - 68px);
+      .hero-copy {
+        font-size: 16px;
       }
 
       .floating-asset,
       .asset-blood-screens {
         opacity: 0.74;
+      }
+
+      .asset-hero-right {
+        width: 82px;
+        top: 56px;
+        right: 18px;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .play-title-mobile {
+        display: inline;
+      }
+
+      .play-title-desktop {
+        display: none;
+      }
+
+      .game-frame {
+        max-height: none;
+      }
+
+      .game-overlay-card {
+        padding: 18px;
+      }
+
+      .game-controls-row .btn {
+        width: 100%;
       }
 
       .footer-nugget {
@@ -1293,6 +1388,15 @@
 
       .footer-blood {
         width: 120px;
+      }
+    }
+
+    @media (min-width: 641px) {
+      .play-title-mobile {
+        display: none;
+      }
+      .play-title-desktop {
+        display: inline;
       }
     }
 
@@ -1345,7 +1449,7 @@
 
         <div class="hero-title-wrap">
           <img class="hero-title-nugget left" src="images/flesh-nugget.png" alt="" />
-          <h1 class="glitch-title">FLESH NUGGETS</h1>
+          <h1 class="glitch-title"><span class="line">FLESH</span><span class="line">NUGGETS</span></h1>
           <img class="hero-title-nugget right" src="images/flesh-nugget.png" alt="" />
         </div>
 
@@ -1367,31 +1471,52 @@
         <img src="images/enemy-angry.png" alt="" />
       </div>
 
-      <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
+      <h2 class="section-title">
+        <span class="play-title-desktop">[ RUN_SEQUENCE.EXE ]</span>
+        <span class="play-title-mobile">Playable Build</span>
+      </h2>
+
       <p class="section-intro">
-        The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Flesh bodies are expendable. The Memory Cube remains stable.
+        The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Click Activate Game to enter the build without interrupting page scrolling.
       </p>
 
       <div class="run-sequence-shell">
         <div class="game-interface">
           <div class="interface-title">Memory Cube Interface</div>
 
-          <div class="game-frame">
-            <iframe
-              src="game/index.html"
-              title="Flesh Nuggets Game"
-              loading="eager"
-              allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
-              tabindex="-1"
-            ></iframe>
+          <div class="game-frame-shell">
+            <div class="game-frame-overlay" id="gameOverlay">
+              <div class="game-overlay-card">
+                <h3>Activate Game</h3>
+                <p>
+                  Click below to interact with the build. This keeps scrolling smooth on Mac and Chrome and prevents accidental input before you're ready.
+                </p>
+                <button class="btn" id="activateGameBtn" type="button">Activate Game</button>
+              </div>
+            </div>
+
+            <div class="game-frame" id="gameFrameWrap">
+              <iframe
+                id="gameFrame"
+                src="game/index.html"
+                title="Flesh Nuggets Game"
+                loading="eager"
+                allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
+                tabindex="-1"
+              ></iframe>
+            </div>
           </div>
 
           <div class="interface-status">System Status: Experiment In Progress</div>
         </div>
       </div>
 
+      <div class="game-controls-row">
+        <button class="btn secondary" id="deactivateGameBtn" type="button">Return To Page Scroll</button>
+      </div>
+
       <p class="status-line">
-        BODY DISPOSABLE // MEMORY STABLE
+        BODY DISPOSABLE // MEMORY STABLE // CLICK ACTIVATE TO PLAY
       </p>
     </section>
 
@@ -1720,6 +1845,35 @@
           inner.style.setProperty("--ty", "0px");
         });
       });
+
+      const gameFrame = document.getElementById("gameFrame");
+      const gameOverlay = document.getElementById("gameOverlay");
+      const activateGameBtn = document.getElementById("activateGameBtn");
+      const deactivateGameBtn = document.getElementById("deactivateGameBtn");
+      const gameFrameWrap = document.getElementById("gameFrameWrap");
+
+      function activateGame() {
+        if (!gameFrameWrap || !gameOverlay) return;
+        gameFrameWrap.classList.add("active");
+        gameOverlay.classList.add("hidden");
+        try {
+          gameFrame.focus();
+        } catch (err) {}
+      }
+
+      function deactivateGame() {
+        if (!gameFrameWrap || !gameOverlay) return;
+        gameFrameWrap.classList.remove("active");
+        gameOverlay.classList.remove("hidden");
+      }
+
+      if (activateGameBtn) {
+        activateGameBtn.addEventListener("click", activateGame);
+      }
+
+      if (deactivateGameBtn) {
+        deactivateGameBtn.addEventListener("click", deactivateGame);
+      }
     })();
   </script>
 </body>
