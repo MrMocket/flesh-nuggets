@@ -1400,6 +1400,155 @@
       }
     }
 
+    .mini-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .mini-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .mini-card,
+    .system-card,
+    .upgrade-card,
+    .loop-step {
+      background: linear-gradient(180deg, rgba(11, 9, 9, 0.78), rgba(17, 10, 10, 0.92));
+      border: 2px solid var(--panel-border-soft);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
+      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      position: relative;
+    }
+
+    .mini-card:hover,
+    .system-card:hover,
+    .upgrade-card:hover,
+    .loop-step:hover {
+      transform: translateY(-4px);
+      border-color: #5f3636;
+      box-shadow:
+        inset 0 0 18px rgba(255, 80, 80, 0.02),
+        0 14px 28px rgba(0,0,0,0.16),
+        0 0 18px rgba(202,53,53,0.08);
+    }
+
+    .mini-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--green-soft);
+      font-size: 11px;
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+    }
+
+    .mini-card h3,
+    .system-card h3,
+    .upgrade-card h3,
+    .loop-step h3 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mini-card p,
+    .system-card p,
+    .upgrade-card p,
+    .loop-step p {
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .control-item {
+      padding: 16px;
+      border-radius: 18px;
+      border: 2px solid #402626;
+      background: linear-gradient(180deg, rgba(10,8,8,0.95), rgba(16,10,10,0.95));
+      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+    }
+
+    .control-item:hover {
+      transform: translateY(-3px);
+      border-color: #5f3636;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18), 0 0 16px rgba(202,53,53,0.08);
+    }
+
+    .control-key {
+      color: var(--green-soft);
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+    }
+
+    .control-desc {
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .loop-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .loop-step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      color: #071007;
+      background: var(--green-main);
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 0 12px rgba(165,255,118,0.35);
+    }
+
+    .upgrade-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 2px solid #4a2f2f;
+      background: linear-gradient(180deg, rgba(18,12,12,0.94), rgba(12,8,8,0.96));
+      color: var(--text-dim);
+    }
+
+    .upgrade-note strong {
+      color: #fff;
+    }
+
+    @media (max-width: 920px) {
+      .mini-grid-4,
+      .mini-grid-3,
+      .controls-grid,
+      .loop-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -1420,6 +1569,8 @@
       <div class="nav-zone">
         <nav class="nav">
           <a href="#play">Play</a>
+          <a href="#systems">Systems</a>
+          <a href="#upgrades">Upgrades</a>
           <a href="#cube">Memory Cube</a>
           <a href="#lore">Lore</a>
           <a href="#screens">Screens</a>
@@ -1454,7 +1605,7 @@
         </div>
 
         <p class="hero-copy">
-          Flesh Nuggets is a browser-playable top-down roguelike where disposable flesh bodies are sent into hostile lab runs by a persistent Memory Cube AI.
+          Flesh Nuggets is a browser-based roguelike where disposable flesh bodies are sent into dangerous lab runs. Your persistent identity is preserved by the Memory Cube.
         </p>
 
         <div class="button-row">
@@ -1516,6 +1667,146 @@
       <p class="status-line">
         BODY DISPOSABLE // MEMORY STABLE // CLICK ACTIVATE TO PLAY
       </p>
+    </section>
+
+    <section id="systems">
+      <div class="section-chip">Run Clarity // Judge Fast Read</div>
+      <h2 class="section-title">How The Run Works</h2>
+      <p class="section-intro">
+        Flesh Nuggets is a room-based roguelike where disposable flesh bodies are sent into hostile lab runs. The Memory Cube preserves your persistent identity across runs—without it, death is permanent.
+      </p>
+
+      <div class="controls-grid">
+        <div class="control-item">
+          <div class="control-key">WASD</div>
+          <div class="control-desc">Move</div>
+        </div>
+
+        <div class="control-item">
+          <div class="control-key">Mouse</div>
+          <div class="control-desc">Aim</div>
+        </div>
+
+        <div class="control-item">
+          <div class="control-key">Left Click</div>
+          <div class="control-desc">Fire flesh projectiles</div>
+        </div>
+
+        <div class="control-item">
+          <div class="control-key">Arrow Keys</div>
+          <div class="control-desc">Directional aim + fire</div>
+        </div>
+
+        <div class="control-item">
+          <div class="control-key">R</div>
+          <div class="control-desc">Reload</div>
+        </div>
+
+        <div class="control-item">
+          <div class="control-key">ESC</div>
+          <div class="control-desc">Pause</div>
+        </div>
+      </div>
+
+      <div class="upgrade-note">
+        <strong>Reserved Input:</strong> Space is intentionally locked as a future <strong>Dash</strong> upgrade, showing the planned Lab progression path without overbuilding the MVP.
+      </div>
+
+      <div class="loop-grid">
+        <div class="loop-step">
+          <div class="loop-step-number">01</div>
+          <h3>Enter Room</h3>
+          <p>Move through containment rooms and survive each encounter.</p>
+        </div>
+
+        <div class="loop-step">
+          <div class="loop-step-number">02</div>
+          <h3>Fight</h3>
+          <p>Destroy hostile specimens using regenerating flesh projectiles.</p>
+        </div>
+
+        <div class="loop-step">
+          <div class="loop-step-number">03</div>
+          <h3>Collect Nuggets</h3>
+          <p>Enemies drop Flesh Nuggets that power run progression.</p>
+        </div>
+
+        <div class="loop-step">
+          <div class="loop-step-number">04</div>
+          <h3>Upgrade</h3>
+          <p>Gain run power through mutations and push deeper into the lab.</p>
+        </div>
+
+        <div class="loop-step">
+          <div class="loop-step-number">05</div>
+          <h3>Die / Repeat</h3>
+          <p>The body is disposable. The system learns and the experiment continues.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="upgrades">
+      <div class="section-chip">Pickups // Progression // Unlockables</div>
+      <h2 class="section-title">Pickups And Upgrade Path</h2>
+      <p class="section-intro">
+        Flesh Nuggets features clear progression: short-term upgrades during runs, and long-term lab unlocks tied to the Memory Cube.
+      </p>
+
+      <div class="mini-grid-3">
+        <div class="system-card">
+          <div class="mini-label">Run Pickup</div>
+          <h3>Flesh Nuggets</h3>
+          <p>
+            Enemies drop Flesh Nuggets during runs. These are the main pickup that powers run progression and rewards combat survival.
+          </p>
+        </div>
+
+        <div class="system-card">
+          <div class="mini-label">Run Progression</div>
+          <h3>Mutations</h3>
+          <p>
+            Temporary upgrades gained during runs that boost combat power and make each attempt feel progressively stronger.
+          </p>
+        </div>
+
+        <div class="system-card">
+          <div class="mini-label">Lab Progression</div>
+          <h3>Biomass</h3>
+          <p>
+            Persistent resource earned from runs, used for lab upgrades that carry over between play sessions.
+          </p>
+        </div>
+      </div>
+
+      <div class="mini-grid-4">
+        <div class="upgrade-card">
+          <div class="mini-label">Skill Tree Node</div>
+          <h3>Dash</h3>
+          <p>Unlock emergency mobility and give the player a sharper escape tool.</p>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="mini-label">Skill Tree Node</div>
+          <h3>Magnet Radius</h3>
+          <p>Pull nearby pickups in more easily to keep momentum high.</p>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="mini-label">Skill Tree Node</div>
+          <h3>Base Health</h3>
+          <p>Reinforce the flesh body to survive deeper containment runs.</p>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="mini-label">Skill Tree Node</div>
+          <h3>Reload Speed</h3>
+          <p>Improve flesh regeneration speed and reduce combat downtime.</p>
+        </div>
+      </div>
+
+      <div class="upgrade-note">
+        <strong>MVP Note:</strong> This website presents the upgrade path clearly for judges without forcing full implementation yet. The current prototype proves the combat loop first, while the Lab system establishes where progression expands next.
+      </div>
     </section>
 
     <section id="cube">
