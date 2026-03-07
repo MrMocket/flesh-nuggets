@@ -1735,144 +1735,152 @@
 
   </div>
 
-  <script>
-    (function () {
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
+<script>
+(function () {
 
-      function forceTop() {
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-        window.scrollTo(0, 0);
-      }
+  /* ---------- Stop browser restoring scroll position ---------- */
 
-      window.addEventListener("beforeunload", forceTop);
-      window.addEventListener("load", function () {
-        forceTop();
-        requestAnimationFrame(forceTop);
-        setTimeout(forceTop, 50);
-        setTimeout(forceTop, 150);
-        setTimeout(forceTop, 350);
-      });
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
 
-      window.addEventListener("pageshow", function () {
-        forceTop();
-        setTimeout(forceTop, 50);
-      });
+  window.addEventListener("load", () => {
+    window.scrollTo(0, 0);
+  });
 
-      const track = document.getElementById("carouselTrack");
-      const dots = Array.from(document.querySelectorAll(".carousel-dot"));
-      const prev = document.getElementById("prevSlide");
-      const next = document.getElementById("nextSlide");
+  /* ---------- Screenshot carousel ---------- */
 
-      let currentSlide = 0;
-      let autoTimer = null;
-      const totalSlides = dots.length;
+  const track = document.getElementById("carouselTrack");
+  const dots = Array.from(document.querySelectorAll(".carousel-dot"));
+  const prev = document.getElementById("prevSlide");
+  const next = document.getElementById("nextSlide");
 
-      function updateCarousel(index) {
-        currentSlide = (index + totalSlides) % totalSlides;
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === currentSlide);
-        });
-      }
+  let currentSlide = 0;
+  let autoTimer = null;
+  const totalSlides = dots.length;
 
-      function startAuto() {
-        stopAuto();
-        autoTimer = setInterval(() => {
-          updateCarousel(currentSlide + 1);
-        }, 4500);
-      }
+  function updateCarousel(index) {
+    currentSlide = (index + totalSlides) % totalSlides;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-      function stopAuto() {
-        if (autoTimer) {
-          clearInterval(autoTimer);
-          autoTimer = null;
-        }
-      }
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentSlide);
+    });
+  }
 
-      if (prev && next && track && dots.length) {
-        prev.addEventListener("click", function () {
-          updateCarousel(currentSlide - 1);
-          startAuto();
-        });
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(() => {
+      updateCarousel(currentSlide + 1);
+    }, 4500);
+  }
 
-        next.addEventListener("click", function () {
-          updateCarousel(currentSlide + 1);
-          startAuto();
-        });
+  function stopAuto() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  }
 
-        dots.forEach((dot, index) => {
-          dot.addEventListener("click", function () {
-            updateCarousel(index);
-            startAuto();
-          });
-        });
+  if (prev && next && track && dots.length) {
 
-        const carouselShell = document.querySelector(".carousel-shell");
-        if (carouselShell) {
-          carouselShell.addEventListener("mouseenter", stopAuto);
-          carouselShell.addEventListener("mouseleave", startAuto);
-        }
+    prev.addEventListener("click", () => {
+      updateCarousel(currentSlide - 1);
+      startAuto();
+    });
 
-        updateCarousel(0);
+    next.addEventListener("click", () => {
+      updateCarousel(currentSlide + 1);
+      startAuto();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        updateCarousel(index);
         startAuto();
-      }
-
-      const interactiveAssets = document.querySelectorAll(".interactive-asset");
-
-      interactiveAssets.forEach((asset) => {
-        const inner = asset.querySelector("img");
-        if (!inner) return;
-
-        asset.addEventListener("mousemove", (e) => {
-          const rect = asset.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          const px = ((x / rect.width) - 0.5) * 14;
-          const py = ((y / rect.height) - 0.5) * 14;
-
-          inner.style.setProperty("--tx", `${px}px`);
-          inner.style.setProperty("--ty", `${py}px`);
-        });
-
-        asset.addEventListener("mouseleave", () => {
-          inner.style.setProperty("--tx", "0px");
-          inner.style.setProperty("--ty", "0px");
-        });
       });
+    });
 
-      const gameFrame = document.getElementById("gameFrame");
-      const gameOverlay = document.getElementById("gameOverlay");
-      const activateGameBtn = document.getElementById("activateGameBtn");
-      const deactivateGameBtn = document.getElementById("deactivateGameBtn");
-      const gameFrameWrap = document.getElementById("gameFrameWrap");
+    const carouselShell = document.querySelector(".carousel-shell");
 
-      function activateGame() {
-        if (!gameFrameWrap || !gameOverlay) return;
-        gameFrameWrap.classList.add("active");
-        gameOverlay.classList.add("hidden");
-        try {
-          gameFrame.focus();
-        } catch (err) {}
-      }
+    if (carouselShell) {
+      carouselShell.addEventListener("mouseenter", stopAuto);
+      carouselShell.addEventListener("mouseleave", startAuto);
+    }
 
-      function deactivateGame() {
-        if (!gameFrameWrap || !gameOverlay) return;
-        gameFrameWrap.classList.remove("active");
-        gameOverlay.classList.remove("hidden");
-      }
+    updateCarousel(0);
+    startAuto();
+  }
 
-      if (activateGameBtn) {
-        activateGameBtn.addEventListener("click", activateGame);
-      }
+  /* ---------- Floating asset mouse interaction ---------- */
 
-      if (deactivateGameBtn) {
-        deactivateGameBtn.addEventListener("click", deactivateGame);
-      }
-    })();
-  </script>
+  const interactiveAssets = document.querySelectorAll(".interactive-asset");
+
+  interactiveAssets.forEach((asset) => {
+
+    const inner = asset.querySelector("img");
+    if (!inner) return;
+
+    asset.addEventListener("mousemove", (e) => {
+
+      const rect = asset.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const px = ((x / rect.width) - 0.5) * 14;
+      const py = ((y / rect.height) - 0.5) * 14;
+
+      inner.style.setProperty("--tx", `${px}px`);
+      inner.style.setProperty("--ty", `${py}px`);
+    });
+
+    asset.addEventListener("mouseleave", () => {
+
+      inner.style.setProperty("--tx", "0px");
+      inner.style.setProperty("--ty", "0px");
+    });
+
+  });
+
+  /* ---------- Game activation overlay ---------- */
+
+  const gameFrame = document.getElementById("gameFrame");
+  const gameOverlay = document.getElementById("gameOverlay");
+  const activateGameBtn = document.getElementById("activateGameBtn");
+  const deactivateGameBtn = document.getElementById("deactivateGameBtn");
+  const gameFrameWrap = document.getElementById("gameFrameWrap");
+
+  function activateGame() {
+
+    if (!gameFrameWrap || !gameOverlay) return;
+
+    gameFrameWrap.classList.add("active");
+    gameOverlay.classList.add("hidden");
+
+    try {
+      gameFrame.focus();
+    } catch (err) {}
+
+  }
+
+  function deactivateGame() {
+
+    if (!gameFrameWrap || !gameOverlay) return;
+
+    gameFrameWrap.classList.remove("active");
+    gameOverlay.classList.remove("hidden");
+
+  }
+
+  if (activateGameBtn) {
+    activateGameBtn.addEventListener("click", activateGame);
+  }
+
+  if (deactivateGameBtn) {
+    deactivateGameBtn.addEventListener("click", deactivateGame);
+  }
+
+})();
+</script>
 </body>
 </html>
