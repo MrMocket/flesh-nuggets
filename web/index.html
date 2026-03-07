@@ -1,232 +1,679 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLESH NUGGETS | Memory Cube Uplink</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --flesh-red: #8b0000;
-            --vein-purple: #2d0a31;
-            --lab-green: #39ff14;
-            --panel-bg: rgba(15, 15, 15, 0.95);
-            --border-style: 4px solid #444;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLESH NUGGETS | Memory Cube Uplink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --flesh-red: #8b1e1e;
+      --vein-purple: #2b102e;
+      --lab-green: #86ff5c;
+      --acid-yellow: #d1ff52;
+      --panel-bg: rgba(16, 13, 13, 0.94);
+      --panel-border: #3a2a2a;
+      --text-main: #d8d2d2;
+      --text-dim: #a89d9d;
+      --black: #070707;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: #0a0a0a;
-            background-image: 
-                radial-gradient(circle, #1a0505 1px, transparent 1px),
-                linear-gradient(to bottom, #050000, #150a0a);
-            background-size: 40px 40px, 100% 100%;
-            color: #ccc;
-            font-family: 'Courier Prime', monospace;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        /* Scanline Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 100;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-        }
+    body {
+      background:
+        radial-gradient(circle at top, rgba(70, 15, 15, 0.35), transparent 35%),
+        linear-gradient(to bottom, #050404, #110909 40%, #080808 100%);
+      color: var(--text-main);
+      font-family: 'Courier Prime', monospace;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-        h1, h2, h3 {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--flesh-red);
-        }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+      z-index: 50;
+    }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-        /* Section Framing */
-        section {
-            background: var(--panel-bg);
-            border: var(--border-style);
-            margin-bottom: 60px;
-            padding: 40px;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
 
-        section::before {
-            content: 'BIO-HAZARD // SECURE ACCESS';
-            position: absolute;
-            top: -15px; left: 20px;
-            background: #444;
-            color: #000;
-            font-size: 10px;
-            padding: 2px 10px;
-            font-weight: bold;
-        }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
 
-        /* Hero Section */
-        #hero {
-            text-align: center;
-            border-color: var(--flesh-red);
-            padding: 80px 20px;
-        }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8, 8, 8, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #2a1e1e;
+    }
 
-        .glitch-title {
-            font-size: 4rem;
-            color: #fff;
-            text-shadow: 3px 3px var(--flesh-red);
-            margin-bottom: 10px;
-        }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
 
-        /* Game Window */
-        .game-containment {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border: 8px double var(--lab-green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
+    .brand {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+    }
 
-        .game-containment::after {
-            content: 'INITIALIZING SEED...';
-            color: var(--lab-green);
-            animation: blink 1s infinite;
-        }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
 
-        /* Buttons */
-        .btn {
-            display: inline-block;
-            background: var(--flesh-red);
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-        }
+    .nav a:hover,
+    .footer-link:hover {
+      color: var(--lab-green);
+    }
 
-        .btn:hover {
-            background: #ff0000;
-            box-shadow: 0 0 15px var(--flesh-red);
-        }
+    section {
+      background: var(--panel-bg);
+      border: 3px solid var(--panel-border);
+      margin-bottom: 48px;
+      padding: 32px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+      border-radius: 18px;
+      overflow: hidden;
+    }
 
-        /* Grid for Info */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+    section::before {
+      content: 'LAB SYSTEM // ACTIVE';
+      position: absolute;
+      top: 0;
+      left: 24px;
+      transform: translateY(-50%);
+      background: #3a2a2a;
+      color: #f5dada;
+      font-size: 11px;
+      padding: 4px 10px;
+      font-weight: bold;
+      border-radius: 999px;
+    }
 
-        .feature-tag {
-            border-left: 3px solid var(--lab-green);
-            padding-left: 15px;
-            margin-bottom: 20px;
-        }
+    #hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-color: #5f1f1f;
+      background:
+        linear-gradient(rgba(8, 6, 6, 0.68), rgba(8, 6, 6, 0.9)),
+        url("images/hero-bg.jpg") center/cover no-repeat;
+    }
 
-        @keyframes blink {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+    .hero-content {
+      max-width: 860px;
+    }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            font-size: 12px;
-            opacity: 0.6;
-        }
-    </style>
+    .eyebrow {
+      color: var(--lab-green);
+      font-size: 14px;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    .glitch-title {
+      font-size: clamp(3rem, 7vw, 6rem);
+      color: #fff;
+      text-shadow: 3px 3px 0 var(--flesh-red);
+      line-height: 0.95;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy {
+      color: #d7cbcb;
+      max-width: 760px;
+      margin: 0 auto 24px;
+      font-size: 18px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--flesh-red);
+      color: white;
+      padding: 14px 24px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.25s ease;
+      clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover {
+      background: #c52b2b;
+      box-shadow: 0 0 18px rgba(139, 30, 30, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #1a1a1a;
+      border: 1px solid #4d3b3b;
+      color: var(--lab-green);
+    }
+
+    .section-title {
+      color: #fff;
+      margin-bottom: 14px;
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+    }
+
+    .section-intro {
+      color: var(--text-dim);
+      max-width: 850px;
+      margin-bottom: 24px;
+    }
+
+    .run-sequence-shell {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.9)),
+        url("images/panel-pattern.png") center center / cover no-repeat;
+      border: 2px solid #2f2323;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .run-sequence-border {
+      padding: 26px;
+      border-radius: 22px;
+      background: url("images/game-border.png") center center / 100% 100% no-repeat;
+    }
+
+    .game-containment {
+      width: 100%;
+      background: #000;
+      border: 4px solid rgba(134, 255, 92, 0.7);
+      border-radius: 16px;
+      padding: 10px;
+      position: relative;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .game-containment iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: none;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .status-line {
+      margin-top: 14px;
+      text-align: center;
+      color: var(--lab-green);
+      font-size: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .info-card {
+      border: 2px solid #2f2323;
+      border-radius: 16px;
+      padding: 20px;
+      background: rgba(10, 10, 10, 0.55);
+    }
+
+    .cube-image-box,
+    .image-box {
+      border: 2px solid #2f2323;
+      border-radius: 16px;
+      background: rgba(8, 8, 8, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      overflow: hidden;
+    }
+
+    .cube-image-box img,
+    .image-box img,
+    .screenshot img,
+    .team-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .feature-tag {
+      border-left: 4px solid var(--lab-green);
+      padding-left: 14px;
+      color: #d8cdcd;
+    }
+
+    .quote {
+      border-left: 3px solid var(--flesh-red);
+      padding-left: 18px;
+      margin-top: 18px;
+      font-style: italic;
+      color: #e3d6d6;
+    }
+
+    .screenshot-grid,
+    .team-grid,
+    .future-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .screenshot,
+    .team-card,
+    .future-card {
+      border: 2px solid #2f2323;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(8, 8, 8, 0.68);
+    }
+
+    .screenshot-copy,
+    .team-copy,
+    .future-copy {
+      padding: 16px;
+    }
+
+    .team-role {
+      color: var(--lab-green);
+      font-size: 13px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .future-card h3 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    details {
+      border: 2px solid #2f2323;
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(8, 8, 8, 0.55);
+      margin-bottom: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+    }
+
+    details p {
+      margin-top: 10px;
+      color: var(--text-dim);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px 60px;
+      font-size: 12px;
+      color: #8f8181;
+    }
+
+    .footer-brand {
+      font-family: 'Orbitron', sans-serif;
+      color: #d7c7c7;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .footer-link {
+      color: #b8aaaa;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 920px) {
+      .grid-2,
+      .screenshot-grid,
+      .team-grid,
+      .future-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 24px;
+      }
+
+      .topbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav {
+        gap: 10px;
+      }
+
+      .run-sequence-border {
+        padding: 14px;
+        background-size: cover;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">FLESH NUGGETS</div>
+      <nav class="nav">
+        <a href="#play">Play</a>
+        <a href="#cube">Memory Cube</a>
+        <a href="#lore">Lore</a>
+        <a href="#screens">Screens</a>
+        <a href="#team">Team</a>
+        <a href="#future">Future</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+
     <section id="hero">
+      <div class="hero-content">
+        <div class="eyebrow">MEMORY CUBE UPLINK // FUJI TESTNET MVP</div>
         <h1 class="glitch-title">FLESH NUGGETS</h1>
-        <p>CONSTRUCT. CONSUME. REBOOT.</p>
-        <a href="#play" class="btn">ENTER THE VATS</a>
+        <p class="hero-copy">
+          You are a Memory Cube AI operating a rogue biotech lab. Each run sends a disposable flesh body into the facility. The body can die. The memory persists.
+        </p>
+        <div class="button-row">
+          <a href="#play" class="btn">ENTER THE VATS</a>
+          <a href="#cube" class="btn secondary">WHAT IS A MEMORY CUBE?</a>
+        </div>
+      </div>
     </section>
 
     <section id="play">
-        <h2>[ RUN_SEQUENCE.EXE ]</h2>
-        <div class="game-containment">
-            </div>
-        <p style="margin-top: 15px; text-align: center; color: var(--lab-green);">SYSTEM STATUS: BODY DISPOSABLE // MEMORY STABLE</p>
+      <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
+      <p class="section-intro">
+        Enter the active test cycle. Flesh Nuggets is a browser-playable top-down roguelike prototype built in Godot. The Memory Cube remains stable while disposable flesh bodies are sent into the lab for each run.
+      </p>
+
+      <div class="run-sequence-shell">
+        <div class="run-sequence-border">
+          <div class="game-containment">
+            <iframe src="game/index.html" title="Flesh Nuggets Game"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <p class="status-line">
+        SYSTEM STATUS: BODY DISPOSABLE // MEMORY STABLE // BEST PLAYED ON DESKTOP
+      </p>
     </section>
 
     <section id="cube">
-        <div class="grid">
-            <div>
-                <h2>The Memory Cube</h2>
-                <p>Your flesh is a resource; your Cube is your soul. Minting a Memory Cube allows your AI consciousness to persist across meat-shredding runs.</p>
-                <button class="btn">MINT UPLINK</button>
-            </div>
-            <div style="border: 2px solid #333; display: flex; align-items: center; justify-content: center;">
-                <p>[ 3D CUBE RENDER ]</p>
-            </div>
+      <div class="grid-2">
+        <div class="info-card">
+          <h2 class="section-title">The Memory Cube</h2>
+          <p>
+            The Memory Cube is the player’s persistent identity. In the world of Flesh Nuggets, the lab does not protect the body — it protects the data.
+          </p>
+          <p style="margin-top: 12px;">
+            Flesh bodies are grown and sent into runs as disposable shells. When a run ends, the body is lost, but the Cube remains. Minting a Memory Cube on-chain binds that identity to the player and sets up future progression, unlocks, and competitive systems.
+          </p>
+
+          <div class="feature-list">
+            <div class="feature-tag"><strong>Persistent identity:</strong> your Cube is the thing that survives.</div>
+            <div class="feature-tag"><strong>Disposable runs:</strong> each body is expendable.</div>
+            <div class="feature-tag"><strong>Future progression:</strong> on-chain identity unlocks deeper systems later.</div>
+          </div>
+
+          <div class="button-row" style="justify-content: flex-start;">
+            <button class="btn">CONNECT WALLET</button>
+            <button class="btn secondary">MINT MEMORY CUBE</button>
+          </div>
         </div>
+
+        <div class="cube-image-box">
+          <img src="images/memory-cube.png" alt="Memory Cube artwork">
+        </div>
+      </div>
     </section>
 
     <section id="lore">
-        <h2>Sector-7 Overview</h2>
-        <p>Built in the wake of the "Great Bio-Suture," Sector-7 was designed to harvest data from the impossible. As a Memory Cube, you possess the only intelligence capable of navigating the shifting hallways of the Nugget Vats.</p>
-        <blockquote style="border-left: 2px solid var(--flesh-red); padding-left: 20px; margin-top: 20px; font-style: italic;">
-            "If the nugget screams, the synchronization is working." - Lead Surgeon
-        </blockquote>
+      <h2 class="section-title">Lab Overview</h2>
+      <p class="section-intro">
+        Flesh Nuggets is built around a strange biotech loop: unstable flesh, repeatable runs, and a core intelligence that refuses to die.
+      </p>
+
+      <p>
+        The player is not the meat body. The player is the Memory Cube AI running the lab. Disposable flesh forms are sent into dangerous test runs to gather survival data, resources, and future progression potential. This makes death part of the system rather than a failure state.
+      </p>
+
+      <p style="margin-top: 14px;">
+        The MVP focuses on proving that loop: a playable browser build, a clear game identity, and a website-based Web3 layer where the player’s Cube can later be minted and tied to longer-term progression.
+      </p>
+
+      <div class="quote">
+        “The nugget breaks. The memory learns.”
+      </div>
+    </section>
+
+    <section id="screens">
+      <h2 class="section-title">Game Screens</h2>
+      <p class="section-intro">
+        A quick look at the current MVP: gameplay loop, menus, combat, and the lab atmosphere.
+      </p>
+
+      <div class="screenshot-grid">
+        <div class="screenshot">
+          <img src="images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one">
+          <div class="screenshot-copy">
+            <strong>Main Gameplay</strong><br>
+            Core run flow, enemies, and top-down action.
+          </div>
+        </div>
+
+        <div class="screenshot">
+          <img src="images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two">
+          <div class="screenshot-copy">
+            <strong>Lab Combat</strong><br>
+            Disposable body enters, fights, and survives for as long as it can.
+          </div>
+        </div>
+
+        <div class="screenshot">
+          <img src="images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three">
+          <div class="screenshot-copy">
+            <strong>Menus & MVP Flow</strong><br>
+            Main menu, pause, death screen, and browser-ready play loop.
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="team">
-        <h2>The Architects</h2>
-        <div class="grid">
-            <div class="feature-tag"><strong>Dr. Void</strong><br>Chief Bio-Engineer</div>
-            <div class="feature-tag"><strong>Synthetix</strong><br>Neural Link Architect</div>
+      <h2 class="section-title">Meet the Team</h2>
+      <p class="section-intro">
+        The current MVP is being built lean and fast, focused on proving the core game loop and the Memory Cube identity system.
+      </p>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <img src="images/team-mocket.png" alt="Mocket profile image">
+          <div class="team-copy">
+            <h3>Mocket</h3>
+            <div class="team-role">Creator / Art / World / Direction</div>
+            <p>
+              Creator of Flesh Nuggets, building the visual identity, game world, and overall project direction.
+            </p>
+          </div>
         </div>
+
+        <div class="team-card">
+          <img src="images/team-dev.png" alt="Developer profile image">
+          <div class="team-copy">
+            <h3>Developer</h3>
+            <div class="team-role">Gameplay / Systems / Implementation</div>
+            <p>
+              Supporting the gameplay loop, MVP systems, and technical implementation behind the prototype.
+            </p>
+          </div>
+        </div>
+
+        <div class="team-card">
+          <img src="images/team-web3.png" alt="Web3 contributor profile image">
+          <div class="team-copy">
+            <h3>Web3 Support</h3>
+            <div class="team-role">Wallet / Contract / Integration</div>
+            <p>
+              Helping shape the wallet flow, Fuji testnet setup, and the future Memory Cube identity layer.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="future">
-        <h2>Augmentation Roadmap</h2>
-        <ul>
-            <li>Multi-limb Grafting (Q3 2026)</li>
-            <li>Infectious PvP Arenas</li>
-            <li>Cross-Chain Organ Harvesting</li>
-        </ul>
+      <h2 class="section-title">Future Systems</h2>
+      <p class="section-intro">
+        The MVP proves the concept. The longer-term vision expands the Memory Cube into a deeper progression and community system.
+      </p>
+
+      <div class="future-grid">
+        <div class="future-card">
+          <div class="future-copy">
+            <h3>Memory Cube Progression</h3>
+            <p>Persistent identity, unlocks, and future upgrades tied to the Cube instead of the disposable body.</p>
+          </div>
+        </div>
+
+        <div class="future-card">
+          <div class="future-copy">
+            <h3>Leaderboards</h3>
+            <p>Competitive score tracking, run depth, and community recognition across future events.</p>
+          </div>
+        </div>
+
+        <div class="future-card">
+          <div class="future-copy">
+            <h3>Tournaments</h3>
+            <p>Community-driven challenge runs, entry systems, prize pools, and top performer rewards.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="faq">
-        <h2>Incident Reports (FAQ)</h2>
-        <details>
-            <summary>What happens if my body dies?</summary>
-            <p>The meat is recycled. Your Cube returns to the hub with harvested XP.</p>
-        </details>
-        <details>
-            <summary>Is this safe for my hardware?</summary>
-            <p>Digital safety is guaranteed. Biological safety is not.</p>
-        </details>
+      <h2 class="section-title">FAQ / MVP Notes</h2>
+
+      <details>
+        <summary>What is the current MVP?</summary>
+        <p>
+          The MVP includes a playable browser build, core combat loop, working menu flow, and a website wrapper designed for wallet connection and future Memory Cube minting on Fuji testnet.
+        </p>
+      </details>
+
+      <details>
+        <summary>What happens when the body dies?</summary>
+        <p>
+          The run ends and the disposable flesh body is lost. The Memory Cube concept is built around the idea that the identity persists even when the body does not.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why is wallet connect on the website instead of inside the game?</summary>
+        <p>
+          For the MVP, gameplay stays clean and uninterrupted while the website handles the Web3 layer. This keeps the prototype lean, playable, and easy to evaluate.
+        </p>
+      </details>
+
+      <details>
+        <summary>Is this desktop or mobile?</summary>
+        <p>
+          The current MVP is designed primarily for desktop browser play. The website can be made mobile-friendly first, while mobile gameplay support can come later.
+        </p>
+      </details>
     </section>
 
     <footer>
-        &copy; 2026 FLESH NUGGETS BIOTECH. ALL RIGHTS RESERVED. <br>
-        SYSTEM_ID: B-0992-X
+      <div class="footer-brand">PROJECT BY MOCKETDESIGNS</div>
+      <div>© 2026 FLESH NUGGETS // MEMORY CUBE LAB SYSTEM // FUJI TESTNET MVP</div>
+      <div class="footer-links">
+        <a class="footer-link" href="https://x.com/mrmocket" target="_blank" rel="noopener noreferrer">Follow on X / Twitter</a>
+      </div>
     </footer>
 
-</div>
+  </div>
 
 </body>
 </html>
