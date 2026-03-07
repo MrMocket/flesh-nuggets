@@ -101,7 +101,7 @@
       max-width: 100%;
     }
 
-    h1, h2, h3, .brand, .btn, .wallet-top-btn, .section-chip, .interface-title, .interface-status, summary {
+    h1, h2, h3, .brand, .btn, .wallet-top-btn, .section-chip, .interface-title, .interface-status, summary, .carousel-btn, .carousel-dot {
       font-family: "Orbitron", sans-serif;
       text-transform: uppercase;
       letter-spacing: 1.5px;
@@ -619,7 +619,7 @@
     .future-card,
     details,
     .single-profile,
-    .screenshot-test-card {
+    .carousel-shell {
       background: linear-gradient(180deg, rgba(11, 9, 9, 0.76), rgba(17, 10, 10, 0.90));
       border: 2px solid var(--panel-border-soft);
       border-radius: var(--radius-lg);
@@ -632,7 +632,7 @@
     .future-card:hover,
     details:hover,
     .single-profile:hover,
-    .screenshot-test-card:hover {
+    .carousel-shell:hover {
       transform: translateY(-4px);
       border-color: #5f3636;
       box-shadow:
@@ -669,7 +669,7 @@
     .cube-image-box img,
     .image-box img,
     .single-profile img,
-    .screenshot-test-card img {
+    .carousel-slide img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -679,7 +679,7 @@
     .cube-image-box:hover img,
     .image-box:hover img,
     .single-profile:hover img,
-    .screenshot-test-card:hover img {
+    .carousel-shell:hover .carousel-slide img {
       transform: scale(1.03);
     }
 
@@ -721,39 +721,124 @@
       font-style: italic;
     }
 
-    .screenshot-test-grid {
-      display: grid;
-      gap: 20px;
-      max-width: 980px;
-    }
-
-    .screenshot-test-card {
+    .carousel-shell {
       overflow: hidden;
       padding: 0;
+      position: relative;
     }
 
-    .screenshot-test-card img {
+    .carousel-viewport {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #050505;
+    }
+
+    .carousel-track {
+      display: flex;
       width: 100%;
-      height: auto;
-      border-bottom: 1px solid rgba(255, 180, 180, 0.07);
+      height: 100%;
+      transition: transform 450ms ease;
     }
 
-    .screenshot-test-copy {
-      padding: 16px 18px;
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: #050505;
     }
 
-    .screenshot-test-copy strong {
+    .carousel-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.06) 50%);
+      pointer-events: none;
+    }
+
+    .carousel-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 18px 18px 16px;
+    }
+
+    .carousel-overlay strong {
       display: block;
-      margin-bottom: 6px;
       color: #fff;
+      margin-bottom: 6px;
       font-family: "Orbitron", sans-serif;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    .screenshot-test-copy span {
+    .carousel-overlay span {
       color: #e3d1d1;
       font-size: 14px;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 170, 170, 0.32);
+      background: rgba(12, 10, 10, 0.78);
+      color: #fff;
+      cursor: pointer;
+      z-index: 3;
+      transition: transform var(--ease-main), background var(--ease-main), border-color var(--ease-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      backdrop-filter: blur(6px);
+    }
+
+    .carousel-btn:hover {
+      background: rgba(30, 16, 16, 0.94);
+      border-color: rgba(165,255,118,0.42);
+      transform: translateY(-50%) scale(1.06);
+    }
+
+    .carousel-btn.prev {
+      left: 14px;
+    }
+
+    .carousel-btn.next {
+      right: 14px;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 16px 16px;
+      background: linear-gradient(180deg, rgba(15,10,10,0.88), rgba(11,8,8,0.92));
+      border-top: 1px solid rgba(255, 180, 180, 0.06);
+    }
+
+    .carousel-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #6a4d4d;
+      background: transparent;
+      cursor: pointer;
+      transition: transform var(--ease-main), background var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      padding: 0;
+    }
+
+    .carousel-dot.active {
+      background: var(--green-main);
+      border-color: var(--green-main);
+      box-shadow: 0 0 12px rgba(165,255,118,0.45);
+      transform: scale(1.1);
     }
 
     .about-grid {
@@ -944,6 +1029,11 @@
       .interface-status::after {
         display: none;
       }
+
+      .carousel-btn {
+        width: 40px;
+        height: 40px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1081,32 +1171,45 @@
       <div class="section-chip">Visual Feed // Current MVP</div>
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
-        Screenshot loading test. If these still show alt text instead of images, the issue is the file path, filename, or deploy — not the carousel.
+        A quick visual pass through the current MVP. The slideshow rotates slowly on its own, and viewers can flick through manually with the arrows.
       </p>
 
-      <div class="screenshot-test-grid">
-        <div class="screenshot-test-card">
-          <img src="./images/screenshot-1.png" alt="Screenshot 1" />
-          <div class="screenshot-test-copy">
-            <strong>Main Gameplay</strong>
-            <span>Core run flow, enemy pressure, and top-down action.</span>
+      <div class="carousel-shell">
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-slide">
+              <img src="./images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one" />
+              <div class="carousel-overlay">
+                <strong>Main Gameplay</strong>
+                <span>Core run flow, enemy pressure, and top-down action.</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <img src="./images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two" />
+              <div class="carousel-overlay">
+                <strong>Lab Combat</strong>
+                <span>Disposable bodies enter the run and fight to survive.</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <img src="./images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three" />
+              <div class="carousel-overlay">
+                <strong>MVP Flow</strong>
+                <span>Main menu, pause, death screen, and browser-ready loop.</span>
+              </div>
+            </div>
           </div>
+
+          <button class="carousel-btn prev" id="prevSlide" aria-label="Previous screenshot">‹</button>
+          <button class="carousel-btn next" id="nextSlide" aria-label="Next screenshot">›</button>
         </div>
 
-        <div class="screenshot-test-card">
-          <img src="./images/screenshot-2.png" alt="Screenshot 2" />
-          <div class="screenshot-test-copy">
-            <strong>Lab Combat</strong>
-            <span>Disposable bodies enter the run and fight to survive.</span>
-          </div>
-        </div>
-
-        <div class="screenshot-test-card">
-          <img src="./images/screenshot-3.png" alt="Screenshot 3" />
-          <div class="screenshot-test-copy">
-            <strong>MVP Flow</strong>
-            <span>Main menu, pause, death screen, and browser-ready loop.</span>
-          </div>
+        <div class="carousel-dots" id="carouselDots">
+          <button class="carousel-dot active" aria-label="Go to slide 1"></button>
+          <button class="carousel-dot" aria-label="Go to slide 2"></button>
+          <button class="carousel-dot" aria-label="Go to slide 3"></button>
         </div>
       </div>
     </section>
@@ -1246,6 +1349,65 @@
         forceTop();
         setTimeout(forceTop, 50);
       });
+
+      const track = document.getElementById("carouselTrack");
+      const dots = Array.from(document.querySelectorAll(".carousel-dot"));
+      const prev = document.getElementById("prevSlide");
+      const next = document.getElementById("nextSlide");
+
+      let currentSlide = 0;
+      let autoTimer = null;
+      const totalSlides = dots.length;
+
+      function updateCarousel(index) {
+        currentSlide = (index + totalSlides) % totalSlides;
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === currentSlide);
+        });
+      }
+
+      function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(() => {
+          updateCarousel(currentSlide + 1);
+        }, 4500);
+      }
+
+      function stopAuto() {
+        if (autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = null;
+        }
+      }
+
+      if (prev && next && track && dots.length) {
+        prev.addEventListener("click", function () {
+          updateCarousel(currentSlide - 1);
+          startAuto();
+        });
+
+        next.addEventListener("click", function () {
+          updateCarousel(currentSlide + 1);
+          startAuto();
+        });
+
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", function () {
+            updateCarousel(index);
+            startAuto();
+          });
+        });
+
+        const carouselShell = document.querySelector(".carousel-shell");
+        if (carouselShell) {
+          carouselShell.addEventListener("mouseenter", stopAuto);
+          carouselShell.addEventListener("mouseleave", startAuto);
+        }
+
+        updateCarousel(0);
+        startAuto();
+      }
     })();
   </script>
 </body>
