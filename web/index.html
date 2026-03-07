@@ -8,14 +8,11 @@
   <style>
     :root {
       --flesh-red: #8b1e1e;
-      --vein-purple: #2b102e;
       --lab-green: #86ff5c;
-      --acid-yellow: #d1ff52;
       --panel-bg: rgba(16, 13, 13, 0.94);
       --panel-border: #3a2a2a;
       --text-main: #d8d2d2;
       --text-dim: #a89d9d;
-      --black: #070707;
     }
 
     * {
@@ -36,18 +33,20 @@
       font-family: 'Courier Prime', monospace;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
     }
 
+    /* Website texture only, kept behind content */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background:
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.015), rgba(0, 0, 255, 0.03));
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.10) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
       background-size: 100% 4px, 3px 100%;
       pointer-events: none;
-      z-index: 50;
+      z-index: 0;
     }
 
     a {
@@ -61,19 +60,11 @@
       letter-spacing: 2px;
     }
 
-    .container {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-    }
-
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: rgba(8, 8, 8, 0.85);
+      z-index: 30;
+      background: rgba(8, 8, 8, 0.88);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid #2a1e1e;
     }
@@ -86,6 +77,32 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .wallet-top-btn {
+      background: #8b1e1e;
+      color: #fff;
+      border: 1px solid #b33a3a;
+      padding: 10px 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .wallet-top-btn:hover {
+      background: #b32828;
+      box-shadow: 0 0 12px rgba(139, 30, 30, 0.35);
     }
 
     .brand {
@@ -106,6 +123,14 @@
     .nav a:hover,
     .footer-link:hover {
       color: var(--lab-green);
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     section {
@@ -219,7 +244,7 @@
 
     .run-sequence-shell {
       margin-top: 22px;
-      padding: 18px;
+      padding: 20px;
       border-radius: 24px;
       background:
         linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.9)),
@@ -229,28 +254,28 @@
     }
 
     .run-sequence-border {
-      padding: 26px;
-      border-radius: 22px;
-      background: url("images/game-border.png") center center / 100% 100% no-repeat;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1496 / 938;
+      background: url("images/game-border.png") center center / contain no-repeat;
     }
 
     .game-containment {
-      width: 100%;
+      position: absolute;
+      left: 14.5%;
+      right: 15%;
+      top: 14.5%;
+      bottom: 15.5%;
       background: #000;
-      border: 4px solid rgba(134, 255, 92, 0.7);
-      border-radius: 16px;
-      padding: 10px;
-      position: relative;
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
       overflow: hidden;
+      border-radius: 8px;
     }
 
     .game-containment iframe {
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: 100%;
       border: none;
-      border-radius: 10px;
       background: #000;
     }
 
@@ -276,7 +301,8 @@
     }
 
     .cube-image-box,
-    .image-box {
+    .image-box,
+    .single-profile {
       border: 2px solid #2f2323;
       border-radius: 16px;
       background: rgba(8, 8, 8, 0.8);
@@ -290,7 +316,7 @@
     .cube-image-box img,
     .image-box img,
     .screenshot img,
-    .team-card img {
+    .single-profile img {
       display: block;
       width: 100%;
       height: auto;
@@ -318,7 +344,6 @@
     }
 
     .screenshot-grid,
-    .team-grid,
     .future-grid {
       display: grid;
       gap: 18px;
@@ -326,7 +351,6 @@
     }
 
     .screenshot,
-    .team-card,
     .future-card {
       border: 2px solid #2f2323;
       border-radius: 16px;
@@ -335,16 +359,22 @@
     }
 
     .screenshot-copy,
-    .team-copy,
     .future-copy {
       padding: 16px;
     }
 
-    .team-role {
-      color: var(--lab-green);
-      font-size: 13px;
-      margin-top: 4px;
-      margin-bottom: 8px;
+    .about-grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: 1fr 1.15fr;
+      align-items: stretch;
+    }
+
+    .about-copy {
+      border: 2px solid #2f2323;
+      border-radius: 16px;
+      padding: 20px;
+      background: rgba(8, 8, 8, 0.68);
     }
 
     .future-card h3 {
@@ -403,8 +433,8 @@
     @media (max-width: 920px) {
       .grid-2,
       .screenshot-grid,
-      .team-grid,
-      .future-grid {
+      .future-grid,
+      .about-grid {
         grid-template-columns: 1fr;
       }
 
@@ -422,8 +452,7 @@
       }
 
       .run-sequence-border {
-        padding: 14px;
-        background-size: cover;
+        background-size: contain;
       }
     }
   </style>
@@ -432,13 +461,17 @@
 
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="brand">FLESH NUGGETS</div>
+      <div class="topbar-left">
+        <button class="wallet-top-btn">Connect Wallet</button>
+        <div class="brand">FLESH NUGGETS</div>
+      </div>
+
       <nav class="nav">
         <a href="#play">Play</a>
         <a href="#cube">Memory Cube</a>
         <a href="#lore">Lore</a>
         <a href="#screens">Screens</a>
-        <a href="#team">Team</a>
+        <a href="#about">About</a>
         <a href="#future">Future</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -452,7 +485,7 @@
         <div class="eyebrow">MEMORY CUBE UPLINK // FUJI TESTNET MVP</div>
         <h1 class="glitch-title">FLESH NUGGETS</h1>
         <p class="hero-copy">
-          You are a Memory Cube AI operating a rogue biotech lab. Each run sends a disposable flesh body into the facility. The body can die. The memory persists.
+          Flesh Nuggets is a browser-playable top-down roguelike where disposable flesh bodies are sent into hostile lab runs by a persistent Memory Cube AI.
         </p>
         <div class="button-row">
           <a href="#play" class="btn">ENTER THE VATS</a>
@@ -464,7 +497,7 @@
     <section id="play">
       <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
       <p class="section-intro">
-        Enter the active test cycle. Flesh Nuggets is a browser-playable top-down roguelike prototype built in Godot. The Memory Cube remains stable while disposable flesh bodies are sent into the lab for each run.
+        The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Flesh bodies are expendable. The Memory Cube remains stable.
       </p>
 
       <div class="run-sequence-shell">
@@ -485,21 +518,20 @@
         <div class="info-card">
           <h2 class="section-title">The Memory Cube</h2>
           <p>
-            The Memory Cube is the player’s persistent identity. In the world of Flesh Nuggets, the lab does not protect the body — it protects the data.
+            The Memory Cube is the player’s persistent identity. In Flesh Nuggets, the lab does not preserve the body — it preserves the data.
           </p>
           <p style="margin-top: 12px;">
-            Flesh bodies are grown and sent into runs as disposable shells. When a run ends, the body is lost, but the Cube remains. Minting a Memory Cube on-chain binds that identity to the player and sets up future progression, unlocks, and competitive systems.
+            Flesh bodies are grown and sent into runs as disposable shells. When a run ends, the body is lost, but the Cube remains. Future minting on Fuji testnet binds that identity on-chain and opens the path for longer-term progression.
           </p>
 
           <div class="feature-list">
-            <div class="feature-tag"><strong>Persistent identity:</strong> your Cube is the thing that survives.</div>
+            <div class="feature-tag"><strong>Persistent identity:</strong> your Cube is what survives.</div>
             <div class="feature-tag"><strong>Disposable runs:</strong> each body is expendable.</div>
-            <div class="feature-tag"><strong>Future progression:</strong> on-chain identity unlocks deeper systems later.</div>
+            <div class="feature-tag"><strong>Future Web3 layer:</strong> wallet connection and minting live on the website for a cleaner MVP flow.</div>
           </div>
 
           <div class="button-row" style="justify-content: flex-start;">
-            <button class="btn">CONNECT WALLET</button>
-            <button class="btn secondary">MINT MEMORY CUBE</button>
+            <button class="btn secondary">Mint Memory Cube</button>
           </div>
         </div>
 
@@ -512,15 +544,15 @@
     <section id="lore">
       <h2 class="section-title">Lab Overview</h2>
       <p class="section-intro">
-        Flesh Nuggets is built around a strange biotech loop: unstable flesh, repeatable runs, and a core intelligence that refuses to die.
+        Flesh Nuggets is built around a strange biotech loop: unstable flesh, repeatable runs, and a core intelligence that keeps learning.
       </p>
 
       <p>
-        The player is not the meat body. The player is the Memory Cube AI running the lab. Disposable flesh forms are sent into dangerous test runs to gather survival data, resources, and future progression potential. This makes death part of the system rather than a failure state.
+        The player is not the meat body. The player is the Memory Cube AI operating the lab. Disposable flesh bodies are sent into dangerous runs to gather survival data, test outcomes, and future progression potential.
       </p>
 
       <p style="margin-top: 14px;">
-        The MVP focuses on proving that loop: a playable browser build, a clear game identity, and a website-based Web3 layer where the player’s Cube can later be minted and tied to longer-term progression.
+        That makes death part of the system rather than a full stop. The MVP proves the game loop first, while the website sets up the future identity layer around the Cube.
       </p>
 
       <div class="quote">
@@ -531,7 +563,7 @@
     <section id="screens">
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
-        A quick look at the current MVP: gameplay loop, menus, combat, and the lab atmosphere.
+        A quick look at the current MVP: gameplay loop, combat, menus, and the lab atmosphere.
       </p>
 
       <div class="screenshot-grid">
@@ -539,7 +571,7 @@
           <img src="images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one">
           <div class="screenshot-copy">
             <strong>Main Gameplay</strong><br>
-            Core run flow, enemies, and top-down action.
+            Core run flow, enemy pressure, and top-down action.
           </div>
         </div>
 
@@ -547,58 +579,42 @@
           <img src="images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two">
           <div class="screenshot-copy">
             <strong>Lab Combat</strong><br>
-            Disposable body enters, fights, and survives for as long as it can.
+            Disposable bodies enter the run and fight to survive.
           </div>
         </div>
 
         <div class="screenshot">
           <img src="images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three">
           <div class="screenshot-copy">
-            <strong>Menus & MVP Flow</strong><br>
-            Main menu, pause, death screen, and browser-ready play loop.
+            <strong>MVP Flow</strong><br>
+            Main menu, pause, death screen, and browser-ready loop.
           </div>
         </div>
       </div>
     </section>
 
-    <section id="team">
-      <h2 class="section-title">Meet the Team</h2>
+    <section id="about">
+      <h2 class="section-title">About the Project</h2>
       <p class="section-intro">
-        The current MVP is being built lean and fast, focused on proving the core game loop and the Memory Cube identity system.
+        Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
       </p>
 
-      <div class="team-grid">
-        <div class="team-card">
-          <img src="images/team-mocket.png" alt="Mocket profile image">
-          <div class="team-copy">
-            <h3>Mocket</h3>
-            <div class="team-role">Creator / Art / World / Direction</div>
-            <p>
-              Creator of Flesh Nuggets, building the visual identity, game world, and overall project direction.
-            </p>
-          </div>
+      <div class="about-grid">
+        <div class="single-profile">
+          <img src="images/mocket-profile.png" alt="Mocket profile image">
         </div>
 
-        <div class="team-card">
-          <img src="images/team-dev.png" alt="Developer profile image">
-          <div class="team-copy">
-            <h3>Developer</h3>
-            <div class="team-role">Gameplay / Systems / Implementation</div>
-            <p>
-              Supporting the gameplay loop, MVP systems, and technical implementation behind the prototype.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-card">
-          <img src="images/team-web3.png" alt="Web3 contributor profile image">
-          <div class="team-copy">
-            <h3>Web3 Support</h3>
-            <div class="team-role">Wallet / Contract / Integration</div>
-            <p>
-              Helping shape the wallet flow, Fuji testnet setup, and the future Memory Cube identity layer.
-            </p>
-          </div>
+        <div class="about-copy">
+          <h3>Built by Mocket</h3>
+          <p>
+            Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall MVP push.
+          </p>
+          <p style="margin-top: 12px;">
+            The goal of this stage is to prove the game loop, present a playable browser build, and establish the Memory Cube as the long-term identity system that can expand into deeper progression, community competition, and Web3 integration over time.
+          </p>
+          <p style="margin-top: 12px;">
+            This MVP is intentionally lean: playable, readable, and focused on showing the concept clearly.
+          </p>
         </div>
       </div>
     </section>
@@ -606,7 +622,7 @@
     <section id="future">
       <h2 class="section-title">Future Systems</h2>
       <p class="section-intro">
-        The MVP proves the concept. The longer-term vision expands the Memory Cube into a deeper progression and community system.
+        These are planned beyond the current MVP and show where the Memory Cube system can expand next.
       </p>
 
       <div class="future-grid">
@@ -620,14 +636,14 @@
         <div class="future-card">
           <div class="future-copy">
             <h3>Leaderboards</h3>
-            <p>Competitive score tracking, run depth, and community recognition across future events.</p>
+            <p>Competitive score tracking, run depth, and community recognition tied to future events and repeat play.</p>
           </div>
         </div>
 
         <div class="future-card">
           <div class="future-copy">
             <h3>Tournaments</h3>
-            <p>Community-driven challenge runs, entry systems, prize pools, and top performer rewards.</p>
+            <p>Community challenge runs, prize structures, and competitive events built around the core lab-run loop.</p>
           </div>
         </div>
       </div>
@@ -637,30 +653,30 @@
       <h2 class="section-title">FAQ / MVP Notes</h2>
 
       <details>
-        <summary>What is the current MVP?</summary>
+        <summary>What is included in the current MVP?</summary>
         <p>
-          The MVP includes a playable browser build, core combat loop, working menu flow, and a website wrapper designed for wallet connection and future Memory Cube minting on Fuji testnet.
+          The MVP includes a playable browser build, core combat loop, working menu flow, death loop, and a website wrapper prepared for wallet connection and future Memory Cube minting on Fuji testnet.
         </p>
       </details>
 
       <details>
         <summary>What happens when the body dies?</summary>
         <p>
-          The run ends and the disposable flesh body is lost. The Memory Cube concept is built around the idea that the identity persists even when the body does not.
+          The run ends and the disposable flesh body is lost. The Memory Cube concept is built around the idea that the player identity persists even when the body does not.
         </p>
       </details>
 
       <details>
         <summary>Why is wallet connect on the website instead of inside the game?</summary>
         <p>
-          For the MVP, gameplay stays clean and uninterrupted while the website handles the Web3 layer. This keeps the prototype lean, playable, and easy to evaluate.
+          For the MVP, gameplay stays clean and uninterrupted while the website handles the Web3 layer. This keeps the prototype lean, playable, and easier for judges to review.
         </p>
       </details>
 
       <details>
         <summary>Is this desktop or mobile?</summary>
         <p>
-          The current MVP is designed primarily for desktop browser play. The website can be made mobile-friendly first, while mobile gameplay support can come later.
+          The current MVP is designed primarily for desktop browser play. The website can be made more mobile-friendly first, while mobile gameplay support can come later.
         </p>
       </details>
     </section>
