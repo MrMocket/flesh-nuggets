@@ -391,11 +391,59 @@
         0 0 16px rgba(202,53,53,0.12);
       position: relative;
       z-index: 2;
+      animation: titleGlitch 4.5s infinite;
+    }
+
+    .glitch-title::before,
+    .glitch-title::after {
+      content: "FLESH NUGGETS";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .glitch-title::before {
+      color: rgba(255, 70, 70, 0.75);
+      transform: translate(-2px, 0);
+      animation: titleGlitchBefore 4.5s infinite;
+    }
+
+    .glitch-title::after {
+      color: rgba(140, 255, 140, 0.45);
+      transform: translate(2px, 0);
+      animation: titleGlitchAfter 4.5s infinite;
+    }
+
+    @keyframes titleGlitch {
+      0%, 89%, 100% { transform: translate(0, 0); }
+      90% { transform: translate(-1px, 0); }
+      91% { transform: translate(2px, -1px); }
+      92% { transform: translate(-2px, 1px); }
+      93% { transform: translate(1px, 0); }
+      94% { transform: translate(0, 0); }
+    }
+
+    @keyframes titleGlitchBefore {
+      0%, 89%, 100% { opacity: 0; clip-path: inset(0 0 0 0); }
+      90% { opacity: 1; clip-path: inset(8% 0 58% 0); }
+      91% { opacity: 1; clip-path: inset(52% 0 18% 0); }
+      92% { opacity: 0; clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes titleGlitchAfter {
+      0%, 89%, 100% { opacity: 0; clip-path: inset(0 0 0 0); }
+      90.5% { opacity: 1; clip-path: inset(18% 0 42% 0); }
+      91.5% { opacity: 1; clip-path: inset(62% 0 8% 0); }
+      92.5% { opacity: 0; clip-path: inset(0 0 0 0); }
     }
 
     .hero-title-nugget {
       position: absolute;
-      width: 62px;
+      width: 82px;
       height: auto;
       z-index: 3;
       filter: drop-shadow(0 8px 12px rgba(0,0,0,0.24));
@@ -403,13 +451,13 @@
     }
 
     .hero-title-nugget.left {
-      left: -78px;
+      left: -110px;
       top: 50%;
       transform: translateY(-50%);
     }
 
     .hero-title-nugget.right {
-      right: -78px;
+      right: -110px;
       top: 50%;
       transform: translateY(-50%);
       animation-delay: 0.35s;
@@ -1018,11 +1066,11 @@
     }
 
     .footer-nugget.left {
-      left: calc(50% - 180px);
+      left: calc(50% - 260px);
     }
 
     .footer-nugget.right {
-      right: calc(50% - 180px);
+      right: calc(50% - 260px);
       animation-delay: 0.4s;
     }
 
@@ -1052,7 +1100,7 @@
     }
 
     .asset-hero-left {
-      top: 68px;
+      bottom: 78px;
       left: 34px;
       width: 118px;
       z-index: 1;
@@ -1145,15 +1193,15 @@
       }
 
       .hero-title-nugget {
-        width: 48px;
+        width: 58px;
       }
 
       .hero-title-nugget.left {
-        left: -56px;
+        left: -72px;
       }
 
       .hero-title-nugget.right {
-        right: -56px;
+        right: -72px;
       }
 
       .asset-hero-left,
@@ -1164,11 +1212,11 @@
       }
 
       .footer-nugget.left {
-        left: calc(50% - 120px);
+        left: calc(50% - 150px);
       }
 
       .footer-nugget.right {
-        right: calc(50% - 120px);
+        right: calc(50% - 150px);
       }
     }
 
@@ -1217,21 +1265,21 @@
       }
 
       .hero-title-nugget {
-        width: 40px;
+        width: 44px;
       }
 
       .hero-title-nugget.left,
       .hero-title-nugget.right {
         top: auto;
-        bottom: -36px;
+        bottom: -40px;
       }
 
       .hero-title-nugget.left {
-        left: calc(50% - 64px);
+        left: calc(50% - 68px);
       }
 
       .hero-title-nugget.right {
-        right: calc(50% - 64px);
+        right: calc(50% - 68px);
       }
 
       .floating-asset,
@@ -1244,11 +1292,11 @@
       }
 
       .footer-nugget.left {
-        left: calc(50% - 92px);
+        left: calc(50% - 110px);
       }
 
       .footer-nugget.right {
-        right: calc(50% - 92px);
+        right: calc(50% - 110px);
       }
 
       .footer-blood {
@@ -1309,7 +1357,7 @@
 
         <div class="hero-title-wrap">
           <img class="hero-title-nugget left" src="images/flesh-nugget.png" alt="" />
-          <h1 class="glitch-title">Flesh Nuggets</h1>
+          <h1 class="glitch-title">FLESH NUGGETS</h1>
           <img class="hero-title-nugget right" src="images/flesh-nugget.png" alt="" />
         </div>
 
