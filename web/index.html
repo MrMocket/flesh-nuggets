@@ -1,42 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Flesh Nuggets</title>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLESH NUGGETS | Memory Cube Uplink</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flesh-red: #8b0000;
+            --vein-purple: #2d0a31;
+            --lab-green: #39ff14;
+            --panel-bg: rgba(15, 15, 15, 0.95);
+            --border-style: 4px solid #444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            background-image: 
+                radial-gradient(circle, #1a0505 1px, transparent 1px),
+                linear-gradient(to bottom, #050000, #150a0a);
+            background-size: 40px 40px, 100% 100%;
+            color: #ccc;
+            font-family: 'Courier Prime', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Scanline Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--flesh-red);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Section Framing */
+        section {
+            background: var(--panel-bg);
+            border: var(--border-style);
+            margin-bottom: 60px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        section::before {
+            content: 'BIO-HAZARD // SECURE ACCESS';
+            position: absolute;
+            top: -15px; left: 20px;
+            background: #444;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 10px;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        #hero {
+            text-align: center;
+            border-color: var(--flesh-red);
+            padding: 80px 20px;
+        }
+
+        .glitch-title {
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 3px 3px var(--flesh-red);
+            margin-bottom: 10px;
+        }
+
+        /* Game Window */
+        .game-containment {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border: 8px double var(--lab-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-containment::after {
+            content: 'INITIALIZING SEED...';
+            color: var(--lab-green);
+            animation: blink 1s infinite;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: var(--flesh-red);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .btn:hover {
+            background: #ff0000;
+            box-shadow: 0 0 15px var(--flesh-red);
+        }
+
+        /* Grid for Info */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .feature-tag {
+            border-left: 3px solid var(--lab-green);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+    </style>
 </head>
+<body>
 
-<body style="background:#111;color:white;font-family:sans-serif;text-align:center">
+<div class="container">
+    
+    <section id="hero">
+        <h1 class="glitch-title">FLESH NUGGETS</h1>
+        <p>CONSTRUCT. CONSUME. REBOOT.</p>
+        <a href="#play" class="btn">ENTER THE VATS</a>
+    </section>
 
-<h1>Flesh Nuggets</h1>
+    <section id="play">
+        <h2>[ RUN_SEQUENCE.EXE ]</h2>
+        <div class="game-containment">
+            </div>
+        <p style="margin-top: 15px; text-align: center; color: var(--lab-green);">SYSTEM STATUS: BODY DISPOSABLE // MEMORY STABLE</p>
+    </section>
 
-<p>
-You are the Memory Cube AI controlling a lab that grows disposable flesh bodies.
-</p>
+    <section id="cube">
+        <div class="grid">
+            <div>
+                <h2>The Memory Cube</h2>
+                <p>Your flesh is a resource; your Cube is your soul. Minting a Memory Cube allows your AI consciousness to persist across meat-shredding runs.</p>
+                <button class="btn">MINT UPLINK</button>
+            </div>
+            <div style="border: 2px solid #333; display: flex; align-items: center; justify-content: center;">
+                <p>[ 3D CUBE RENDER ]</p>
+            </div>
+        </div>
+    </section>
 
-<p>
-Each run sends a new body into the facility.
-</p>
+    <section id="lore">
+        <h2>Sector-7 Overview</h2>
+        <p>Built in the wake of the "Great Bio-Suture," Sector-7 was designed to harvest data from the impossible. As a Memory Cube, you possess the only intelligence capable of navigating the shifting hallways of the Nugget Vats.</p>
+        <blockquote style="border-left: 2px solid var(--flesh-red); padding-left: 20px; margin-top: 20px; font-style: italic;">
+            "If the nugget screams, the synchronization is working." - Lead Surgeon
+        </blockquote>
+    </section>
 
-<p>
-Minting a Memory Cube binds your identity on-chain.
-</p>
+    <section id="team">
+        <h2>The Architects</h2>
+        <div class="grid">
+            <div class="feature-tag"><strong>Dr. Void</strong><br>Chief Bio-Engineer</div>
+            <div class="feature-tag"><strong>Synthetix</strong><br>Neural Link Architect</div>
+        </div>
+    </section>
 
-<hr>
+    <section id="future">
+        <h2>Augmentation Roadmap</h2>
+        <ul>
+            <li>Multi-limb Grafting (Q3 2026)</li>
+            <li>Infectious PvP Arenas</li>
+            <li>Cross-Chain Organ Harvesting</li>
+        </ul>
+    </section>
 
-<h2>Play</h2>
+    <section id="faq">
+        <h2>Incident Reports (FAQ)</h2>
+        <details>
+            <summary>What happens if my body dies?</summary>
+            <p>The meat is recycled. Your Cube returns to the hub with harvested XP.</p>
+        </details>
+        <details>
+            <summary>Is this safe for my hardware?</summary>
+            <p>Digital safety is guaranteed. Biological safety is not.</p>
+        </details>
+    </section>
 
-<iframe 
-src="game/index.html"
-width="960"
-height="540"
-style="border:none;">
-</iframe>
+    <footer>
+        &copy; 2026 FLESH NUGGETS BIOTECH. ALL RIGHTS RESERVED. <br>
+        SYSTEM_ID: B-0992-X
+    </footer>
 
-<hr>
-
-<h2>Wallet</h2>
-
-<button>Connect Wallet</button>
+</div>
 
 </body>
 </html>
