@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FLESH NUGGETS | Memory Cube Uplink</title>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --flesh-red: #8b1e1e;
-      --lab-green: #86ff5c;
-      --panel-bg: rgba(16, 13, 13, 0.94);
-      --panel-border: #3a2a2a;
-      --text-main: #d8d2d2;
-      --text-dim: #a89d9d;
+      --bg-1: #070505;
+      --bg-2: #140909;
+      --bg-3: #1f0f0f;
+
+      --flesh-red: #a12222;
+      --flesh-red-bright: #d93939;
+      --meat-pink: #f08c8c;
+      --sludge: #7dff71;
+      --sludge-soft: #b8ff8f;
+
+      --panel-bg: rgba(17, 11, 11, 0.92);
+      --panel-bg-2: rgba(27, 16, 16, 0.88);
+      --panel-border: #553030;
+      --panel-border-soft: #3b2323;
+
+      --text-main: #f0e4e4;
+      --text-dim: #c6b5b5;
+      --text-soft: #9e8888;
+
+      --shadow-dark: 0 0 35px rgba(0, 0, 0, 0.42);
+      --shadow-red: 0 0 18px rgba(161, 34, 34, 0.22);
+
+      --max-width: 1220px;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
     }
 
     * {
@@ -26,27 +47,43 @@
     }
 
     body {
-      background:
-        radial-gradient(circle at top, rgba(70, 15, 15, 0.35), transparent 35%),
-        linear-gradient(to bottom, #050404, #110909 40%, #080808 100%);
-      color: var(--text-main);
+      min-height: 100vh;
       font-family: 'Courier Prime', monospace;
+      color: var(--text-main);
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(217, 57, 57, 0.10), transparent 20%),
+        radial-gradient(circle at 85% 18%, rgba(125, 255, 113, 0.06), transparent 18%),
+        radial-gradient(circle at 50% 0%, rgba(255, 130, 130, 0.05), transparent 26%),
+        linear-gradient(to bottom, var(--bg-1), var(--bg-2) 40%, #090606 100%);
     }
 
-    /* Website texture only, kept behind content */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background:
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.10) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-      background-size: 100% 4px, 3px 100%;
       pointer-events: none;
       z-index: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.28;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.10) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.018), rgba(0, 255, 0, 0.008), rgba(0, 0, 255, 0.018));
+      background-size: 100% 4px, 3px 100%;
+      opacity: 0.35;
     }
 
     a {
@@ -54,108 +91,171 @@
       text-decoration: none;
     }
 
-    h1, h2, h3 {
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    h1, h2, h3, summary, .brand, .btn, .wallet-top-btn, .section-chip {
       font-family: 'Orbitron', sans-serif;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 30;
-      background: rgba(8, 8, 8, 0.88);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid #2a1e1e;
+      z-index: 50;
+      background: rgba(10, 7, 7, 0.86);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(95, 40, 40, 0.65);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
     }
 
     .topbar-inner {
-      max-width: 1180px;
+      max-width: var(--max-width);
       margin: 0 auto;
       padding: 14px 20px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
     }
 
     .topbar-left {
       display: flex;
       align-items: center;
       gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .wallet-top-btn {
-      background: #8b1e1e;
-      color: #fff;
-      border: 1px solid #b33a3a;
-      padding: 10px 16px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.25s ease;
-    }
-
-    .wallet-top-btn:hover {
-      background: #b32828;
-      box-shadow: 0 0 12px rgba(139, 30, 30, 0.35);
+      flex: 0 0 auto;
     }
 
     .brand {
-      font-family: 'Orbitron', sans-serif;
       font-weight: 900;
       color: #fff;
-      letter-spacing: 2px;
+      font-size: 1rem;
+      text-shadow: 2px 2px 0 rgba(161, 34, 34, 0.6);
+      white-space: nowrap;
     }
 
     .nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
-      font-size: 14px;
+      gap: 14px;
+      font-size: 13px;
       color: var(--text-dim);
+      margin-left: auto;
+      align-items: center;
+    }
+
+    .nav a {
+      position: relative;
+      padding: 4px 0;
+      transition: 0.2s ease;
+    }
+
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      background: var(--sludge);
+      transition: width 0.2s ease;
     }
 
     .nav a:hover,
     .footer-link:hover {
-      color: var(--lab-green);
+      color: var(--sludge-soft);
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+    .wallet-top-btn {
+      margin-left: 10px;
+      background:
+        linear-gradient(180deg, #d73b3b, #8e1d1d);
+      color: #fff;
+      border: 2px solid #f06a6a;
+      padding: 10px 16px;
+      font-size: 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.22s ease;
+      box-shadow:
+        0 0 0 2px rgba(52, 15, 15, 0.9),
+        0 0 18px rgba(161, 34, 34, 0.18);
+      white-space: nowrap;
+    }
+
+    .wallet-top-btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 0 0 2px rgba(52, 15, 15, 0.95),
+        0 0 22px rgba(217, 57, 57, 0.34);
+      background:
+        linear-gradient(180deg, #ef4c4c, #aa2323);
     }
 
     .container {
-      max-width: 1180px;
+      max-width: var(--max-width);
       margin: 0 auto;
-      padding: 20px;
+      padding: 22px 20px 40px;
       position: relative;
       z-index: 1;
     }
 
     section {
-      background: var(--panel-bg);
-      border: 3px solid var(--panel-border);
-      margin-bottom: 48px;
-      padding: 32px;
       position: relative;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
-      border-radius: 18px;
-      overflow: hidden;
+      margin-bottom: 42px;
+      padding: 46px 32px 32px;
+      background:
+        radial-gradient(circle at top right, rgba(217, 57, 57, 0.06), transparent 26%),
+        linear-gradient(180deg, var(--panel-bg), var(--panel-bg-2));
+      border: 3px solid var(--panel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-dark), var(--shadow-red);
+      overflow: visible;
     }
 
-    section::before {
-      content: 'LAB SYSTEM // ACTIVE';
+    section::after {
+      content: "";
       position: absolute;
-      top: 0;
+      inset: 10px;
+      border: 1px solid rgba(255, 170, 170, 0.08);
+      border-radius: calc(var(--radius-xl) - 8px);
+      pointer-events: none;
+    }
+
+    .section-chip {
+      position: absolute;
+      top: -14px;
       left: 24px;
-      transform: translateY(-50%);
-      background: #3a2a2a;
-      color: #f5dada;
-      font-size: 11px;
-      padding: 4px 10px;
-      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      padding: 6px 14px;
       border-radius: 999px;
+      background:
+        linear-gradient(180deg, #4f2323, #301515);
+      color: #ffd5d5;
+      font-size: 10px;
+      font-weight: 700;
+      border: 2px solid #6b3737;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+      z-index: 2;
+    }
+
+    .section-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sludge);
+      box-shadow: 0 0 8px rgba(125, 255, 113, 0.8);
+      flex: 0 0 auto;
     }
 
     #hero {
@@ -164,34 +264,37 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      border-color: #5f1f1f;
+      border-color: #742828;
       background:
-        linear-gradient(rgba(8, 6, 6, 0.68), rgba(8, 6, 6, 0.9)),
+        linear-gradient(rgba(10, 7, 7, 0.60), rgba(10, 7, 7, 0.88)),
         url("images/hero-bg.jpg") center/cover no-repeat;
     }
 
     .hero-content {
-      max-width: 860px;
+      max-width: 900px;
     }
 
     .eyebrow {
-      color: var(--lab-green);
-      font-size: 14px;
-      margin-bottom: 12px;
+      color: var(--sludge-soft);
+      font-size: 13px;
+      margin-bottom: 14px;
       letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .glitch-title {
-      font-size: clamp(3rem, 7vw, 6rem);
-      color: #fff;
-      text-shadow: 3px 3px 0 var(--flesh-red);
-      line-height: 0.95;
-      margin-bottom: 18px;
+      font-size: clamp(3.2rem, 8vw, 6.5rem);
+      line-height: 0.92;
+      color: #fff6f6;
+      text-shadow:
+        4px 4px 0 var(--flesh-red),
+        -2px -2px 0 rgba(255, 150, 150, 0.08);
+      margin-bottom: 20px;
     }
 
     .hero-copy {
-      color: #d7cbcb;
-      max-width: 760px;
+      color: #e7d9d9;
+      max-width: 780px;
       margin: 0 auto 24px;
       font-size: 18px;
     }
@@ -199,76 +302,110 @@
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 14px;
       margin-top: 24px;
     }
 
+    #hero .button-row {
+      justify-content: center;
+    }
+
     .btn {
-      display: inline-block;
-      background: var(--flesh-red);
-      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
       padding: 14px 24px;
-      font-weight: bold;
-      border: none;
+      border: 2px solid #5b2222;
+      border-radius: 14px;
       cursor: pointer;
-      transition: 0.25s ease;
-      clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 1px;
+      transition: 0.24s ease;
+      font-weight: 700;
+      font-size: 13px;
+      color: #fff;
+      background:
+        linear-gradient(180deg, #c33434, #8d1e1e);
+      box-shadow:
+        0 6px 0 #4e1313,
+        0 10px 16px rgba(0,0,0,0.25);
     }
 
     .btn:hover {
-      background: #c52b2b;
-      box-shadow: 0 0 18px rgba(139, 30, 30, 0.45);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      background:
+        linear-gradient(180deg, #ea4747, #a52020);
+      box-shadow:
+        0 8px 0 #4e1313,
+        0 14px 22px rgba(0,0,0,0.32);
     }
 
     .btn.secondary {
-      background: #1a1a1a;
-      border: 1px solid #4d3b3b;
-      color: var(--lab-green);
+      background:
+        linear-gradient(180deg, #1c1a1a, #111010);
+      border-color: #4f4040;
+      color: var(--sludge-soft);
+      box-shadow:
+        0 6px 0 #0c0b0b,
+        0 10px 16px rgba(0,0,0,0.25);
     }
 
     .section-title {
-      color: #fff;
-      margin-bottom: 14px;
-      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      color: #fff7f7;
+      margin-bottom: 12px;
+      font-size: clamp(1.65rem, 3vw, 2.45rem);
+      text-shadow: 2px 2px 0 rgba(90, 20, 20, 0.55);
     }
 
     .section-intro {
       color: var(--text-dim);
-      max-width: 850px;
+      max-width: 900px;
       margin-bottom: 24px;
     }
 
     .run-sequence-shell {
       margin-top: 22px;
       padding: 20px;
-      border-radius: 24px;
+      border-radius: 26px;
       background:
-        linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.9)),
-        url("images/panel-pattern.png") center center / cover no-repeat;
-      border: 2px solid #2f2323;
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.45);
+        radial-gradient(circle at top, rgba(217, 57, 57, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(12, 9, 9, 0.95), rgba(7, 5, 5, 0.98));
+      border: 2px solid #402727;
+      box-shadow:
+        inset 0 0 28px rgba(0, 0, 0, 0.55),
+        0 0 20px rgba(0, 0, 0, 0.2);
     }
 
     .run-sequence-border {
       position: relative;
       width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
       aspect-ratio: 1496 / 938;
-      background: url("images/game-border.png") center center / contain no-repeat;
+      background: #000;
+      border-radius: 28px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .run-sequence-border::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: url("images/game-border.png") center center / 100% 100% no-repeat;
     }
 
     .game-containment {
       position: absolute;
-      left: 14.5%;
-      right: 15%;
-      top: 14.5%;
-      bottom: 15.5%;
+      z-index: 1;
+      left: 8.4%;
+      right: 8.4%;
+      top: 10.2%;
+      bottom: 10.8%;
       background: #000;
+      border-radius: 10px;
       overflow: hidden;
-      border-radius: 8px;
     }
 
     .game-containment iframe {
@@ -280,10 +417,11 @@
     }
 
     .status-line {
-      margin-top: 14px;
+      margin-top: 16px;
       text-align: center;
-      color: var(--lab-green);
-      font-size: 14px;
+      color: var(--sludge-soft);
+      font-size: 13px;
+      letter-spacing: 1px;
     }
 
     .grid-2 {
@@ -293,23 +431,33 @@
       align-items: stretch;
     }
 
-    .info-card {
-      border: 2px solid #2f2323;
-      border-radius: 16px;
-      padding: 20px;
-      background: rgba(10, 10, 10, 0.55);
+    .info-card,
+    .about-copy,
+    .future-card,
+    details {
+      background:
+        linear-gradient(180deg, rgba(11, 9, 9, 0.75), rgba(16, 10, 10, 0.88));
+      border: 2px solid var(--panel-border-soft);
+      border-radius: var(--radius-lg);
+      box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
+    }
+
+    .info-card,
+    .about-copy {
+      padding: 22px;
     }
 
     .cube-image-box,
     .image-box,
     .single-profile {
-      border: 2px solid #2f2323;
-      border-radius: 16px;
-      background: rgba(8, 8, 8, 0.8);
+      border: 2px solid var(--panel-border-soft);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(180deg, rgba(8, 8, 8, 0.88), rgba(14, 10, 10, 0.92));
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 280px;
+      min-height: 300px;
       overflow: hidden;
     }
 
@@ -317,9 +465,8 @@
     .image-box img,
     .screenshot img,
     .single-profile img {
-      display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
       object-fit: cover;
     }
 
@@ -330,17 +477,29 @@
     }
 
     .feature-tag {
-      border-left: 4px solid var(--lab-green);
-      padding-left: 14px;
-      color: #d8cdcd;
+      position: relative;
+      padding-left: 16px;
+      color: #e5d5d5;
+    }
+
+    .feature-tag::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--sludge);
+      box-shadow: 0 0 8px rgba(125,255,113,0.55);
     }
 
     .quote {
-      border-left: 3px solid var(--flesh-red);
+      border-left: 4px solid var(--flesh-red-bright);
       padding-left: 18px;
       margin-top: 18px;
       font-style: italic;
-      color: #e3d6d6;
+      color: #f3dddd;
     }
 
     .screenshot-grid,
@@ -352,15 +511,18 @@
 
     .screenshot,
     .future-card {
-      border: 2px solid #2f2323;
-      border-radius: 16px;
       overflow: hidden;
-      background: rgba(8, 8, 8, 0.68);
+      border-radius: var(--radius-lg);
     }
 
     .screenshot-copy,
     .future-copy {
       padding: 16px;
+    }
+
+    .screenshot-copy strong,
+    .future-card h3 {
+      color: #fff;
     }
 
     .about-grid {
@@ -370,31 +532,33 @@
       align-items: stretch;
     }
 
-    .about-copy {
-      border: 2px solid #2f2323;
-      border-radius: 16px;
-      padding: 20px;
-      background: rgba(8, 8, 8, 0.68);
-    }
-
-    .future-card h3 {
-      color: #fff;
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
-
     details {
-      border: 2px solid #2f2323;
-      border-radius: 14px;
       padding: 14px 16px;
-      background: rgba(8, 8, 8, 0.55);
       margin-bottom: 12px;
     }
 
     summary {
       cursor: pointer;
-      font-family: 'Orbitron', sans-serif;
       color: #fff;
+      list-style: none;
+      position: relative;
+      padding-right: 20px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: var(--sludge-soft);
+    }
+
+    details[open] summary::after {
+      content: "–";
     }
 
     details p {
@@ -404,14 +568,14 @@
 
     footer {
       text-align: center;
-      padding: 30px 20px 60px;
+      padding: 20px 20px 60px;
       font-size: 12px;
-      color: #8f8181;
+      color: var(--text-soft);
     }
 
     .footer-brand {
       font-family: 'Orbitron', sans-serif;
-      color: #d7c7c7;
+      color: #ead7d7;
       margin-bottom: 8px;
       letter-spacing: 1px;
     }
@@ -425,9 +589,25 @@
     }
 
     .footer-link {
-      color: #b8aaaa;
+      color: #cdbbbb;
       text-decoration: underline;
       text-underline-offset: 3px;
+    }
+
+    @media (max-width: 1080px) {
+      .topbar-inner {
+        flex-wrap: wrap;
+      }
+
+      .nav {
+        order: 3;
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .wallet-top-btn {
+        margin-left: auto;
+      }
     }
 
     @media (max-width: 920px) {
@@ -439,20 +619,68 @@
       }
 
       section {
-        padding: 24px;
+        padding: 42px 22px 24px;
       }
 
       .topbar-inner {
-        flex-direction: column;
         align-items: flex-start;
+      }
+
+      .topbar-left {
+        width: 100%;
+      }
+
+      .brand {
+        font-size: 0.92rem;
       }
 
       .nav {
         gap: 10px;
       }
 
+      .run-sequence-shell {
+        padding: 14px;
+      }
+
       .run-sequence-border {
-        background-size: contain;
+        border-radius: 20px;
+      }
+
+      .game-containment {
+        left: 8%;
+        right: 8%;
+        top: 10%;
+        bottom: 11%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 16px 14px 30px;
+      }
+
+      .topbar-inner {
+        padding: 12px 14px;
+      }
+
+      .wallet-top-btn {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .section-chip {
+        left: 16px;
+        right: 16px;
+        width: fit-content;
+        max-width: calc(100% - 32px);
       }
     }
   </style>
@@ -462,7 +690,6 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="topbar-left">
-        <button class="wallet-top-btn">Connect Wallet</button>
         <div class="brand">FLESH NUGGETS</div>
       </div>
 
@@ -475,26 +702,30 @@
         <a href="#future">Future</a>
         <a href="#faq">FAQ</a>
       </nav>
+
+      <button class="wallet-top-btn">Connect Wallet</button>
     </div>
   </div>
 
   <div class="container">
 
     <section id="hero">
+      <div class="section-chip">Lab Feed Active</div>
       <div class="hero-content">
-        <div class="eyebrow">MEMORY CUBE UPLINK // FUJI TESTNET MVP</div>
+        <div class="eyebrow">Memory Cube Uplink // Fuji Testnet MVP</div>
         <h1 class="glitch-title">FLESH NUGGETS</h1>
         <p class="hero-copy">
           Flesh Nuggets is a browser-playable top-down roguelike where disposable flesh bodies are sent into hostile lab runs by a persistent Memory Cube AI.
         </p>
         <div class="button-row">
-          <a href="#play" class="btn">ENTER THE VATS</a>
-          <a href="#cube" class="btn secondary">WHAT IS A MEMORY CUBE?</a>
+          <a href="#play" class="btn">Enter The Vats</a>
+          <a href="#cube" class="btn secondary">What Is A Memory Cube?</a>
         </div>
       </div>
     </section>
 
     <section id="play">
+      <div class="section-chip">Run Sequence // Playable Build</div>
       <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
       <p class="section-intro">
         The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Flesh bodies are expendable. The Memory Cube remains stable.
@@ -514,6 +745,7 @@
     </section>
 
     <section id="cube">
+      <div class="section-chip">Identity System // Pending Mint</div>
       <div class="grid-2">
         <div class="info-card">
           <h2 class="section-title">The Memory Cube</h2>
@@ -536,12 +768,13 @@
         </div>
 
         <div class="cube-image-box">
-          <img src="images/memory-cube.png" alt="Memory Cube artwork">
+          <img src="images/memory-cube.png" alt="Memory Cube artwork" />
         </div>
       </div>
     </section>
 
     <section id="lore">
+      <div class="section-chip">Biotech Log // Narrative Layer</div>
       <h2 class="section-title">Lab Overview</h2>
       <p class="section-intro">
         Flesh Nuggets is built around a strange biotech loop: unstable flesh, repeatable runs, and a core intelligence that keeps learning.
@@ -561,6 +794,7 @@
     </section>
 
     <section id="screens">
+      <div class="section-chip">Visual Feed // Current MVP</div>
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
         A quick look at the current MVP: gameplay loop, combat, menus, and the lab atmosphere.
@@ -568,25 +802,25 @@
 
       <div class="screenshot-grid">
         <div class="screenshot">
-          <img src="images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one">
+          <img src="images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one" />
           <div class="screenshot-copy">
-            <strong>Main Gameplay</strong><br>
+            <strong>Main Gameplay</strong><br />
             Core run flow, enemy pressure, and top-down action.
           </div>
         </div>
 
         <div class="screenshot">
-          <img src="images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two">
+          <img src="images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two" />
           <div class="screenshot-copy">
-            <strong>Lab Combat</strong><br>
+            <strong>Lab Combat</strong><br />
             Disposable bodies enter the run and fight to survive.
           </div>
         </div>
 
         <div class="screenshot">
-          <img src="images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three">
+          <img src="images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three" />
           <div class="screenshot-copy">
-            <strong>MVP Flow</strong><br>
+            <strong>MVP Flow</strong><br />
             Main menu, pause, death screen, and browser-ready loop.
           </div>
         </div>
@@ -594,6 +828,7 @@
     </section>
 
     <section id="about">
+      <div class="section-chip">Creator Log // Solo Build</div>
       <h2 class="section-title">About the Project</h2>
       <p class="section-intro">
         Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
@@ -601,7 +836,7 @@
 
       <div class="about-grid">
         <div class="single-profile">
-          <img src="images/mocket-profile.png" alt="Mocket profile image">
+          <img src="images/mocket-profile.png" alt="Mocket profile image" />
         </div>
 
         <div class="about-copy">
@@ -620,6 +855,7 @@
     </section>
 
     <section id="future">
+      <div class="section-chip">Expansion Path // Post MVP</div>
       <h2 class="section-title">Future Systems</h2>
       <p class="section-intro">
         These are planned beyond the current MVP and show where the Memory Cube system can expand next.
@@ -650,6 +886,7 @@
     </section>
 
     <section id="faq">
+      <div class="section-chip">Judge Notes // MVP Scope</div>
       <h2 class="section-title">FAQ / MVP Notes</h2>
 
       <details>
