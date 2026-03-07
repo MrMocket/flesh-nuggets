@@ -4,36 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FLESH NUGGETS | Memory Cube Uplink</title>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@600;700;900&display=swap" rel="stylesheet" />
+
   <style>
     :root {
-      --bg-main: #090606;
-      --bg-deep: #140909;
-      --bg-panel: rgba(18, 11, 11, 0.94);
-      --bg-panel-2: rgba(28, 16, 16, 0.92);
+      --bg-main: #080505;
+      --bg-deep: #140808;
+      --bg-panel: rgba(18, 10, 10, 0.95);
+      --bg-panel-2: rgba(29, 15, 15, 0.94);
 
-      --red-main: #b72929;
-      --red-dark: #6b1818;
-      --red-soft: #e06767;
+      --red-main: #c53232;
+      --red-dark: #731b1b;
+      --red-soft: #ff7b7b;
 
-      --green-main: #9dff6e;
-      --green-soft: #d4ffb2;
+      --green-main: #9fff70;
+      --green-soft: #d4ffb7;
+      --green-dim: #79cf55;
 
-      --text-main: #f2e7e7;
-      --text-dim: #cbb8b8;
-      --text-soft: #9f8e8e;
+      --text-main: #f5e9e9;
+      --text-dim: #cfbcbc;
+      --text-soft: #9e8c8c;
 
-      --panel-border: #5a3333;
-      --panel-border-soft: #3b2424;
+      --panel-border: #623636;
+      --panel-border-soft: #3e2525;
+      --panel-glow: rgba(197, 50, 50, 0.18);
 
-      --shadow-dark: 0 0 30px rgba(0, 0, 0, 0.34);
-      --shadow-red: 0 0 20px rgba(183, 41, 41, 0.16);
-
-      --radius-xl: 28px;
+      --radius-xl: 30px;
       --radius-lg: 20px;
       --radius-md: 14px;
+      --radius-pill: 999px;
 
       --max-width: 1240px;
+
+      --shadow-dark: 0 0 30px rgba(0, 0, 0, 0.34);
+      --shadow-red: 0 0 22px rgba(197, 50, 50, 0.15);
+
+      --ease-main: 220ms cubic-bezier(.2,.8,.2,1);
     }
 
     * {
@@ -44,19 +50,20 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 110px;
     }
 
     body {
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
-      font-family: 'Courier Prime', monospace;
+      font-family: "Courier Prime", monospace;
       line-height: 1.6;
       color: var(--text-main);
       background:
-        radial-gradient(circle at 15% 10%, rgba(255, 80, 80, 0.10), transparent 18%),
-        radial-gradient(circle at 80% 14%, rgba(157, 255, 110, 0.05), transparent 18%),
-        linear-gradient(to bottom, #060404, #120909 42%, #090606 100%);
+        radial-gradient(circle at 10% 10%, rgba(255, 90, 90, 0.12), transparent 18%),
+        radial-gradient(circle at 90% 12%, rgba(159, 255, 112, 0.05), transparent 18%),
+        linear-gradient(to bottom, #050303, #120808 40%, #090505 100%);
     }
 
     body::before {
@@ -68,8 +75,8 @@
       background:
         linear-gradient(rgba(255,255,255,0.014) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
-      background-size: 42px 42px;
-      opacity: 0.28;
+      background-size: 44px 44px;
+      opacity: 0.22;
     }
 
     body::after {
@@ -82,7 +89,7 @@
         linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.08) 50%),
         linear-gradient(90deg, rgba(255,0,0,0.018), rgba(0,255,0,0.008), rgba(0,0,255,0.018));
       background-size: 100% 4px, 3px 100%;
-      opacity: 0.30;
+      opacity: 0.28;
     }
 
     a {
@@ -95,8 +102,8 @@
       max-width: 100%;
     }
 
-    h1, h2, h3, .brand, .btn, .wallet-top-btn, summary, .section-chip, .interface-title, .interface-status {
-      font-family: 'Orbitron', sans-serif;
+    h1, h2, h3, .brand, .btn, .wallet-top-btn, .section-chip, .interface-title, .interface-status, summary {
+      font-family: "Orbitron", sans-serif;
       text-transform: uppercase;
       letter-spacing: 1.5px;
     }
@@ -107,7 +114,7 @@
       z-index: 50;
       background: rgba(10, 7, 7, 0.88);
       backdrop-filter: blur(10px);
-      border-bottom: 2px solid rgba(97, 34, 34, 0.72);
+      border-bottom: 2px solid rgba(99, 34, 34, 0.8);
       box-shadow: 0 8px 24px rgba(0,0,0,0.18);
     }
 
@@ -115,16 +122,10 @@
       max-width: var(--max-width);
       margin: 0 auto;
       padding: 14px 20px;
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 18px;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex: 0 0 auto;
+      gap: 22px;
     }
 
     .brand {
@@ -132,65 +133,109 @@
       font-weight: 900;
       font-size: 1rem;
       white-space: nowrap;
-      text-shadow: 3px 3px 0 rgba(107, 24, 24, 0.75);
+      text-shadow: 3px 3px 0 rgba(115, 27, 27, 0.8);
+      transition: transform var(--ease-main), text-shadow var(--ease-main);
+    }
+
+    .brand:hover {
+      transform: translateY(-1px);
+      text-shadow: 4px 4px 0 rgba(115, 27, 27, 0.9), 0 0 14px rgba(197, 50, 50, 0.22);
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: flex-start;
+      min-width: 0;
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
+      display: inline-flex;
       align-items: center;
-      margin-left: 24px;
+      flex-wrap: wrap;
+      gap: 18px;
       color: var(--text-dim);
       font-size: 13px;
+      padding: 10px 18px;
+      border: 2px solid #5a2e2e;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(180deg, rgba(24,13,13,0.9), rgba(13,8,8,0.92));
+      box-shadow: inset 0 0 16px rgba(255, 80, 80, 0.03);
     }
 
     .nav a {
       position: relative;
-      transition: 0.2s ease;
+      transition: color var(--ease-main), transform var(--ease-main);
     }
 
     .nav a::after {
       content: "";
       position: absolute;
       left: 0;
-      bottom: -4px;
+      bottom: -5px;
       width: 0;
       height: 2px;
+      border-radius: 2px;
       background: var(--green-main);
-      transition: width 0.2s ease;
+      box-shadow: 0 0 8px rgba(159,255,112,0.55);
+      transition: width var(--ease-main);
     }
 
     .nav a:hover {
       color: var(--green-soft);
+      transform: translateY(-1px);
     }
 
     .nav a:hover::after {
       width: 100%;
     }
 
+    .wallet-slot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 180px;
+    }
+
     .wallet-top-btn {
-      margin-left: auto;
-      background: linear-gradient(180deg, #e14141, #9a2121);
+      justify-self: end;
+      background: linear-gradient(180deg, #ea4a4a, #a02121);
       color: #fff;
-      border: 2px solid #ff7c7c;
-      border-radius: 999px;
-      padding: 11px 18px;
+      border: 2px solid #ff8989;
+      border-radius: var(--radius-pill);
+      padding: 11px 20px;
       font-size: 11px;
-      cursor: pointer;
       white-space: nowrap;
+      cursor: pointer;
+      transition:
+        transform var(--ease-main),
+        box-shadow var(--ease-main),
+        background var(--ease-main);
       box-shadow:
-        0 0 0 2px rgba(55, 14, 14, 0.95),
-        0 0 18px rgba(183, 41, 41, 0.18);
-      transition: 0.22s ease;
+        0 0 0 2px rgba(59, 16, 16, 0.95),
+        0 0 20px rgba(197, 50, 50, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-top-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.16) 50%, transparent 80%);
+      transform: translateX(-130%);
+      transition: transform 450ms ease;
     }
 
     .wallet-top-btn:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(180deg, #ff5252, #b72222);
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(180deg, #ff5a5a, #bc2525);
       box-shadow:
-        0 0 0 2px rgba(55, 14, 14, 1),
-        0 0 22px rgba(224, 103, 103, 0.28);
+        0 0 0 2px rgba(59, 16, 16, 1),
+        0 0 24px rgba(255, 123, 123, 0.25);
+    }
+
+    .wallet-top-btn:hover::before {
+      transform: translateX(130%);
     }
 
     .container {
@@ -208,10 +253,18 @@
       border-radius: var(--radius-xl);
       border: 3px solid var(--panel-border);
       background:
-        radial-gradient(circle at top right, rgba(224, 103, 103, 0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(255, 120, 120, 0.05), transparent 24%),
         linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
       box-shadow: var(--shadow-dark), var(--shadow-red);
       overflow: visible;
+      transition: transform 320ms ease, box-shadow 320ms ease, border-color 320ms ease;
+    }
+
+    section:hover {
+      border-color: #774040;
+      box-shadow:
+        0 0 30px rgba(0,0,0,0.34),
+        0 0 26px rgba(197, 50, 50, 0.18);
     }
 
     section::after {
@@ -226,19 +279,20 @@
     .section-chip {
       position: absolute;
       top: -14px;
-      left: 24px;
+      left: 20px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
       min-height: 28px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, #582525, #331616);
-      color: #ffdede;
-      border: 2px solid #754040;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
       font-size: 10px;
-      z-index: 2;
+      color: #ffe1e1;
+      background: linear-gradient(180deg, #5c2626, #341515);
+      border: 2px solid #7a4242;
       box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+      z-index: 2;
+      animation: chipPulse 2.8s ease-in-out infinite;
     }
 
     .section-chip::before {
@@ -247,8 +301,13 @@
       height: 8px;
       border-radius: 50%;
       background: var(--green-main);
-      box-shadow: 0 0 10px rgba(157,255,110,0.8);
+      box-shadow: 0 0 10px rgba(159,255,112,0.82);
       flex: 0 0 auto;
+    }
+
+    @keyframes chipPulse {
+      0%, 100% { box-shadow: 0 6px 14px rgba(0,0,0,0.22); }
+      50% { box-shadow: 0 6px 14px rgba(0,0,0,0.22), 0 0 14px rgba(159,255,112,0.12); }
     }
 
     #hero {
@@ -257,14 +316,20 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      border-color: #7b2b2b;
+      border-color: #7a2c2c;
       background:
-        linear-gradient(rgba(10, 7, 7, 0.62), rgba(10, 7, 7, 0.88)),
+        linear-gradient(rgba(10, 7, 7, 0.64), rgba(10, 7, 7, 0.88)),
         url("images/hero-bg.jpg") center/cover no-repeat;
     }
 
     .hero-content {
       max-width: 900px;
+      animation: heroFloat 5.5s ease-in-out infinite;
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
     }
 
     .eyebrow {
@@ -276,17 +341,17 @@
     }
 
     .glitch-title {
-      font-size: clamp(3.2rem, 8vw, 6.5rem);
+      font-size: clamp(3.1rem, 8vw, 6.4rem);
       line-height: 0.92;
       margin-bottom: 18px;
-      color: #fff7f7;
+      color: #fff8f8;
       text-shadow:
         4px 4px 0 var(--red-main),
-        0 0 16px rgba(183, 41, 41, 0.12);
+        0 0 16px rgba(197, 50, 50, 0.12);
     }
 
     .hero-copy {
-      max-width: 780px;
+      max-width: 790px;
       margin: 0 auto 24px;
       font-size: 18px;
       color: #eadede;
@@ -307,40 +372,71 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 50px;
       padding: 14px 24px;
       border-radius: 14px;
-      border: 2px solid #632121;
+      border: 2px solid #662323;
       color: #fff;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      transition: 0.22s ease;
-      background: linear-gradient(180deg, #cb3636, #8d1d1d);
+      transition:
+        transform var(--ease-main),
+        box-shadow var(--ease-main),
+        border-color var(--ease-main),
+        background var(--ease-main);
+      background: linear-gradient(180deg, #d73a3a, #951e1e);
       box-shadow:
-        0 6px 0 #4e1414,
-        0 10px 16px rgba(0,0,0,0.25);
+        0 6px 0 #531515,
+        0 10px 18px rgba(0,0,0,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 25%, rgba(255,255,255,0.13) 50%, transparent 75%);
+      transform: translateX(-130%);
+      transition: transform 450ms ease;
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      background: linear-gradient(180deg, #ef4b4b, #a92020);
+      transform: translateY(-3px) scale(1.015);
+      background: linear-gradient(180deg, #f24c4c, #aa2020);
+      box-shadow:
+        0 8px 0 #531515,
+        0 16px 26px rgba(0,0,0,0.28);
+    }
+
+    .btn:hover::before {
+      transform: translateX(130%);
     }
 
     .btn.secondary {
       color: var(--green-soft);
-      border-color: #4b4040;
-      background: linear-gradient(180deg, #1b1919, #121010);
+      border-color: #4b4141;
+      background: linear-gradient(180deg, #1b1919, #111010);
       box-shadow:
-        0 6px 0 #0a0909,
-        0 10px 16px rgba(0,0,0,0.25);
+        0 6px 0 #0b0a0a,
+        0 10px 18px rgba(0,0,0,0.25);
+    }
+
+    .btn.secondary:hover {
+      border-color: #5e5656;
+      background: linear-gradient(180deg, #232020, #141212);
+      box-shadow:
+        0 8px 0 #0b0a0a,
+        0 16px 26px rgba(0,0,0,0.28),
+        0 0 18px rgba(159,255,112,0.08);
     }
 
     .section-title {
       font-size: clamp(1.65rem, 3vw, 2.45rem);
       margin-bottom: 12px;
       color: #fff;
-      text-shadow: 2px 2px 0 rgba(107,24,24,0.55);
+      text-shadow: 2px 2px 0 rgba(115, 27, 27, 0.55);
     }
 
     .section-intro {
@@ -355,11 +451,19 @@
       border-radius: 26px;
       border: 2px solid #422626;
       background:
-        radial-gradient(circle at top, rgba(183, 41, 41, 0.08), transparent 28%),
+        radial-gradient(circle at top, rgba(197, 50, 50, 0.08), transparent 28%),
         linear-gradient(180deg, rgba(10, 8, 8, 0.98), rgba(6, 5, 5, 0.98));
       box-shadow:
         inset 0 0 26px rgba(0,0,0,0.58),
         0 0 20px rgba(0,0,0,0.18);
+      transition: transform 260ms ease, box-shadow 260ms ease;
+    }
+
+    .run-sequence-shell:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 0 26px rgba(0,0,0,0.58),
+        0 0 24px rgba(197, 50, 50, 0.12);
     }
 
     .game-interface {
@@ -372,6 +476,16 @@
       box-shadow:
         0 0 0 2px rgba(87, 45, 45, 0.85),
         0 0 25px rgba(0,0,0,0.35);
+      position: relative;
+    }
+
+    .game-interface::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(159,255,112,0.04), transparent 26%);
+      mix-blend-mode: screen;
     }
 
     .interface-title,
@@ -383,22 +497,27 @@
       padding: 12px 20px;
       text-align: center;
       color: var(--green-soft);
-      font-size: clamp(0.9rem, 1.7vw, 1.55rem);
-      letter-spacing: 2px;
-      background:
-        linear-gradient(180deg, #121818, #0d1111);
       position: relative;
+      background: linear-gradient(180deg, #111919, #0b1111);
+      text-shadow: 0 0 10px rgba(159,255,112,0.16);
     }
 
     .interface-title {
-      border-bottom: 2px solid #2f3c2f;
-      box-shadow: inset 0 -8px 18px rgba(157,255,110,0.05);
+      font-size: clamp(0.95rem, 1.8vw, 1.55rem);
+      border-bottom: 2px solid #2d3c2d;
+      box-shadow: inset 0 -8px 18px rgba(159,255,112,0.05);
+      animation: terminalGlow 3s ease-in-out infinite;
     }
 
     .interface-status {
-      border-top: 2px solid #2f3c2f;
-      box-shadow: inset 0 8px 18px rgba(157,255,110,0.05);
       font-size: clamp(0.72rem, 1.1vw, 1rem);
+      border-top: 2px solid #2d3c2d;
+      box-shadow: inset 0 8px 18px rgba(159,255,112,0.05);
+    }
+
+    @keyframes terminalGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(159,255,112,0.16); }
+      50% { text-shadow: 0 0 14px rgba(159,255,112,0.28); }
     }
 
     .interface-title::before,
@@ -409,8 +528,8 @@
       width: 14%;
       max-width: 120px;
       height: 2px;
-      background:
-        linear-gradient(to right, transparent, var(--green-main), transparent);
+      border-radius: 2px;
+      background: linear-gradient(to right, transparent, var(--green-main), transparent);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -428,10 +547,9 @@
     }
 
     .game-frame {
-      background: #000;
-      padding: 0;
-      aspect-ratio: 16 / 9;
       width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
       position: relative;
       overflow: hidden;
     }
@@ -445,11 +563,12 @@
     }
 
     .status-line {
-      margin-top: 16px;
+      margin-top: 14px;
       text-align: center;
-      color: var(--green-soft);
-      font-size: 13px;
+      color: var(--green-dim);
+      font-size: 12px;
       letter-spacing: 1px;
+      opacity: 0.92;
     }
 
     .grid-2 {
@@ -462,12 +581,27 @@
     .info-card,
     .about-copy,
     .future-card,
-    details {
-      background:
-        linear-gradient(180deg, rgba(11, 9, 9, 0.76), rgba(17, 10, 10, 0.90));
+    details,
+    .single-profile {
+      background: linear-gradient(180deg, rgba(11, 9, 9, 0.76), rgba(17, 10, 10, 0.90));
       border: 2px solid var(--panel-border-soft);
       border-radius: var(--radius-lg);
       box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
+      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+    }
+
+    .info-card:hover,
+    .about-copy:hover,
+    .future-card:hover,
+    details:hover,
+    .single-profile:hover,
+    .screenshot:hover {
+      transform: translateY(-4px);
+      border-color: #5d3535;
+      box-shadow:
+        inset 0 0 18px rgba(255, 80, 80, 0.02),
+        0 14px 28px rgba(0,0,0,0.16),
+        0 0 18px rgba(197, 50, 50, 0.08);
     }
 
     .info-card,
@@ -476,17 +610,23 @@
     }
 
     .cube-image-box,
-    .image-box,
-    .single-profile {
+    .image-box {
       min-height: 300px;
       border-radius: var(--radius-lg);
       border: 2px solid var(--panel-border-soft);
-      background:
-        linear-gradient(180deg, rgba(8,8,8,0.9), rgba(13,10,10,0.95));
+      background: linear-gradient(180deg, rgba(8,8,8,0.9), rgba(13,10,10,0.95));
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+    }
+
+    .cube-image-box:hover,
+    .image-box:hover {
+      transform: translateY(-4px);
+      border-color: #5d3535;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.16), 0 0 18px rgba(197, 50, 50, 0.08);
     }
 
     .cube-image-box img,
@@ -496,6 +636,14 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 360ms ease;
+    }
+
+    .cube-image-box:hover img,
+    .image-box:hover img,
+    .screenshot:hover img,
+    .single-profile:hover img {
+      transform: scale(1.03);
     }
 
     .feature-list {
@@ -508,6 +656,12 @@
       position: relative;
       padding-left: 16px;
       color: #e8d7d7;
+      transition: transform var(--ease-main), color var(--ease-main);
+    }
+
+    .feature-tag:hover {
+      transform: translateX(4px);
+      color: #f2e4e4;
     }
 
     .feature-tag::before {
@@ -519,14 +673,14 @@
       height: 7px;
       border-radius: 50%;
       background: var(--green-main);
-      box-shadow: 0 0 8px rgba(157,255,110,0.65);
+      box-shadow: 0 0 8px rgba(159,255,112,0.65);
     }
 
     .quote {
       margin-top: 18px;
       padding-left: 18px;
       border-left: 4px solid var(--red-main);
-      color: #f1dddd;
+      color: #f3dfdf;
       font-style: italic;
     }
 
@@ -556,8 +710,21 @@
     .about-grid {
       display: grid;
       gap: 24px;
-      grid-template-columns: 1fr 1.15fr;
-      align-items: stretch;
+      grid-template-columns: 320px 1fr;
+      align-items: start;
+    }
+
+    .single-profile {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      min-height: unset;
+      overflow: hidden;
+      align-self: start;
+      justify-self: start;
+      background: linear-gradient(180deg, rgba(8,8,8,0.92), rgba(13,10,10,0.97));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     details {
@@ -571,6 +738,12 @@
       list-style: none;
       position: relative;
       padding-right: 24px;
+      transition: color var(--ease-main), transform var(--ease-main);
+    }
+
+    summary:hover {
+      color: var(--green-soft);
+      transform: translateX(2px);
     }
 
     summary::-webkit-details-marker {
@@ -583,10 +756,12 @@
       right: 0;
       top: 0;
       color: var(--green-soft);
+      transition: transform var(--ease-main);
     }
 
     details[open] summary::after {
       content: "–";
+      transform: rotate(180deg);
     }
 
     details p {
@@ -603,8 +778,8 @@
 
     .footer-brand {
       margin-bottom: 8px;
-      color: #e7d5d5;
-      font-family: 'Orbitron', sans-serif;
+      color: #e8d5d5;
+      font-family: "Orbitron", sans-serif;
       letter-spacing: 1px;
     }
 
@@ -620,25 +795,32 @@
       color: #ccbaba;
       text-decoration: underline;
       text-underline-offset: 3px;
+      transition: color var(--ease-main), transform var(--ease-main);
     }
 
     .footer-link:hover {
       color: var(--green-soft);
+      transform: translateY(-1px);
     }
 
     @media (max-width: 1080px) {
       .topbar-inner {
-        flex-wrap: wrap;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .nav-wrap {
+        justify-content: flex-start;
+      }
+
+      .wallet-slot {
+        justify-content: flex-start;
+        min-width: 0;
       }
 
       .nav {
-        order: 3;
-        width: 100%;
-        margin-left: 0;
-      }
-
-      .wallet-top-btn {
-        margin-left: auto;
+        width: fit-content;
+        max-width: 100%;
       }
     }
 
@@ -654,8 +836,8 @@
         padding: 42px 22px 24px;
       }
 
-      .game-interface {
-        border-radius: 18px;
+      .single-profile {
+        max-width: 320px;
       }
 
       .interface-title,
@@ -681,9 +863,14 @@
         padding: 12px 14px;
       }
 
+      .nav {
+        gap: 12px;
+        padding: 10px 14px;
+      }
+
+      .wallet-slot,
       .wallet-top-btn {
         width: 100%;
-        margin-left: 0;
       }
 
       .button-row {
@@ -706,27 +893,39 @@
         display: none;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
 
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="topbar-left">
-        <div class="brand">FLESH NUGGETS</div>
+      <div class="brand">FLESH NUGGETS</div>
+
+      <div class="nav-wrap">
+        <nav class="nav">
+          <a href="#play">Play</a>
+          <a href="#cube">Memory Cube</a>
+          <a href="#lore">Lore</a>
+          <a href="#screens">Screens</a>
+          <a href="#about">About</a>
+          <a href="#future">Future</a>
+          <a href="#faq">FAQ</a>
+        </nav>
       </div>
 
-      <nav class="nav">
-        <a href="#play">Play</a>
-        <a href="#cube">Memory Cube</a>
-        <a href="#lore">Lore</a>
-        <a href="#screens">Screens</a>
-        <a href="#about">About</a>
-        <a href="#future">Future</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-
-      <button class="wallet-top-btn">Connect Wallet</button>
+      <div class="wallet-slot">
+        <button class="wallet-top-btn">Connect Wallet</button>
+      </div>
     </div>
   </div>
 
@@ -736,7 +935,7 @@
       <div class="section-chip">Lab Feed Active</div>
       <div class="hero-content">
         <div class="eyebrow">Memory Cube Uplink // Fuji Testnet MVP</div>
-        <h1 class="glitch-title">FLESH NUGGETS</h1>
+        <h1 class="glitch-title">Flesh Nuggets</h1>
         <p class="hero-copy">
           Flesh Nuggets is a browser-playable top-down roguelike where disposable flesh bodies are sent into hostile lab runs by a persistent Memory Cube AI.
         </p>
@@ -759,7 +958,12 @@
           <div class="interface-title">Memory Cube Interface</div>
 
           <div class="game-frame">
-            <iframe src="game/index.html" title="Flesh Nuggets Game"></iframe>
+            <iframe
+              src="game/index.html"
+              title="Flesh Nuggets Game"
+              loading="eager"
+              allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
+            ></iframe>
           </div>
 
           <div class="interface-status">System Status: Experiment In Progress</div>
@@ -767,7 +971,7 @@
       </div>
 
       <p class="status-line">
-        SYSTEM STATUS: BODY DISPOSABLE // MEMORY STABLE // BEST PLAYED ON DESKTOP
+        BODY DISPOSABLE // MEMORY STABLE
       </p>
     </section>
 
@@ -828,7 +1032,7 @@
       </p>
 
       <div class="screenshot-grid">
-        <div class="screenshot">
+        <div class="screenshot info-card" style="padding:0;">
           <img src="images/screenshot-1.png" alt="Flesh Nuggets gameplay screenshot one" />
           <div class="screenshot-copy">
             <strong>Main Gameplay</strong><br />
@@ -836,7 +1040,7 @@
           </div>
         </div>
 
-        <div class="screenshot">
+        <div class="screenshot info-card" style="padding:0;">
           <img src="images/screenshot-2.png" alt="Flesh Nuggets gameplay screenshot two" />
           <div class="screenshot-copy">
             <strong>Lab Combat</strong><br />
@@ -844,7 +1048,7 @@
           </div>
         </div>
 
-        <div class="screenshot">
+        <div class="screenshot info-card" style="padding:0;">
           <img src="images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three" />
           <div class="screenshot-copy">
             <strong>MVP Flow</strong><br />
@@ -856,7 +1060,7 @@
 
     <section id="about">
       <div class="section-chip">Creator Log // Solo Build</div>
-      <h2 class="section-title">About the Project</h2>
+      <h2 class="section-title">About The Project</h2>
       <p class="section-intro">
         Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
       </p>
@@ -867,7 +1071,7 @@
         </div>
 
         <div class="about-copy">
-          <h3>Built by Mocket</h3>
+          <h3>Built By Mocket</h3>
           <p>
             Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall MVP push.
           </p>
@@ -946,14 +1150,31 @@
     </section>
 
     <footer>
-      <div class="footer-brand">PROJECT BY MOCKETDESIGNS</div>
-      <div>© 2026 FLESH NUGGETS // MEMORY CUBE LAB SYSTEM // FUJI TESTNET MVP</div>
+      <div class="footer-brand">Project By MocketDesigns</div>
+      <div>© 2026 Flesh Nuggets // Memory Cube Lab System // Fuji Testnet MVP</div>
       <div class="footer-links">
-        <a class="footer-link" href="https://x.com/mrmocket" target="_blank" rel="noopener noreferrer">Follow on X / Twitter</a>
+        <a class="footer-link" href="https://x.com/mrmocket" target="_blank" rel="noopener noreferrer">Follow On X / Twitter</a>
       </div>
     </footer>
 
   </div>
 
+  <script>
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
+    window.addEventListener("load", function () {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+      setTimeout(function () {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      }, 60);
+    });
+
+    window.addEventListener("pageshow", function () {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
+  </script>
 </body>
 </html>
