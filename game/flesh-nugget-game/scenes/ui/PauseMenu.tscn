@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://xy338l7kwdka"]
+
+[ext_resource type="FontFile" uid="uid://by1kol50p463" path="res://fonts/Oxanium-SemiBold.ttf" id="1_vb6pq"]
+
+[node name="PauseMenu" type="PopupPanel" unique_id=1302449063]
+process_mode = 2
+oversampling_override = 1.0
+size = Vector2i(236, 199)
+visible = true
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=461364512]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 232.0
+offset_bottom = 195.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Content" unique_id=1837585293]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_vb6pq")
+theme_override_font_sizes/font_size = 73
+text = "PAUSE"
+horizontal_alignment = 1
+
+[node name="MainMenuButton" type="Button" parent="Content" unique_id=580507982]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_vb6pq")
+theme_override_font_sizes/font_size = 20
+text = "Main Menu"
+
+[node name="ResumeButton" type="Button" parent="Content" unique_id=899971104]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_vb6pq")
+theme_override_font_sizes/font_size = 20
+text = "Resume"
+
+[node name="RestartButton" type="Button" parent="Content" unique_id=1122042829]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_vb6pq")
+theme_override_font_sizes/font_size = 20
+text = "Restart"

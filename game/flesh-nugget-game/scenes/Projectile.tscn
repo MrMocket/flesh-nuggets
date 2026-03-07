@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dymyasc4vvui1"]
+
+[ext_resource type="Script" uid="uid://c7wtok4bhiqw0" path="res://scripts/weapons/Projectile.gd" id="1_vihyi"]
+[ext_resource type="Texture2D" uid="uid://b45h8frryqvs8" path="res://assets/weapons/BulletShadow.png" id="2_du7tx"]
+[ext_resource type="Texture2D" uid="uid://blamkl40k3mqy" path="res://assets/weapons/projectile1/PNG_0001.png" id="3_a7ljl"]
+[ext_resource type="Texture2D" uid="uid://d4kakrp4jbjvf" path="res://assets/weapons/projectile1/PNG_0003.png" id="5_b6x4e"]
+[ext_resource type="Texture2D" uid="uid://cc5y4lt8ffetx" path="res://assets/weapons/projectile1/PNG_0005.png" id="7_su8my"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q3m7n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_a7ljl")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.6,
+"texture": ExtResource("5_b6x4e")
+}, {
+"duration": 0.3,
+"texture": ExtResource("7_su8my")
+}],
+"loop": false,
+"name": &"impact",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vihyi"]
+radius = 13.0
+
+[node name="Projectile" type="Area2D" unique_id=1705667010]
+collision_layer = 32
+collision_mask = 17
+script = ExtResource("1_vihyi")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1112732453]
+position = Vector2(-1.1920929e-07, 35)
+scale = Vector2(0.040771484, 0.040771484)
+texture = ExtResource("2_du7tx")
+
+[node name="Visual" type="Node2D" parent="." unique_id=842243308]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=1225315573]
+position = Vector2(-2.000001, -2.000001)
+scale = Vector2(0.0678125, 0.0678125)
+sprite_frames = SubResource("SpriteFrames_q3m7n")
+animation = &"fly"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=418254847]
+scale = Vector2(0.9, 0.9)
+shape = SubResource("CircleShape2D_vihyi")
+debug_color = Color(0.39215687, 1, 0.69803923, 0.64705884)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

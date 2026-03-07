@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://dv4pn7y0ej7om"]
+
+[ext_resource type="Script" uid="uid://ckra553vdn5w5" path="res://scripts/ui/DeathScreen.gd" id="1_pli0r"]
+[ext_resource type="Texture2D" uid="uid://c1020gm2hkgeq" path="res://assets/Menu/ChatGPT Image Feb 26, 2026, 09_28_11 AM.png" id="2_xj0m4"]
+[ext_resource type="Texture2D" uid="uid://dk615eqh83neq" path="res://assets/placeholder/ChatGPT Image Feb 26, 2026, 09_31_16 AM.png" id="3_mwkx4"]
+[ext_resource type="FontFile" uid="uid://by1kol50p463" path="res://fonts/Oxanium-SemiBold.ttf" id="3_tmfs4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xj0m4"]
+
+[node name="DeathScreen" type="Control" unique_id=52214364]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pli0r")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=400977131]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xj0m4")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=924712786]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_mwkx4")
+expand_mode = 1
+
+[node name="RedOverlay" type="ColorRect" parent="." unique_id=1663743213]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.654902, 0.09803922, 0.1254902, 0.19215687)
+
+[node name="CenterPanel" type="Panel" parent="." unique_id=1034423950]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xj0m4")
+
+[node name="Content" type="VBoxContainer" parent="CenterPanel" unique_id=2078892837]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -64.0
+offset_right = 78.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label (you died)" type="Label" parent="CenterPanel/Content" unique_id=2060858080]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_tmfs4")
+theme_override_font_sizes/font_size = 73
+text = "YOU DIED"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="CenterPanel/Content" unique_id=701283484]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/paragraph_spacing = 4
+theme_override_fonts/font = ExtResource("3_tmfs4")
+text = "
+Flesh Collected: 0
+Rooms Cleared: 0
+"
+horizontal_alignment = 1
+
+[node name="MintButton" type="Button" parent="CenterPanel/Content" unique_id=1684366026]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_tmfs4")
+theme_override_font_sizes/font_size = 20
+text = "Mint Memory Cube"
+
+[node name="RetryButton" type="Button" parent="CenterPanel/Content" unique_id=1282793070]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_tmfs4")
+theme_override_font_sizes/font_size = 20
+text = "Retry"
+
+[node name="MenuButton" type="Button" parent="CenterPanel/Content" unique_id=1010908663]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_tmfs4")
+theme_override_font_sizes/font_size = 20
+text = "Main Menu"

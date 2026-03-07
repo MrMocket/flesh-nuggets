@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://dyhh51i4hypl"]
+
+[ext_resource type="Texture2D" uid="uid://b4hq1op2se2lq" path="res://assets/drops/fleshnuggetidle/FleshNugget1.png" id="1_1t8t8"]
+[ext_resource type="Script" uid="uid://ptu7mr1i52wu" path="res://scripts/drops/NuggetDrop.gd" id="1_ueyml"]
+[ext_resource type="Texture2D" uid="uid://dv4p1jl6v4ujf" path="res://assets/drops/fleshnuggetidle/FleshNugget2.png" id="2_ueyml"]
+[ext_resource type="Texture2D" uid="uid://dbat5gnhmadoi" path="res://assets/drops/fleshnuggetidle/FleshNugget3.png" id="3_d5wbq"]
+[ext_resource type="Texture2D" uid="uid://b1jmdkwu8vsev" path="res://assets/drops/fleshnuggetidle/FleshNugget4.png" id="4_lb74i"]
+[ext_resource type="Texture2D" uid="uid://bhbirp11unds4" path="res://assets/drops/FleshNugget.png" id="5_3j0qp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hh4hv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1t8t8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ueyml")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_d5wbq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_lb74i")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_3j0qp")
+}],
+"loop": false,
+"name": &"pickup",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_3j0qp")
+}],
+"loop": false,
+"name": &"spawn",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j5u5d"]
+size = Vector2(33, 20)
+
+[node name="NuggetDrop" type="Area2D" unique_id=1575149896]
+collision_layer = 256
+collision_mask = 2
+script = ExtResource("1_ueyml")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1327086935]
+position = Vector2(-1, 5)
+scale = Vector2(0.125, 0.125)
+sprite_frames = SubResource("SpriteFrames_hh4hv")
+animation = &"pickup"
+speed_scale = 1.2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1780895907]
+light_mask = 2
+visibility_layer = 256
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_j5u5d")

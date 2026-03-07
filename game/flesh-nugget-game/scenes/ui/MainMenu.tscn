@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://byqmfwdyme6ce"]
+
+[ext_resource type="Texture2D" uid="uid://c1020gm2hkgeq" path="res://assets/Menu/ChatGPT Image Feb 26, 2026, 09_28_11 AM.png" id="1_6jbdy"]
+[ext_resource type="Script" uid="uid://nkm7s8hxtgv" path="res://scripts/ui/MainMenu.gd" id="1_iwbf0"]
+[ext_resource type="FontFile" uid="uid://by1kol50p463" path="res://fonts/Oxanium-SemiBold.ttf" id="2_iwbf0"]
+[ext_resource type="Texture2D" uid="uid://dk615eqh83neq" path="res://assets/placeholder/ChatGPT Image Feb 26, 2026, 09_31_16 AM.png" id="3_2ysvc"]
+
+[node name="MainMenu" type="Control" unique_id=353329735]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iwbf0")
+
+[node name="BG" type="TextureRect" parent="." unique_id=1675536142]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_6jbdy")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect2" type="TextureRect" parent="BG" unique_id=1358539219]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_2ysvc")
+expand_mode = 1
+
+[node name="WalletButton" type="Button" parent="." unique_id=371002363]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -263.0
+offset_top = 59.0
+offset_right = -125.0
+offset_bottom = 90.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 18
+text = "Connect Wallet"
+
+[node name="Label" type="Label" parent="." unique_id=593056188]
+layout_mode = 0
+offset_left = 351.0
+offset_top = 151.0
+offset_right = 929.0
+offset_bottom = 226.0
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 74
+text = "FLESH NUGGETS"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1332010392]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -76.0
+offset_top = -50.5
+offset_right = 76.0
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="StartRunButton" type="Button" parent="VBoxContainer" unique_id=234847160]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 20
+text = "Start Run"
+
+[node name="LabButton" type="Button" parent="VBoxContainer" unique_id=1664776267]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Lab (Coming Soon)"
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer" unique_id=1543277215]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 20
+disabled = true
+text = "Settings (Soon)"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=1707845117]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_iwbf0")
+theme_override_font_sizes/font_size = 20
+text = "Quit"

@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://c21ybrbwl00eq"]
+
+[ext_resource type="Script" uid="uid://bslfnwd7xbhhc" path="res://scripts/main.gd" id="1_0bbpv"]
+[ext_resource type="PackedScene" uid="uid://b1opjg1vlqy16" path="res://scenes/Player.tscn" id="1_elqb8"]
+[ext_resource type="PackedScene" uid="uid://c4adbo2cphvfb" path="res://scenes/HUD.tscn" id="2_rvslj"]
+[ext_resource type="Script" uid="uid://bwblet875ea1g" path="res://scripts/core/RunFlow.gd" id="5_c01mt"]
+[ext_resource type="PackedScene" uid="uid://xy338l7kwdka" path="res://scenes/ui/PauseMenu.tscn" id="5_nxtc6"]
+[ext_resource type="PackedScene" uid="uid://d14kj025hke8j" path="res://scenes/levels/room_l_1_1.tscn" id="5_vcsgt"]
+[ext_resource type="Script" uid="uid://dkch1ryw60jgt" path="res://scripts/ui/pause_menu.gd" id="6_nxtc6"]
+
+[node name="Main" type="Node2D" unique_id=1999105900 groups=["hud"]]
+y_sort_enabled = true
+script = ExtResource("1_0bbpv")
+
+[node name="World" type="Node2D" parent="." unique_id=1712217197]
+
+[node name="Drops" type="Node2D" parent="World" unique_id=1201974758 groups=["drops"]]
+z_index = 15
+
+[node name="Decals" type="Node2D" parent="World" unique_id=83015931 groups=["decals"]]
+z_index = 5
+
+[node name="Room_L1_1" parent="World" unique_id=736369620 instance=ExtResource("5_vcsgt")]
+position = Vector2(0, -3)
+
+[node name="Actors" type="Node2D" parent="." unique_id=671195584]
+z_index = 20
+
+[node name="Player" parent="Actors" unique_id=1794226032 instance=ExtResource("1_elqb8")]
+position = Vector2(929.99994, 448.99997)
+
+[node name="Enemies" type="Node2D" parent="Actors" unique_id=1611402032 groups=["Enemies", "enemies_root"]]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=750495234]
+layer = 0
+
+[node name="HUD" parent="UI" unique_id=1321197801 instance=ExtResource("2_rvslj")]
+
+[node name="PauseUI" type="CanvasLayer" parent="." unique_id=1336618709]
+process_mode = 2
+layer = 10
+
+[node name="DarkOverlay" type="ColorRect" parent="PauseUI" unique_id=390207859]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.47058824)
+
+[node name="PauseMenu" parent="PauseUI" unique_id=1635872653 instance=ExtResource("5_nxtc6")]
+script = ExtResource("6_nxtc6")
+
+[node name="RunFlow" type="Node" parent="." unique_id=765455515]
+script = ExtResource("5_c01mt")

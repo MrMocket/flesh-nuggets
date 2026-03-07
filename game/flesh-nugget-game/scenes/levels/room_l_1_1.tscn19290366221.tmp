@@ -1,0 +1,259 @@
+[gd_scene format=3 uid="uid://d14kj025hke8j"]
+
+[ext_resource type="Texture2D" uid="uid://cvgenkok105gx" path="res://assets/level designs/level1/background.png" id="1_64g3h"]
+[ext_resource type="Script" uid="uid://dol3xbjuowyyg" path="res://scripts/levels/RoomController.gd" id="1_wcy51"]
+[ext_resource type="PackedScene" uid="uid://gtnrluhaqnga" path="res://scenes/EnemyBasicMelee.tscn" id="2_84e5n"]
+[ext_resource type="Texture2D" uid="uid://b0kt6djv87g6r" path="res://assets/level designs/level1/OverlayOilStains.png" id="2_wcy51"]
+[ext_resource type="Texture2D" uid="uid://blsr8heuytbbe" path="res://assets/level designs/level1/OverlayLightBloodStains.png" id="3_84e5n"]
+[ext_resource type="Texture2D" uid="uid://cycjcg5m7s0g1" path="res://assets/level designs/level1/OverlayWindows.png" id="4_u4p2i"]
+[ext_resource type="Texture2D" uid="uid://ddupdc1k0f1w7" path="res://assets/level designs/level1/OverlayWires.png" id="5_3vmoi"]
+[ext_resource type="Texture2D" uid="uid://beslvka4nto3d" path="res://assets/level designs/level1/OverlayFlesh.png" id="6_8uon6"]
+[ext_resource type="Texture2D" uid="uid://bpcrfcjoxxaft" path="res://assets/level designs/level1/DoorTop.png" id="7_1o3qx"]
+[ext_resource type="Texture2D" uid="uid://coorvibhc7g4d" path="res://assets/level designs/level1/LightRedTop.png" id="8_8wbho"]
+[ext_resource type="Texture2D" uid="uid://4n8f6533v6td" path="res://assets/level designs/level1/LightGreenTop.png" id="9_ehci7"]
+[ext_resource type="Texture2D" uid="uid://b1uveys0w68l5" path="res://assets/level designs/level1/DoorLeft.png" id="10_n5pxe"]
+[ext_resource type="Texture2D" uid="uid://d1i5trar2s3nw" path="res://assets/level designs/level1/LightRedLeft.png" id="11_tqx60"]
+[ext_resource type="Texture2D" uid="uid://cq27sla87tq6v" path="res://assets/level designs/level1/LightGreenLeft.png" id="12_gu7qs"]
+[ext_resource type="Texture2D" uid="uid://bdjlcmr20t17n" path="res://assets/level designs/level1/DoorRight.png" id="13_1pvoh"]
+[ext_resource type="Texture2D" uid="uid://clghof55yeu3d" path="res://assets/level designs/level1/LightRedRight.png" id="14_3ftg6"]
+[ext_resource type="Texture2D" uid="uid://bllpc7o68x12s" path="res://assets/level designs/level1/LightGreenRight.png" id="15_3ilyd"]
+[ext_resource type="Texture2D" uid="uid://b7h557gffsmfq" path="res://assets/level designs/level1/LightRedBottom.png" id="16_lsu0v"]
+[ext_resource type="Texture2D" uid="uid://yqfrn6gotpnr" path="res://assets/level designs/level1/LightGreenBottom.png" id="17_l8km4"]
+[ext_resource type="Texture2D" uid="uid://ck5dsrnc2wc0g" path="res://assets/level designs/level1/FramesDoors.png" id="18_8qna5"]
+[ext_resource type="Texture2D" uid="uid://bl4v00htpnmpb" path="res://assets/level designs/level1/LowerWallDoor.png" id="19_8u4r5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eui4f"]
+size = Vector2(132, 112.6875)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tkkth"]
+size = Vector2(252, 52)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hy4dw"]
+size = Vector2(254, 30)
+
+[node name="Room_L1_1" type="Node2D" unique_id=736369620]
+y_sort_enabled = true
+script = ExtResource("1_wcy51")
+enemy_scene = ExtResource("2_84e5n")
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1448229332]
+layer = 200
+
+[node name="UI" type="Control" parent="TransitionLayer" unique_id=1461400198]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Fade" type="ColorRect" parent="TransitionLayer/UI" unique_id=329626371]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="RoomArt" type="Node2D" parent="." unique_id=32555154]
+
+[node name="Background" type="Sprite2D" parent="RoomArt" unique_id=602426690]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("1_64g3h")
+centered = false
+
+[node name="Decals" type="Node2D" parent="." unique_id=1462818084]
+
+[node name="Decal_1" type="Sprite2D" parent="Decals" unique_id=1923081863]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("2_wcy51")
+centered = false
+
+[node name="Decal_2" type="Sprite2D" parent="Decals" unique_id=1467985823]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("3_84e5n")
+centered = false
+
+[node name="Decal_3" type="Sprite2D" parent="Decals" unique_id=854825060]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("4_u4p2i")
+centered = false
+
+[node name="Decal_4" type="Sprite2D" parent="Decals" unique_id=794995226]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("5_3vmoi")
+centered = false
+
+[node name="Decal_5" type="Sprite2D" parent="Decals" unique_id=671841160]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("6_8uon6")
+centered = false
+
+[node name="Gameplay" type="Node2D" parent="." unique_id=1200451613]
+
+[node name="SpawnPoints" type="Node2D" parent="Gameplay" unique_id=1968135053]
+
+[node name="SpawnTop" type="Marker2D" parent="Gameplay/SpawnPoints" unique_id=937187429]
+position = Vector2(641, 178)
+
+[node name="SpawnLeft" type="Marker2D" parent="Gameplay/SpawnPoints" unique_id=2030560511]
+position = Vector2(232, 336)
+
+[node name="SpawnRight" type="Marker2D" parent="Gameplay/SpawnPoints" unique_id=738298310]
+position = Vector2(1048, 349)
+
+[node name="SpawnBottom" type="Marker2D" parent="Gameplay/SpawnPoints" unique_id=9080907]
+position = Vector2(640, 647)
+
+[node name="Walls" type="StaticBody2D" parent="Gameplay" unique_id=120604848]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Gameplay/Walls" unique_id=1572865371]
+polygon = PackedVector2Array(239, 122, 575, 122, 574, 79, 706, 80, 706, 122, 1049, 122, 1111.2839, 310.15607, 1150, 295, 1165, 339, 1127.7273, 359.8307, 1240, 699, 766, 699, 766, 751, 1409, 775, 1068, -13, 228, -14, -79, 744, 513, 754, 514, 699, 52, 699, 157, 370, 95, 351, 118, 291, 177, 311)
+
+[node name="Doors" type="Node2D" parent="Gameplay" unique_id=597568244]
+
+[node name="Top" type="Node2D" parent="Gameplay/Doors" unique_id=1902454291]
+
+[node name="DoorSlab" type="Sprite2D" parent="Gameplay/Doors/Top" unique_id=1561912811]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("7_1o3qx")
+centered = false
+
+[node name="LightRed" type="Sprite2D" parent="Gameplay/Doors/Top" unique_id=1867024187]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("8_8wbho")
+centered = false
+
+[node name="LightGreen" type="Sprite2D" parent="Gameplay/Doors/Top" unique_id=520823271]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("9_ehci7")
+centered = false
+
+[node name="Trigger" type="Area2D" parent="Gameplay/Doors/Top" unique_id=589357343]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Top/Trigger" unique_id=1796601791]
+position = Vector2(641, 42)
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Blocker" type="StaticBody2D" parent="Gameplay/Doors/Top" unique_id=1256309349]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Top/Blocker" unique_id=1876766439]
+position = Vector2(641, 65.65625)
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Left" type="Node2D" parent="Gameplay/Doors" unique_id=541340372]
+
+[node name="DoorSlab" type="Sprite2D" parent="Gameplay/Doors/Left" unique_id=1120406019]
+position = Vector2(641, 360)
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("10_n5pxe")
+
+[node name="LightRed" type="Sprite2D" parent="Gameplay/Doors/Left" unique_id=754605103]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("11_tqx60")
+centered = false
+
+[node name="LightGreen" type="Sprite2D" parent="Gameplay/Doors/Left" unique_id=660310801]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("12_gu7qs")
+centered = false
+
+[node name="Trigger" type="Area2D" parent="Gameplay/Doors/Left" unique_id=2119764067]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Left/Trigger" unique_id=503943843]
+position = Vector2(104.99998, 311)
+rotation = 0.33161256
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Blocker" type="StaticBody2D" parent="Gameplay/Doors/Left" unique_id=65518955]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Left/Blocker" unique_id=1072628158]
+position = Vector2(106.99999, 312)
+rotation = 0.33161256
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Right" type="Node2D" parent="Gameplay/Doors" unique_id=1425040681]
+
+[node name="DoorSlab" type="Sprite2D" parent="Gameplay/Doors/Right" unique_id=1196862389]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("13_1pvoh")
+centered = false
+
+[node name="LightRed" type="Sprite2D" parent="Gameplay/Doors/Right" unique_id=1025012036]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("14_3ftg6")
+centered = false
+
+[node name="LightGreen" type="Sprite2D" parent="Gameplay/Doors/Right" unique_id=1618396271]
+z_index = 10
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("15_3ilyd")
+centered = false
+
+[node name="Trigger" type="Area2D" parent="Gameplay/Doors/Right" unique_id=241748917]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Right/Trigger" unique_id=968372256]
+position = Vector2(1182, 311.00003)
+rotation = -0.33161256
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Blocker" type="StaticBody2D" parent="Gameplay/Doors/Right" unique_id=943283681]
+position = Vector2(873, 32)
+rotation = -0.33161256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Right/Blocker" unique_id=1883448435]
+position = Vector2(199.70389, 369.12787)
+shape = SubResource("RectangleShape2D_eui4f")
+
+[node name="Bottom" type="Node2D" parent="Gameplay/Doors" unique_id=1561094291]
+
+[node name="LightRed" type="Sprite2D" parent="Gameplay/Doors/Bottom" unique_id=67147778]
+z_index = 105
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("16_lsu0v")
+centered = false
+
+[node name="LightGreen" type="Sprite2D" parent="Gameplay/Doors/Bottom" unique_id=129973863]
+z_index = 105
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("17_l8km4")
+centered = false
+
+[node name="Trigger" type="Area2D" parent="Gameplay/Doors/Bottom" unique_id=1198272955]
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Bottom/Trigger" unique_id=147531188]
+position = Vector2(639, 724)
+shape = SubResource("RectangleShape2D_tkkth")
+
+[node name="Blocker" type="StaticBody2D" parent="Gameplay/Doors/Bottom" unique_id=1857029514]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Bottom/Blocker" unique_id=1950360205]
+position = Vector2(640, 722)
+shape = SubResource("RectangleShape2D_hy4dw")
+
+[node name="DoorFrames" type="Node2D" parent="." unique_id=1882011798]
+
+[node name="DoorFrames" type="Sprite2D" parent="DoorFrames" unique_id=1020300288]
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("18_8qna5")
+centered = false
+
+[node name="Foreground" type="Node2D" parent="." unique_id=363871564]
+
+[node name="BottomFrame" type="Sprite2D" parent="Foreground" unique_id=493455993]
+z_index = 101
+position = Vector2(0, 1)
+scale = Vector2(0.667, 0.667)
+texture = ExtResource("19_8u4r5")
+centered = false
