@@ -1,5 +1,7 @@
 extends CharacterBody2D
+
 signal ammo_changed(current: int, max: int)
+
 # ----------------------------
 # Movement feel
 # ----------------------------
@@ -26,16 +28,20 @@ signal ammo_changed(current: int, max: int)
 @export var muzzle_distance := 20.0 # unused now, safe to keep
 
 # Fixed muzzle position relative to player (tweak in Inspector)
-@export var muzzle_local_offset := Vector2(10, 8)  # +Y is down
+@export var muzzle_local_offset := Vector2(10, 8) # +Y is down
 
 # ----------------------------
 # Animation timing
 # ----------------------------
-@export var shoot_anim_hold := 0.12          # how long "shoot" stays visible
-@export var reload_anim_delay := 0.10        # delay before showing "reload" anim
+@export var shoot_anim_hold := 0.12
+@export var reload_anim_delay := 0.10
 
 var aim_dir := Vector2.RIGHT
 var facing_right := true
+
+# Keyboard aim support
+var keyboard_aim: Vector2 = Vector2.RIGHT
+var using_keyboard_aim := false
 
 var ammo := 0
 var reloading := false
@@ -62,14 +68,15 @@ var reload_anim_speed_restore := 1.0
 
 var flash_token := 0
 
-# Dash placeholder (we’ll wire this later)
+# Dash placeholder
 var is_dashing := false
 
-# nugget counter
+# Nugget counter
 var nuggets: int = 0
 
 func add_nuggets(amount: int) -> void:
 	nuggets += amount
+
 
 func _ready() -> void:
 	ammo = mag_size
@@ -91,7 +98,9 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	# tick animation timers
+	# ----------------------------
+	# Tick animation timers
+	# ----------------------------
 	if shoot_anim_timer > 0.0:
 		shoot_anim_timer = max(0.0, shoot_anim_timer - delta)
 
@@ -115,10 +124,23 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	# ----------------------------
-	# 2) Aim direction from mouse
+	# 2) Aim input (arrow keys + mouse fallback)
 	# ----------------------------
-	var mouse_pos := get_global_mouse_position()
-	aim_dir = (mouse_pos - global_position).normalized()
+	var arrow_input := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+
+	if arrow_input != Vector2.ZERO:
+		keyboard_aim = arrow_input.normalized()
+		using_keyboard_aim = true
+	else:
+		using_keyboard_aim = false
+
+	if using_keyboard_aim:
+		aim_dir = keyboard_aim
+	else:
+		var mouse_pos := get_global_mouse_position()
+		var mouse_dir := mouse_pos - global_position
+		if mouse_dir.length() > 0.001:
+			aim_dir = mouse_dir.normalized()
 
 	update_facing(aim_dir)
 
@@ -130,25 +152,36 @@ func _physics_process(delta: float) -> void:
 	muzzle.global_position = global_position + off
 
 	# ----------------------------
-	# 3) Manual reload (R) — only if action exists + mag not full
+	# 3) Manual reload (R)
 	# ----------------------------
 	if InputMap.has_action("reload") and Input.is_action_just_pressed("reload"):
-		start_reload(false) # false = don't force delay; uses normal delay settings
+		start_reload(false)
 
 	# ----------------------------
-	# 4) Shooting (hold to fire)
+	# 4) Dash placeholder (Space)
+	# ----------------------------
+	if InputMap.has_action("dash") and Input.is_action_just_pressed("dash"):
+		try_dash()
+
+	# ----------------------------
+	# 5) Shooting
+	# Mouse = normal fire
+	# Arrow aim = auto-fire while held
 	# ----------------------------
 	if Input.is_action_pressed("attack"):
 		try_attack()
+	elif using_keyboard_aim and arrow_input != Vector2.ZERO:
+		try_attack()
+
 
 	# ----------------------------
-	# 5) Animation priority
+	# 6) Animation priority
 	# ----------------------------
 	_update_animation()
 
 
 func _update_animation() -> void:
-	# Highest priority: dash (later)
+	# Highest priority: dash
 	if is_dashing:
 		_set_anim_speed_default()
 		play_anim("dash")
@@ -198,7 +231,7 @@ func try_attack() -> void:
 
 	# Auto reload when empty
 	if ammo <= 0:
-		start_reload(true) # true = use delay after last shot feel
+		start_reload(true)
 		return
 
 	attack()
@@ -211,7 +244,7 @@ func attack() -> void:
 	ammo -= 1
 	emit_signal("ammo_changed", ammo, mag_size)
 	can_attack = false
-	
+
 	shot_timer.wait_time = shot_cooldown
 	shot_timer.start()
 
@@ -220,23 +253,21 @@ func attack() -> void:
 	p.global_position = muzzle.global_position
 	p.call("fire", aim_dir, self)
 
-	# keep shoot visible for a moment (or sustained while holding fire)
+	# Keep shoot visible for a moment
 	shoot_anim_timer = shoot_anim_hold
 
-	# If we just emptied the mag, start reload immediately (but delay the reload anim)
+	# If we just emptied the mag, start reload immediately
 	if ammo <= 0:
 		start_reload(true)
 
 
 # force_delay:
 # - true  = use reload_anim_delay so the last shot reads
-# - false = still uses delay, but this flag exists if you want to change behavior later
+# - false = same for now, left here for future control
 func start_reload(force_delay: bool) -> void:
-	# Don't restart reload if already reloading
 	if reloading:
 		return
 
-	# Only reload if mag is not full
 	if ammo >= mag_size:
 		return
 
@@ -246,9 +277,13 @@ func start_reload(force_delay: bool) -> void:
 	reload_timer.wait_time = reload_time
 	reload_timer.start()
 
-	# Delay the reload animation so the shot reads first
-	# (same behaviour for auto + manual reload)
 	reload_anim_delay_timer = reload_anim_delay if force_delay else reload_anim_delay
+
+
+func try_dash() -> void:
+	# Reserved for future unlock
+	# Add real dash logic later when progression unlock is live
+	pass
 
 
 func _on_shot_timer_finished() -> void:
@@ -269,6 +304,7 @@ func _on_reload_finished() -> void:
 func play_anim(anim_name: String) -> void:
 	if current_anim == anim_name:
 		return
+
 	current_anim = anim_name
 
 	if anim != null and anim.sprite_frames != null and anim.sprite_frames.has_animation(anim_name):
@@ -297,7 +333,8 @@ func _fit_reload_anim_to_reload_time() -> void:
 	if desired <= 0.01:
 		desired = 0.01
 
-	# Duration = frames / (fps * speed_scale) -> speed_scale = frames / (fps * desired)
+	# Duration = frames / (fps * speed_scale)
+	# speed_scale = frames / (fps * desired)
 	anim.speed_scale = float(frames) / (fps * desired)
 
 
