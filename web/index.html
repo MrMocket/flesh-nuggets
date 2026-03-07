@@ -20,8 +20,6 @@
       --green-main: #a5ff76;
       --green-soft: #d9ffbd;
       --green-dim: #7bd455;
-      --green-deep: #163816;
-      --green-dark: #0f2510;
 
       --text-main: #f4e9e9;
       --text-dim: #ccbaba;
@@ -317,7 +315,7 @@
       background: linear-gradient(180deg, #5d2727, #361616);
       border: 2px solid #7b4444;
       box-shadow: 0 6px 14px rgba(0,0,0,0.22);
-      z-index: 4;
+      z-index: 5;
       animation: chipPulse 2.8s ease-in-out infinite;
     }
 
@@ -361,7 +359,7 @@
     .hero-content {
       max-width: 980px;
       position: relative;
-      z-index: 1;
+      z-index: 2;
       animation: heroFloat 5.5s ease-in-out infinite;
     }
 
@@ -378,29 +376,10 @@
       text-transform: uppercase;
     }
 
-    .hero-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
+    .hero-title-wrap {
+      position: relative;
+      display: inline-block;
       margin-bottom: 16px;
-    }
-
-    .hero-title-nugget {
-      width: 72px;
-      height: auto;
-      animation: nuggetFloat 3s ease-in-out infinite;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22));
-    }
-
-    .hero-title-nugget.right {
-      animation-delay: 0.35s;
-    }
-
-    @keyframes nuggetFloat {
-      0%, 100% { transform: translateY(0px) rotate(-2deg); }
-      50% { transform: translateY(-6px) rotate(2deg); }
     }
 
     .glitch-title {
@@ -411,6 +390,34 @@
         4px 4px 0 var(--red-main),
         0 0 16px rgba(202,53,53,0.12);
       position: relative;
+      z-index: 2;
+    }
+
+    .hero-title-nugget {
+      position: absolute;
+      width: 62px;
+      height: auto;
+      z-index: 3;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.24));
+      animation: nuggetFloat 3s ease-in-out infinite;
+    }
+
+    .hero-title-nugget.left {
+      left: -78px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .hero-title-nugget.right {
+      right: -78px;
+      top: 50%;
+      transform: translateY(-50%);
+      animation-delay: 0.35s;
+    }
+
+    @keyframes nuggetFloat {
+      0%, 100% { margin-top: 0px; }
+      50% { margin-top: -6px; }
     }
 
     .hero-copy {
@@ -946,9 +953,11 @@
 
     footer {
       text-align: center;
-      padding: 18px 20px 60px;
+      padding: 24px 20px 74px;
       font-size: 12px;
       color: var(--text-soft);
+      position: relative;
+      overflow: visible;
     }
 
     .footer-brand {
@@ -956,6 +965,13 @@
       color: #e8d5d5;
       font-family: "Orbitron", sans-serif;
       letter-spacing: 1px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-meta {
+      position: relative;
+      z-index: 2;
     }
 
     .footer-links {
@@ -964,6 +980,8 @@
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
 
     .footer-link {
@@ -978,64 +996,99 @@
       transform: translateY(-1px);
     }
 
-    .lab-creature,
-    .blood-accent {
+    .footer-blood {
       position: absolute;
-      pointer-events: none;
+      left: 50%;
+      bottom: -8px;
+      transform: translateX(-50%);
+      width: 150px;
+      opacity: 0.9;
       z-index: 1;
+      pointer-events: none;
+      animation: driftY 4s ease-in-out infinite;
+    }
+
+    .footer-nugget {
+      position: absolute;
+      bottom: 8px;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+      animation: nuggetFloat 3.4s ease-in-out infinite;
+    }
+
+    .footer-nugget.left {
+      left: calc(50% - 180px);
+    }
+
+    .footer-nugget.right {
+      right: calc(50% - 180px);
+      animation-delay: 0.4s;
+    }
+
+    .floating-asset {
+      position: absolute;
+      pointer-events: auto;
+      z-index: 2;
       filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
+      animation: driftY 5s ease-in-out infinite;
+      will-change: transform;
     }
 
-    .lab-creature {
-      width: 120px;
-      opacity: 0.95;
-      animation: creatureFloat 5s ease-in-out infinite;
+    .floating-asset img {
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      transform: translate(var(--tx, 0px), var(--ty, 0px)) scaleX(var(--flip, 1));
+      transition: transform 120ms ease;
+      will-change: transform;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
-    .blood-accent {
-      width: 170px;
-      opacity: 0.78;
-      animation: creatureFloat 6s ease-in-out infinite;
+    @keyframes driftY {
+      0%, 100% { margin-top: 0px; }
+      50% { margin-top: -10px; }
     }
 
-    @keyframes creatureFloat {
-      0%, 100% { transform: translateY(0px) rotate(-2deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
+    .asset-hero-left {
+      top: 68px;
+      left: 34px;
+      width: 118px;
+      z-index: 1;
     }
 
-    .creature-hero {
+    .asset-hero-right {
       top: 34px;
       right: 28px;
       width: 130px;
       z-index: 1;
     }
 
-    .creature-play {
-      bottom: -18px;
-      left: -16px;
+    .asset-play-left {
+      bottom: -22px;
+      left: -14px;
       width: 120px;
       z-index: 2;
     }
 
-    .creature-future {
-      top: -22px;
-      right: -8px;
+    .asset-future-right {
+      top: -18px;
+      right: -6px;
       width: 122px;
       z-index: 2;
     }
 
-    .blood-screens {
-      bottom: -26px;
+    .asset-blood-screens {
+      position: absolute;
+      bottom: -24px;
       right: 10%;
+      width: 170px;
       z-index: 1;
-    }
-
-    .nugget-cube {
-      top: 18px;
-      left: 18px;
-      width: 74px;
-      z-index: 2;
-      opacity: 0.96;
+      pointer-events: none;
+      opacity: 0.78;
+      animation: driftY 6s ease-in-out infinite;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
     }
 
     @media (max-width: 1080px) {
@@ -1091,15 +1144,31 @@
         min-height: 52vh;
       }
 
-      .creature-hero,
-      .creature-play,
-      .creature-future,
-      .blood-screens {
-        width: 90px;
+      .hero-title-nugget {
+        width: 48px;
       }
 
-      .hero-title-nugget {
-        width: 56px;
+      .hero-title-nugget.left {
+        left: -56px;
+      }
+
+      .hero-title-nugget.right {
+        right: -56px;
+      }
+
+      .asset-hero-left,
+      .asset-hero-right,
+      .asset-play-left,
+      .asset-future-right {
+        width: 92px;
+      }
+
+      .footer-nugget.left {
+        left: calc(50% - 120px);
+      }
+
+      .footer-nugget.right {
+        right: calc(50% - 120px);
       }
     }
 
@@ -1147,17 +1216,43 @@
         height: 40px;
       }
 
-      .hero-title-row {
-        gap: 10px;
-      }
-
       .hero-title-nugget {
-        width: 42px;
+        width: 40px;
       }
 
-      .lab-creature,
-      .blood-accent {
-        opacity: 0.72;
+      .hero-title-nugget.left,
+      .hero-title-nugget.right {
+        top: auto;
+        bottom: -36px;
+      }
+
+      .hero-title-nugget.left {
+        left: calc(50% - 64px);
+      }
+
+      .hero-title-nugget.right {
+        right: calc(50% - 64px);
+      }
+
+      .floating-asset,
+      .asset-blood-screens {
+        opacity: 0.74;
+      }
+
+      .footer-nugget {
+        width: 48px;
+      }
+
+      .footer-nugget.left {
+        left: calc(50% - 92px);
+      }
+
+      .footer-nugget.right {
+        right: calc(50% - 92px);
+      }
+
+      .footer-blood {
+        width: 120px;
       }
     }
 
@@ -1200,11 +1295,19 @@
 
     <section id="hero">
       <div class="section-chip">Lab Feed Active</div>
-      <img class="lab-creature creature-hero" src="images/cube-drool.png" alt="" />
+
+      <div class="floating-asset asset-hero-left interactive-asset">
+        <img src="images/cube-smug.png" alt="" />
+      </div>
+
+      <div class="floating-asset asset-hero-right interactive-asset">
+        <img src="images/cube-drool.png" alt="" style="--flip:-1;" />
+      </div>
+
       <div class="hero-content">
         <div class="eyebrow">Memory Cube Uplink // Fuji Testnet MVP</div>
 
-        <div class="hero-title-row">
+        <div class="hero-title-wrap">
           <img class="hero-title-nugget left" src="images/flesh-nugget.png" alt="" />
           <h1 class="glitch-title">Flesh Nuggets</h1>
           <img class="hero-title-nugget right" src="images/flesh-nugget.png" alt="" />
@@ -1223,7 +1326,10 @@
 
     <section id="play">
       <div class="section-chip">Playable Browser Build</div>
-      <img class="lab-creature creature-play" src="images/enemy-angry.png" alt="" />
+
+      <div class="floating-asset asset-play-left interactive-asset">
+        <img src="images/enemy-angry.png" alt="" />
+      </div>
 
       <h2 class="section-title">[ RUN_SEQUENCE.EXE ]</h2>
       <p class="section-intro">
@@ -1304,7 +1410,7 @@
 
     <section id="screens">
       <div class="section-chip">Visual Feed // Current MVP</div>
-      <img class="blood-accent blood-screens" src="images/blood-splat.png" alt="" />
+      <img class="asset-blood-screens" src="images/blood-splat.png" alt="" />
 
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
@@ -1353,8 +1459,6 @@
 
     <section id="about">
       <div class="section-chip">Creator Log // Solo Build</div>
-      <img class="lab-creature nugget-cube" src="images/cube-smug.png" alt="" />
-
       <h2 class="section-title">About The Project</h2>
       <p class="section-intro">
         Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
@@ -1382,7 +1486,10 @@
 
     <section id="future">
       <div class="section-chip">Expansion Path // Post MVP</div>
-      <img class="lab-creature creature-future" src="images/cube-smug.png" alt="" />
+
+      <div class="floating-asset asset-future-right interactive-asset">
+        <img src="images/cube-smug.png" alt="" style="--flip:-1;" />
+      </div>
 
       <h2 class="section-title">Future Systems</h2>
       <p class="section-intro">
@@ -1456,8 +1563,12 @@
     </section>
 
     <footer>
+      <img class="footer-nugget left" src="images/flesh-nugget.png" alt="" />
+      <img class="footer-nugget right" src="images/flesh-nugget.png" alt="" />
+      <img class="footer-blood" src="images/blood-splat.png" alt="" />
+
       <div class="footer-brand">Project By MocketDesigns</div>
-      <div>© 2026 Flesh Nuggets // Memory Cube Lab System // Fuji Testnet MVP</div>
+      <div class="footer-meta">© 2026 Flesh Nuggets // Memory Cube Lab System // Fuji Testnet MVP</div>
       <div class="footer-links">
         <a class="footer-link" href="https://x.com/mrmocket" target="_blank" rel="noopener noreferrer">Follow On X / Twitter</a>
       </div>
@@ -1549,6 +1660,30 @@
         updateCarousel(0);
         startAuto();
       }
+
+      const interactiveAssets = document.querySelectorAll(".interactive-asset");
+
+      interactiveAssets.forEach((asset) => {
+        const inner = asset.querySelector("img");
+        if (!inner) return;
+
+        asset.addEventListener("mousemove", (e) => {
+          const rect = asset.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const px = ((x / rect.width) - 0.5) * 14;
+          const py = ((y / rect.height) - 0.5) * 14;
+
+          inner.style.setProperty("--tx", `${px}px`);
+          inner.style.setProperty("--ty", `${py}px`);
+        });
+
+        asset.addEventListener("mouseleave", () => {
+          inner.style.setProperty("--tx", "0px");
+          inner.style.setProperty("--ty", "0px");
+        });
+      });
     })();
   </script>
 </body>
