@@ -1259,6 +1259,13 @@
       .footer-nugget.right {
         right: calc(50% - 150px);
       }
+
+      .mini-grid-4,
+      .mini-grid-3,
+      .controls-grid,
+      .loop-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 640px) {
@@ -1538,15 +1545,6 @@
 
     .upgrade-note strong {
       color: #fff;
-    }
-
-    @media (max-width: 920px) {
-      .mini-grid-4,
-      .mini-grid-3,
-      .controls-grid,
-      .loop-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
