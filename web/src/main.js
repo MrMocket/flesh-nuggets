@@ -13,7 +13,7 @@ async function updateWalletButton() {
     connectBtn.textContent = shortAddress(address)
     connectBtn.title = address
   } else {
-    connectBtn.textContent = "Connect Wallet"
+    connectBtn.textContent = "CONNECT WALLET"
     connectBtn.title = "Connect wallet"
   }
 }
@@ -25,18 +25,17 @@ if (connectBtn) {
 
     let tries = 0
     const poll = setInterval(async () => {
-      tries++
+      tries += 1
       await updateWalletButton()
 
-      if (tries >= 20) clearInterval(poll)
+      if (tries >= 20) {
+        clearInterval(poll)
+      }
     }, 500)
   })
 }
 
-if (window.ethereum && window.ethereum.on) {
-  window.ethereum.on("accountsChanged", updateWalletButton)
-  window.ethereum.on("chainChanged", updateWalletButton)
-}
+setInterval(updateWalletButton, 1000)
 
 updateWalletButton()
 
