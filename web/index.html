@@ -334,6 +334,10 @@
       50% { box-shadow: 0 6px 14px rgba(0,0,0,0.22), 0 0 14px rgba(165,255,118,0.10); }
     }
 
+    .hero {
+      padding: 80px 24px 70px;
+    }
+
     #hero {
       min-height: 56vh;
       display: flex;
@@ -387,7 +391,7 @@
     }
 
     .glitch-title {
-      font-size: clamp(3rem, 7vw, 6rem);
+      font-size: 3.7rem;
       line-height: 0.92;
       color: #fff8f8;
       text-shadow:
@@ -397,6 +401,7 @@
       z-index: 2;
       animation: titleGlitch 4.5s infinite;
       text-align: center;
+      margin-bottom: 14px;
     }
 
     .glitch-title .line {
@@ -466,7 +471,7 @@
 
     .hero-copy {
       max-width: 790px;
-      margin: 0 auto 22px;
+      margin: 0 auto 20px;
       font-size: 18px;
       color: #eadede;
     }
@@ -475,7 +480,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
-      margin-top: 22px;
     }
 
     #hero .button-row {
@@ -768,7 +772,7 @@
     .single-profile,
     .carousel-shell {
       background: linear-gradient(180deg, rgba(11, 9, 9, 0.76), rgba(17, 10, 10, 0.90));
-      border: 2px solid var(--panel-border-soft);
+      border: 2px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-lg);
       box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
       transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
@@ -798,7 +802,7 @@
     .image-box {
       min-height: 300px;
       border-radius: var(--radius-lg);
-      border: 2px solid var(--panel-border-soft);
+      border: 2px solid rgba(255,255,255,0.06);
       background: linear-gradient(180deg, rgba(8,8,8,0.9), rgba(13,10,10,0.95));
       display: flex;
       align-items: center;
@@ -1242,7 +1246,7 @@
     .skill-tree-preview {
       margin-top: 24px;
       padding: 24px 22px 20px;
-      border: 2px solid var(--panel-border-soft);
+      border: 2px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-lg);
       background:
         radial-gradient(circle at top, rgba(165,255,118,0.05), transparent 26%),
@@ -1402,7 +1406,7 @@
     .records-panel {
       margin-top: 24px;
       padding: 22px 18px 18px;
-      border: 2px solid var(--panel-border-soft);
+      border: 2px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-lg);
       background:
         radial-gradient(circle at top, rgba(165,255,118,0.04), transparent 24%),
@@ -1681,6 +1685,14 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
+    }
+
+    .tournament-disclaimer {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+      line-height: 1.4;
     }
 
     .avax-badge {
@@ -1998,7 +2010,7 @@
     .upgrade-card,
     .loop-step {
       background: linear-gradient(180deg, rgba(11, 9, 9, 0.78), rgba(17, 10, 10, 0.92));
-      border: 2px solid var(--panel-border-soft);
+      border: 2px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-lg);
       padding: 18px;
       box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
@@ -2162,7 +2174,7 @@
 
   <div class="container">
 
-    <section id="hero">
+    <section id="hero" class="hero">
       <div class="section-chip">Lab Feed Active</div>
 
       <div class="floating-asset asset-hero-right interactive-asset">
@@ -2543,13 +2555,24 @@
             </div>
 
             <p class="tournament-copy">
-              Future tournament mode would allow players to sign up with a wallet transaction, enter a timed challenge run, and compete using their Memory Cube identity.
+              Tournament events run as scheduled challenge weeks.<br><br>
+              Players enter with a ticket transaction and compete for the highest Nugget run during the event window.<br><br>
+              90% of all entry tickets form the prize pool.<br>
+              10% supports the host treasury and event operations.<br><br>
+              Top players receive AVAX rewards, exclusive skins, and special Memory Cube cosmetics.<br><br>
+              <small>Events typically run for 7 days and occur monthly.</small>
             </p>
 
             <div class="tournament-actions">
               <button class="btn" type="button">Sign Up — 1 AVAX</button>
               <button class="btn secondary" type="button">View Rules</button>
             </div>
+
+            <p class="tournament-disclaimer">
+              Entry ticket grants access to the tournament event.<br>
+              Skill-based competition. No wagering mechanics.<br>
+              Full rules and eligibility will appear before each event.
+            </p>
           </div>
         </div>
 
