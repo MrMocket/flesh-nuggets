@@ -706,6 +706,40 @@
       pointer-events: auto;
     }
 
+    .mobile-game-lock {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.90));
+      backdrop-filter: blur(4px);
+    }
+
+    .mobile-game-lock-card {
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+      padding: 18px 16px;
+      border-radius: 18px;
+      border: 2px solid #5f3636;
+      background: linear-gradient(180deg, rgba(17,10,10,0.96), rgba(10,8,8,0.98));
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.35),
+        0 0 20px rgba(202,53,53,0.08);
+    }
+
+    .mobile-game-lock-card h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 1rem;
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
     .game-frame-overlay {
       position: absolute;
       inset: 0;
@@ -1904,8 +1938,6 @@
       box-shadow: 0 0 10px rgba(232,65,93,0.18);
     }
 
-    /* responsive */
-
     @media (max-width: 1080px) {
       .topbar-inner {
         grid-template-columns: 1fr;
@@ -2165,6 +2197,18 @@
         max-height: none;
       }
 
+      .mobile-game-lock {
+        display: flex;
+      }
+
+      .game-frame iframe {
+        pointer-events: none !important;
+      }
+
+      .game-frame-overlay {
+        display: none !important;
+      }
+
       .game-overlay-card {
         padding: 18px;
       }
@@ -2334,12 +2378,10 @@
               </div>
             </div>
 
-                     <div class="game-frame" id="gameFrameWrap">
+            <div class="game-frame" id="gameFrameWrap">
               <div class="mobile-game-lock">
                 <div class="mobile-game-lock-card">
-                  <h3>Desktop Play Only</h3>
-                  <p>Flesh Nuggets is currently playable on desktop browser.</p>
-                  <p>Mobile support is coming soon.</p>
+                  <h3>Coming Soon To Mobile</h3>
                 </div>
               </div>
 
