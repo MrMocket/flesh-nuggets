@@ -1613,18 +1613,18 @@
     }
 
     .tournament-card {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
       border-radius: 16px;
       border: 1px solid #4f3131;
       background: rgba(16, 10, 10, 0.82);
-      padding: 18px;
+      padding: 22px;
     }
 
     .tournament-title {
       color: #fff;
       font-family: "Orbitron", sans-serif;
-      font-size: 1.05rem;
+      font-size: 1.18rem;
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -1635,7 +1635,7 @@
       color: var(--green-soft);
       font-size: 12px;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .tournament-grid {
@@ -1667,13 +1667,38 @@
       font-size: 0.95rem;
     }
 
-    .tournament-copy {
+    .tournament-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .tournament-info-card {
+      border-radius: 14px;
+      border: 1px solid #4a2f2f;
+      background: linear-gradient(180deg, rgba(12,8,8,0.92), rgba(18,10,10,0.92));
+      padding: 14px 16px;
+    }
+
+    .tournament-info-title {
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .tournament-list {
+      margin: 0;
+      padding-left: 18px;
       color: var(--text-dim);
-      text-align: center;
-      margin-bottom: 18px;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
+    }
+
+    .tournament-list li {
+      margin-bottom: 6px;
     }
 
     .tournament-actions {
@@ -1681,12 +1706,74 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
+      margin-top: 6px;
     }
 
-    .tournament-disclaimer {
-      margin-top: 12px;
-      font-size: 11px;
+    .tournament-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tournament-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .tournament-info-card {
+      background: rgba(16, 10, 10, 0.82);
+      border: 1px solid #4a2f2f;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .tournament-info-title {
+      color: var(--green-main);
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .tournament-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tournament-list li {
       color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 6px;
+      position: relative;
+      padding-left: 16px;
+    }
+
+    .tournament-list li:before {
+      content: "•";
+      color: var(--green-main);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .tournament-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .tournament-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-soft);
       text-align: center;
       line-height: 1.4;
     }
@@ -1720,6 +1807,10 @@
     @media (max-width: 920px) {
       .tournament-grid {
         grid-template-columns: 1fr 1fr;
+      }
+
+      .tournament-info-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -2036,6 +2127,17 @@
       letter-spacing: 1.4px;
     }
 
+    .game-loop-title {
+      margin-top: 26px;
+      margin-bottom: 16px;
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      text-shadow: 2px 2px 0 rgba(116, 27, 27, 0.45);
+    }
+
     .mini-card h3,
     .system-card h3,
     .upgrade-card h3,
@@ -2312,7 +2414,7 @@
         <strong>Reserved Input:</strong> Space is reserved for Dash as a future outside-of-run Lab skill tree unlock stored by the Memory Cube between runs.
       </div>
 
-      <div class="mini-label" style="margin-top: 22px; margin-bottom: 10px;">Game Loop</div>
+      <h3 class="game-loop-title">Game Loop</h3>
       <div class="loop-grid">
         <div class="loop-step">
           <div class="loop-step-number">01</div>
@@ -2546,32 +2648,49 @@
               </div>
             </div>
 
-            <p class="tournament-copy">
-              <strong>HOW IT WORKS</strong><br><br>
-              • Players enter using a tournament ticket transaction<br>
-              • Compete for the highest Nugget run during the event window<br><br>
-              <strong>PRIZE POOL</strong><br><br>
-              • 90% of all entry tickets go to the prize pool<br>
-              • 10% supports host treasury and event operations<br><br>
-              <strong>REWARDS</strong><br><br>
-              • AVAX prize payouts<br>
-              • Exclusive skins<br>
-              • Special Memory Cube cosmetics<br><br>
-              <strong>EVENT FORMAT</strong><br><br>
-              • Weekly challenge runs<br>
-              • Events last 7 days<br>
-              • Hosted monthly
-            </p>
+            <div class="tournament-info-grid">
+              <div class="tournament-info-card">
+                <div class="tournament-info-title">How It Works</div>
+                <ul class="tournament-list">
+                  <li>Enter using a tournament ticket transaction</li>
+                  <li>Compete for the highest Nugget run during the event window</li>
+                </ul>
+              </div>
+
+              <div class="tournament-info-card">
+                <div class="tournament-info-title">Prize Pool</div>
+                <ul class="tournament-list">
+                  <li>90% of entry tickets go to the prize pool</li>
+                  <li>10% supports host treasury and event operations</li>
+                </ul>
+              </div>
+
+              <div class="tournament-info-card">
+                <div class="tournament-info-title">Rewards</div>
+                <ul class="tournament-list">
+                  <li>AVAX prize payouts</li>
+                  <li>Exclusive skins</li>
+                  <li>Memory Cube cosmetics</li>
+                </ul>
+              </div>
+
+              <div class="tournament-info-card">
+                <div class="tournament-info-title">Event Format</div>
+                <ul class="tournament-list">
+                  <li>Weekly challenge runs</li>
+                  <li>Events last 7 days</li>
+                  <li>Hosted monthly</li>
+                </ul>
+              </div>
+            </div>
 
             <div class="tournament-actions">
               <button class="btn" type="button">Sign Up — 1 AVAX</button>
               <button class="btn secondary" type="button">View Rules</button>
             </div>
 
-            <p class="tournament-disclaimer">
-              Entry ticket grants access to the tournament event.<br>
-              Skill-based competition. No wagering mechanics.<br>
-              Full rules and eligibility will appear before each event.
+            <p class="tournament-note">
+              Entry ticket grants access to the tournament event. Skill-based competition. Full rules and eligibility appear before each event.
             </p>
           </div>
         </div>
