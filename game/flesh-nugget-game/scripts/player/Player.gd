@@ -142,7 +142,13 @@ func _physics_process(delta: float) -> void:
 		if mouse_dir.length() > 0.001:
 			aim_dir = mouse_dir.normalized()
 
-	update_facing(aim_dir)
+	var is_keyboard_shooting := using_keyboard_aim and arrow_input != Vector2.ZERO
+	var is_mouse_shooting := Input.is_action_pressed("attack")
+
+	if is_mouse_shooting or is_keyboard_shooting:
+		update_facing(aim_dir)
+	elif input_vec != Vector2.ZERO:
+		update_facing(input_vec)
 
 	# ----------------------------
 	# 2.5) Muzzle positioning (fixed spot)
@@ -172,7 +178,6 @@ func _physics_process(delta: float) -> void:
 		try_attack()
 	elif using_keyboard_aim and arrow_input != Vector2.ZERO:
 		try_attack()
-
 
 	# ----------------------------
 	# 6) Animation priority
