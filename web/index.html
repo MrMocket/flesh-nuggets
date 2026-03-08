@@ -572,6 +572,13 @@
       color: var(--text-dim);
     }
 
+    .mobile-note {
+      margin-top: -8px;
+      margin-bottom: 18px;
+      color: var(--green-soft);
+      font-size: 13px;
+    }
+
     .run-sequence-shell {
       margin-top: 20px;
       padding: 18px;
@@ -734,17 +741,6 @@
       font-size: 1.1rem;
     }
 
-    .game-overlay-card p {
-      color: var(--text-dim);
-      margin-bottom: 18px;
-    }
-
-    .game-controls-row {
-      margin-top: 16px;
-      display: flex;
-      justify-content: center;
-    }
-
     .status-line {
       margin-top: 12px;
       text-align: center;
@@ -761,12 +757,44 @@
       align-items: stretch;
     }
 
+    .mini-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .mini-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .loop-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
     .info-card,
     .about-copy,
     .future-card,
     details,
     .single-profile,
-    .carousel-shell {
+    .carousel-shell,
+    .mini-card,
+    .system-card,
+    .upgrade-card,
+    .loop-step {
       background: linear-gradient(180deg, rgba(11, 9, 9, 0.76), rgba(17, 10, 10, 0.90));
       border: 2px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-lg);
@@ -780,7 +808,11 @@
     .future-card:hover,
     details:hover,
     .single-profile:hover,
-    .carousel-shell:hover {
+    .carousel-shell:hover,
+    .mini-card:hover,
+    .system-card:hover,
+    .upgrade-card:hover,
+    .loop-step:hover {
       transform: translateY(-4px);
       border-color: #5f3636;
       box-shadow:
@@ -792,6 +824,54 @@
     .info-card,
     .about-copy {
       padding: 22px;
+    }
+
+    .mini-card,
+    .system-card,
+    .upgrade-card,
+    .loop-step {
+      padding: 18px;
+    }
+
+    .mini-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--green-soft);
+      font-size: 11px;
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+    }
+
+    .game-loop-title {
+      margin-top: 26px;
+      margin-bottom: 16px;
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      text-shadow: 2px 2px 0 rgba(116, 27, 27, 0.45);
+    }
+
+    .mini-card h3,
+    .system-card h3,
+    .upgrade-card h3,
+    .loop-step h3 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mini-card p,
+    .system-card p,
+    .upgrade-card p,
+    .loop-step p {
+      color: var(--text-dim);
+      font-size: 14px;
     }
 
     .cube-image-box,
@@ -1184,6 +1264,38 @@
       filter: drop-shadow(0 10px 14px rgba(0,0,0,0.22));
     }
 
+    .control-item {
+      padding: 18px;
+      border-radius: 18px;
+      border: 2px solid #402626;
+      background: linear-gradient(180deg, rgba(10,8,8,0.95), rgba(16,10,10,0.95));
+      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      min-height: 126px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .control-item:hover {
+      transform: translateY(-3px);
+      border-color: #5f3636;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18), 0 0 16px rgba(202,53,53,0.08);
+    }
+
+    .control-title {
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.98rem;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .control-desc {
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
     .control-keys,
     .aiming-control .aiming-options {
       display: flex;
@@ -1237,6 +1349,35 @@
       font-weight: 700;
       font-size: 13px;
       opacity: 0.9;
+    }
+
+    .loop-step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      color: #071007;
+      background: var(--green-main);
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 0 12px rgba(165,255,118,0.35);
+    }
+
+    .upgrade-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 2px solid #4a2f2f;
+      background: linear-gradient(180deg, rgba(18,12,12,0.94), rgba(12,8,8,0.96));
+      color: var(--text-dim);
+    }
+
+    .upgrade-note strong {
+      color: #fff;
     }
 
     .skill-tree-preview {
@@ -1670,8 +1811,8 @@
     .tournament-info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
+      gap: 16px;
+      margin: 20px 0;
       text-align: left;
     }
 
@@ -1683,74 +1824,22 @@
     }
 
     .tournament-info-title {
-      color: #fff;
+      color: var(--green-main);
       font-family: "Orbitron", sans-serif;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       margin-bottom: 10px;
     }
 
     .tournament-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text-dim);
-    }
-
-    .tournament-list li {
-      margin-bottom: 6px;
-    }
-
-    .tournament-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .tournament-note {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--text-soft);
-      text-align: center;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .tournament-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .tournament-info-card {
-      background: rgba(16, 10, 10, 0.82);
-      border: 1px solid #4a2f2f;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .tournament-info-title {
-      color: var(--green-main);
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .tournament-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      color: var(--text-dim);
     }
 
     .tournament-list li {
-      color: var(--text-dim);
       font-size: 13px;
       line-height: 1.5;
       margin-bottom: 6px;
@@ -1758,7 +1847,7 @@
       padding-left: 16px;
     }
 
-    .tournament-list li:before {
+    .tournament-list li::before {
       content: "•";
       color: var(--green-main);
       position: absolute;
@@ -1770,12 +1859,23 @@
       margin-bottom: 0;
     }
 
+    .tournament-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
     .tournament-note {
       margin-top: 16px;
       font-size: 12px;
       color: var(--text-soft);
       text-align: center;
       line-height: 1.4;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .avax-badge {
@@ -1804,21 +1904,7 @@
       box-shadow: 0 0 10px rgba(232,65,93,0.18);
     }
 
-    @media (max-width: 920px) {
-      .tournament-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .tournament-info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .tournament-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    /* responsive */
 
     @media (max-width: 1080px) {
       .topbar-inner {
@@ -1846,6 +1932,20 @@
       .grid-2,
       .about-grid {
         grid-template-columns: 1fr;
+      }
+
+      .mini-grid-4,
+      .mini-grid-3,
+      .controls-grid,
+      .loop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-grid,
+      .loop-grid,
+      .mini-grid-3,
+      .mini-grid-4 {
+        gap: 12px;
       }
 
       section {
@@ -1896,16 +1996,24 @@
         right: calc(50% - 150px);
       }
 
-      .mini-grid-4,
-      .mini-grid-3,
-      .controls-grid,
-      .loop-grid {
-        grid-template-columns: 1fr;
-      }
-
       .skill-tree-preview .tree-row {
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
+      }
+
+      .tree-shell {
+        padding: 14px 10px 8px;
+      }
+
+      .tree-node {
+        width: 100%;
+        max-width: 180px;
+        min-height: 92px;
+      }
+
+      .tree-links {
+        gap: 24px;
+        margin: 0 0 10px;
       }
 
       .leaderboard-head,
@@ -1925,11 +2033,19 @@
       .leaderboard-row .name .secondary {
         font-size: 10px;
       }
+
+      .tournament-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .tournament-info-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 640px) {
       .container {
-        padding: 14px 14px 30px;
+        padding: 10px 10px 28px;
       }
 
       .topbar-inner {
@@ -1937,8 +2053,9 @@
       }
 
       .nav {
-        gap: 12px;
-        padding: 10px 14px;
+        gap: 10px;
+        padding: 8px 12px;
+        font-size: 11px;
       }
 
       .wallet-zone,
@@ -1952,6 +2069,10 @@
 
       .btn {
         width: 100%;
+      }
+
+      section {
+        padding: 36px 14px 20px;
       }
 
       .section-chip {
@@ -2005,6 +2126,12 @@
         font-size: 16px;
       }
 
+      .mobile-note {
+        font-size: 12px;
+        margin-top: -6px;
+        margin-bottom: 14px;
+      }
+
       .floating-asset,
       .asset-blood-screens {
         opacity: 0.74;
@@ -2017,7 +2144,13 @@
       }
 
       .section-title {
-        font-size: 2rem;
+        font-size: 1.6rem;
+      }
+
+      .game-loop-title {
+        font-size: 1.2rem;
+        margin-top: 20px;
+        margin-bottom: 12px;
       }
 
       .play-title-mobile {
@@ -2036,8 +2169,49 @@
         padding: 18px;
       }
 
-      .game-controls-row .btn {
-        width: 100%;
+      .control-item {
+        min-height: unset;
+        padding: 14px;
+      }
+
+      .control-title {
+        font-size: 0.88rem;
+        margin-bottom: 10px;
+      }
+
+      .mouse-badge,
+      .keycap {
+        min-width: 36px;
+        height: 32px;
+        padding: 0 10px;
+        font-size: 11px;
+      }
+
+      .records-tabs {
+        gap: 8px;
+      }
+
+      .records-tab {
+        min-width: 132px;
+        height: 40px;
+        font-size: 11px;
+        padding: 0 14px;
+      }
+
+      .tournament-card {
+        padding: 16px 12px;
+      }
+
+      .tournament-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tournament-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tournament-actions {
+        flex-direction: column;
       }
 
       .footer-nugget {
@@ -2055,182 +2229,16 @@
       .footer-blood {
         width: 120px;
       }
-
-      .tournament-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .tournament-actions {
-        flex-direction: column;
-      }
-
-      .tournament-actions .btn {
-        max-width: 100%;
-      }
     }
 
     @media (min-width: 641px) {
       .play-title-mobile {
         display: none;
       }
+
       .play-title-desktop {
         display: inline;
       }
-    }
-
-    .mini-grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .mini-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .mini-card,
-    .system-card,
-    .upgrade-card,
-    .loop-step {
-      background: linear-gradient(180deg, rgba(11, 9, 9, 0.78), rgba(17, 10, 10, 0.92));
-      border: 2px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      box-shadow: inset 0 0 18px rgba(255, 80, 80, 0.02);
-      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
-      position: relative;
-    }
-
-    .mini-card:hover,
-    .system-card:hover,
-    .upgrade-card:hover,
-    .loop-step:hover {
-      transform: translateY(-4px);
-      border-color: #5f3636;
-      box-shadow:
-        inset 0 0 18px rgba(255, 80, 80, 0.02),
-        0 14px 28px rgba(0,0,0,0.16),
-        0 0 18px rgba(202,53,53,0.08);
-    }
-
-    .mini-label {
-      display: inline-block;
-      margin-bottom: 8px;
-      color: var(--green-soft);
-      font-size: 11px;
-      font-family: "Orbitron", sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1.4px;
-    }
-
-    .game-loop-title {
-      margin-top: 26px;
-      margin-bottom: 16px;
-      color: #fff;
-      font-family: "Orbitron", sans-serif;
-      font-size: 1.55rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      text-shadow: 2px 2px 0 rgba(116, 27, 27, 0.45);
-    }
-
-    .mini-card h3,
-    .system-card h3,
-    .upgrade-card h3,
-    .loop-step h3 {
-      color: #fff;
-      font-size: 1rem;
-      margin-bottom: 8px;
-      font-family: "Orbitron", sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .mini-card p,
-    .system-card p,
-    .upgrade-card p,
-    .loop-step p {
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    .controls-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .control-item {
-      padding: 18px;
-      border-radius: 18px;
-      border: 2px solid #402626;
-      background: linear-gradient(180deg, rgba(10,8,8,0.95), rgba(16,10,10,0.95));
-      transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
-      min-height: 126px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-
-    .control-item:hover {
-      transform: translateY(-3px);
-      border-color: #5f3636;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18), 0 0 16px rgba(202,53,53,0.08);
-    }
-
-    .control-title {
-      color: #fff;
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.98rem;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .control-desc {
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    .loop-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .loop-step-number {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-      color: #071007;
-      background: var(--green-main);
-      font-family: "Orbitron", sans-serif;
-      font-size: 12px;
-      font-weight: 900;
-      box-shadow: 0 0 12px rgba(165,255,118,0.35);
-    }
-
-    .upgrade-note {
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      border: 2px solid #4a2f2f;
-      background: linear-gradient(180deg, rgba(18,12,12,0.94), rgba(12,8,8,0.96));
-      color: var(--text-dim);
-    }
-
-    .upgrade-note strong {
-      color: #fff;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -2307,7 +2315,11 @@
       </h2>
 
       <p class="section-intro">
-        The current MVP includes a playable browser build, core combat loop, menu flow, enemy encounters, and death loop. Click Activate Game to enter the build without interrupting page scrolling.
+        The current build includes a playable browser prototype, core combat loop, menu flow, enemy encounters, and death loop. Click Activate Game to enter the build without interrupting page scrolling.
+      </p>
+
+      <p class="mobile-note">
+        Desktop browser play is currently the main supported experience. Mobile support is planned for a later build.
       </p>
 
       <div class="run-sequence-shell">
@@ -2318,7 +2330,6 @@
             <div class="game-frame-overlay" id="gameOverlay">
               <div class="game-overlay-card">
                 <h3>PLAY SOME FLESH NUGGET GOODNESS!!</h3>
-             
                 <button class="btn" id="activateGameBtn" type="button">Activate Game</button>
               </div>
             </div>
@@ -2415,6 +2426,7 @@
       </div>
 
       <h3 class="game-loop-title">Game Loop</h3>
+
       <div class="loop-grid">
         <div class="loop-step">
           <div class="loop-step-number">01</div>
@@ -2722,7 +2734,7 @@
           <div class="feature-list">
             <div class="feature-tag"><strong>Persistent identity:</strong> your Cube is what survives.</div>
             <div class="feature-tag"><strong>Disposable runs:</strong> each body is expendable.</div>
-            <div class="feature-tag"><strong>Future Web3 layer:</strong> wallet connection and minting live on the website for a cleaner MVP flow.</div>
+            <div class="feature-tag"><strong>Future Web3 layer:</strong> wallet connection and minting live on the website for a cleaner build flow.</div>
           </div>
 
           <div class="button-row" style="justify-content: flex-start;">
@@ -2748,7 +2760,7 @@
       </p>
 
       <p style="margin-top: 14px;">
-        That makes death part of the system rather than a full stop. The MVP proves the game loop first, while the website sets up the future identity layer around the Cube.
+        That makes death part of the system rather than a full stop. The build proves the game loop first, while the website sets up the future identity layer around the Cube.
       </p>
 
       <div class="quote">
@@ -2757,12 +2769,12 @@
     </section>
 
     <section id="screens">
-      <div class="section-chip">Visual Feed // Current MVP</div>
+      <div class="section-chip">Visual Feed // Current Build</div>
       <img class="asset-blood-screens" src="images/blood-splat.png" alt="" />
 
       <h2 class="section-title">Game Screens</h2>
       <p class="section-intro">
-        A quick visual pass through the current MVP. The slideshow rotates slowly on its own, and viewers can flick through manually with the arrows.
+        A quick visual pass through the current build. The slideshow rotates slowly on its own, and viewers can flick through manually with the arrows.
       </p>
 
       <div class="carousel-shell">
@@ -2787,7 +2799,7 @@
             <div class="carousel-slide">
               <img src="./images/screenshot-3.png" alt="Flesh Nuggets gameplay screenshot three" />
               <div class="carousel-overlay">
-                <strong>MVP Flow</strong>
+                <strong>Build Flow</strong>
                 <span>Main menu, pause, death screen, and browser-ready loop.</span>
               </div>
             </div>
@@ -2820,20 +2832,20 @@
         <div class="about-copy">
           <h3>Built By Mocket</h3>
           <p>
-            Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall MVP push.
+            Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall build push.
           </p>
           <p style="margin-top: 12px;">
             The goal of this stage is to prove the game loop, present a playable browser build, and establish the Memory Cube as the long-term identity system that can expand into deeper progression, community competition, and Web3 integration over time.
           </p>
           <p style="margin-top: 12px;">
-            This MVP is intentionally lean: playable, readable, and focused on showing the concept clearly.
+            This build is intentionally lean: playable, readable, and focused on showing the concept clearly.
           </p>
         </div>
       </div>
     </section>
 
     <section id="future">
-      <div class="section-chip">Expansion Path // Post MVP</div>
+      <div class="section-chip">Expansion Path // Post Build</div>
 
       <div class="floating-asset asset-future-right interactive-asset">
         <img src="images/cube-smug.png" alt="" style="--flip:-1;" />
@@ -2841,7 +2853,7 @@
 
       <h2 class="section-title">Future Systems</h2>
       <p class="section-intro">
-        These are planned beyond the current MVP and show where the Memory Cube system can expand next.
+        These are planned beyond the current build and show where the Memory Cube system can expand next.
       </p>
 
       <div class="grid-2">
@@ -2855,7 +2867,7 @@
         <div class="future-card info-card">
           <div class="future-copy">
             <h3>Leaderboards</h3>
-            <p>Competitive score tracking, run depth, and community recognition tied to future events and repeat play.</p>
+            <p>Competitive run tracking, Flesh Nuggets totals, and community recognition tied to future events and repeat play.</p>
           </div>
         </div>
       </div>
@@ -2871,7 +2883,7 @@
         <div class="future-card info-card">
           <div class="future-copy">
             <h3>Web3 Expansion</h3>
-            <p>Wallet-linked identity, mint flow, future unlocks, and on-chain Memory Cube progression beyond the MVP state.</p>
+            <p>Wallet-linked identity, mint flow, future unlocks, and on-chain Memory Cube progression beyond the current state.</p>
           </div>
         </div>
       </div>
@@ -2882,9 +2894,9 @@
       <h2 class="section-title">FAQ / Build Notes</h2>
 
       <details>
-        <summary>What is included in the current MVP?</summary>
+        <summary>What is included in the current build?</summary>
         <p>
-          The MVP includes a playable browser build, core combat loop, working menu flow, death loop, and a website wrapper prepared for wallet connection and future Memory Cube minting on Fuji testnet.
+          The build includes a playable browser prototype, core combat loop, working menu flow, death loop, and a website wrapper prepared for wallet connection and future Memory Cube minting on Fuji testnet.
         </p>
       </details>
 
@@ -2898,14 +2910,14 @@
       <details>
         <summary>Why is wallet connect on the website instead of inside the game?</summary>
         <p>
-          For the MVP, gameplay stays clean and uninterrupted while the website handles the Web3 layer. This keeps the prototype lean, playable, and easier for judges to review.
+          For the build, gameplay stays clean and uninterrupted while the website handles the Web3 layer. This keeps the prototype lean, playable, and easier for judges to review.
         </p>
       </details>
 
       <details>
         <summary>Is this desktop or mobile?</summary>
         <p>
-          The current MVP is designed primarily for desktop browser play. The website can be made more mobile-friendly first, while mobile gameplay support can come later.
+          The current build is designed primarily for desktop browser play. The website is mobile-friendly, while full mobile gameplay support can come later.
         </p>
       </details>
     </section>
@@ -2924,167 +2936,140 @@
 
   </div>
 
-<script>
-(function () {
+  <script>
+    (function () {
 
-  /* ---------- Stop browser restoring scroll position ---------- */
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
 
-  if ("scrollRestoration" in history) {
-    history.scrollRestoration = "manual";
-  }
-
-  window.addEventListener("load", () => {
-    window.scrollTo(0, 0);
-  });
-
-  /* ---------- Screenshot carousel ---------- */
-
-  const track = document.getElementById("carouselTrack");
-  const dots = Array.from(document.querySelectorAll(".carousel-dot"));
-  const prev = document.getElementById("prevSlide");
-  const next = document.getElementById("nextSlide");
-
-  let currentSlide = 0;
-  let autoTimer = null;
-  const totalSlides = dots.length;
-
-  function updateCarousel(index) {
-    currentSlide = (index + totalSlides) % totalSlides;
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === currentSlide);
-    });
-  }
-
-  function startAuto() {
-    stopAuto();
-    autoTimer = setInterval(() => {
-      updateCarousel(currentSlide + 1);
-    }, 4500);
-  }
-
-  function stopAuto() {
-    if (autoTimer) {
-      clearInterval(autoTimer);
-      autoTimer = null;
-    }
-  }
-
-  if (prev && next && track && dots.length) {
-
-    prev.addEventListener("click", () => {
-      updateCarousel(currentSlide - 1);
-      startAuto();
-    });
-
-    next.addEventListener("click", () => {
-      updateCarousel(currentSlide + 1);
-      startAuto();
-    });
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
-        updateCarousel(index);
-        startAuto();
+      window.addEventListener("load", () => {
+        window.scrollTo(0, 0);
       });
-    });
 
-    const carouselShell = document.querySelector(".carousel-shell");
+      const track = document.getElementById("carouselTrack");
+      const dots = Array.from(document.querySelectorAll(".carousel-dot"));
+      const prev = document.getElementById("prevSlide");
+      const next = document.getElementById("nextSlide");
 
-    if (carouselShell) {
-      carouselShell.addEventListener("mouseenter", stopAuto);
-      carouselShell.addEventListener("mouseleave", startAuto);
-    }
+      let currentSlide = 0;
+      let autoTimer = null;
+      const totalSlides = dots.length;
 
-    updateCarousel(0);
-    startAuto();
-  }
+      function updateCarousel(index) {
+        currentSlide = (index + totalSlides) % totalSlides;
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-  /* ---------- Floating asset mouse interaction ---------- */
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === currentSlide);
+        });
+      }
 
-  const interactiveAssets = document.querySelectorAll(".interactive-asset");
+      function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(() => {
+          updateCarousel(currentSlide + 1);
+        }, 4500);
+      }
 
-  interactiveAssets.forEach((asset) => {
+      function stopAuto() {
+        if (autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = null;
+        }
+      }
 
-    const inner = asset.querySelector("img");
-    if (!inner) return;
+      if (prev && next && track && dots.length) {
+        prev.addEventListener("click", () => {
+          updateCarousel(currentSlide - 1);
+          startAuto();
+        });
 
-    asset.addEventListener("mousemove", (e) => {
+        next.addEventListener("click", () => {
+          updateCarousel(currentSlide + 1);
+          startAuto();
+        });
 
-      const rect = asset.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", () => {
+            updateCarousel(index);
+            startAuto();
+          });
+        });
 
-      const px = ((x / rect.width) - 0.5) * 14;
-      const py = ((y / rect.height) - 0.5) * 14;
+        const carouselShell = document.querySelector(".carousel-shell");
 
-      inner.style.setProperty("--tx", `${px}px`);
-      inner.style.setProperty("--ty", `${py}px`);
-    });
+        if (carouselShell) {
+          carouselShell.addEventListener("mouseenter", stopAuto);
+          carouselShell.addEventListener("mouseleave", startAuto);
+        }
 
-    asset.addEventListener("mouseleave", () => {
+        updateCarousel(0);
+        startAuto();
+      }
 
-      inner.style.setProperty("--tx", "0px");
-      inner.style.setProperty("--ty", "0px");
-    });
+      const interactiveAssets = document.querySelectorAll(".interactive-asset");
 
-  });
+      interactiveAssets.forEach((asset) => {
+        const inner = asset.querySelector("img");
+        if (!inner) return;
 
-  /* ---------- Game activation overlay ---------- */
+        asset.addEventListener("mousemove", (e) => {
+          const rect = asset.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-  const gameFrame = document.getElementById("gameFrame");
-  const gameOverlay = document.getElementById("gameOverlay");
-  const activateGameBtn = document.getElementById("activateGameBtn");
-  const deactivateGameBtn = document.getElementById("deactivateGameBtn");
-  const gameFrameWrap = document.getElementById("gameFrameWrap");
+          const px = ((x / rect.width) - 0.5) * 14;
+          const py = ((y / rect.height) - 0.5) * 14;
 
-  function activateGame() {
+          inner.style.setProperty("--tx", `${px}px`);
+          inner.style.setProperty("--ty", `${py}px`);
+        });
 
-    if (!gameFrameWrap || !gameOverlay) return;
+        asset.addEventListener("mouseleave", () => {
+          inner.style.setProperty("--tx", "0px");
+          inner.style.setProperty("--ty", "0px");
+        });
+      });
 
-    gameFrameWrap.classList.add("active");
-    gameOverlay.classList.add("hidden");
+      const gameFrame = document.getElementById("gameFrame");
+      const gameOverlay = document.getElementById("gameOverlay");
+      const activateGameBtn = document.getElementById("activateGameBtn");
+      const gameFrameWrap = document.getElementById("gameFrameWrap");
 
-    try {
-      gameFrame.focus();
-    } catch (err) {}
+      function activateGame() {
+        if (!gameFrameWrap || !gameOverlay) return;
 
-  }
+        gameFrameWrap.classList.add("active");
+        gameOverlay.classList.add("hidden");
 
-  function deactivateGame() {
+        try {
+          gameFrame.focus();
+        } catch (err) {}
+      }
 
-    if (!gameFrameWrap || !gameOverlay) return;
+      if (activateGameBtn) {
+        activateGameBtn.addEventListener("click", activateGame);
+      }
 
-    gameFrameWrap.classList.remove("active");
-    gameOverlay.classList.remove("hidden");
+      const recordTabs = document.querySelectorAll("[data-record-tab]");
+      const recordViews = document.querySelectorAll("[data-record-view]");
 
-  }
+      recordTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-record-tab");
 
-  if (activateGameBtn) {
-    activateGameBtn.addEventListener("click", activateGame);
-  }
+          recordTabs.forEach((t) => t.classList.remove("active"));
+          recordViews.forEach((view) => view.classList.remove("active"));
 
-  /* ---------- Records tabs ---------- */
+          tab.classList.add("active");
 
-  const recordTabs = document.querySelectorAll("[data-record-tab]");
-  const recordViews = document.querySelectorAll("[data-record-view]");
+          const activeView = document.querySelector(`[data-record-view="${target}"]`);
+          if (activeView) activeView.classList.add("active");
+        });
+      });
 
-  recordTabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.getAttribute("data-record-tab");
-
-      recordTabs.forEach((t) => t.classList.remove("active"));
-      recordViews.forEach((view) => view.classList.remove("active"));
-
-      tab.classList.add("active");
-
-      const activeView = document.querySelector(`[data-record-view="${target}"]`);
-      if (activeView) activeView.classList.add("active");
-    });
-  });
-
-})();
-</script>
+    })();
+  </script>
 </body>
 </html>
