@@ -1190,7 +1190,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .aiming-control .aiming-options {
@@ -1210,14 +1210,14 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 34px;
-      height: 30px;
-      padding: 0 10px;
-      border-radius: 8px;
+      min-width: 42px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
       border: 1px solid rgba(165,255,118,0.55);
       background: linear-gradient(180deg, rgba(165,255,118,0.20), rgba(90,140,60,0.16));
       color: #efffe2;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       line-height: 1;
       box-shadow:
@@ -1228,14 +1228,14 @@
     }
 
     .mouse-badge {
-      min-width: 58px;
+      min-width: 66px;
       border-radius: 999px;
     }
 
     .control-plus {
       color: var(--green-soft);
       font-weight: 700;
-      font-size: 12px;
+      font-size: 13px;
       opacity: 0.9;
     }
 
@@ -1399,7 +1399,7 @@
       z-index: 1;
     }
 
-    .leaderboard-preview {
+    .records-panel {
       margin-top: 24px;
       padding: 22px 18px 18px;
       border: 2px solid var(--panel-border-soft);
@@ -1411,13 +1411,60 @@
       overflow: hidden;
     }
 
-    .leaderboard-preview::before {
+    .records-panel::before {
       content: "";
       position: absolute;
       inset: 10px;
       border-radius: calc(var(--radius-lg) - 8px);
       border: 1px solid rgba(255,255,255,0.04);
       pointer-events: none;
+    }
+
+    .records-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .records-tab {
+      min-width: 150px;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid #5a3737;
+      background: linear-gradient(180deg, rgba(20,12,12,0.95), rgba(12,8,8,0.95));
+      color: var(--text-dim);
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform var(--ease-main), border-color var(--ease-main), color var(--ease-main), box-shadow var(--ease-main);
+    }
+
+    .records-tab.active {
+      color: #efffe2;
+      border-color: rgba(165,255,118,0.55);
+      box-shadow: 0 0 14px rgba(165,255,118,0.10);
+      background: linear-gradient(180deg, rgba(165,255,118,0.14), rgba(40,60,30,0.20));
+    }
+
+    .records-tab:hover {
+      transform: translateY(-2px);
+    }
+
+    .records-view {
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .records-view.active {
+      display: block;
     }
 
     .leaderboard-preview h3 {
@@ -1563,6 +1610,115 @@
       text-align: center;
       position: relative;
       z-index: 1;
+    }
+
+    .tournament-card {
+      max-width: 920px;
+      margin: 0 auto;
+      border-radius: 16px;
+      border: 1px solid #4f3131;
+      background: rgba(16, 10, 10, 0.82);
+      padding: 18px;
+    }
+
+    .tournament-title {
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .tournament-subtitle {
+      color: var(--green-soft);
+      font-size: 12px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .tournament-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .tournament-stat {
+      border-radius: 12px;
+      border: 1px solid #4a2f2f;
+      background: linear-gradient(180deg, rgba(12,8,8,0.92), rgba(18,10,10,0.92));
+      padding: 12px;
+      text-align: center;
+    }
+
+    .tournament-stat-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 6px;
+    }
+
+    .tournament-stat-value {
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .tournament-copy {
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 18px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tournament-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .avax-badge {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avax-logo {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #ff6b7f, #e8415d);
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      box-shadow: 0 0 10px rgba(232,65,93,0.18);
+    }
+
+    @media (max-width: 920px) {
+      .tournament-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .tournament-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 1080px) {
@@ -1800,6 +1956,18 @@
       .footer-blood {
         width: 120px;
       }
+
+      .tournament-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .tournament-actions {
+        flex-direction: column;
+      }
+
+      .tournament-actions .btn {
+        max-width: 100%;
+      }
     }
 
     @media (min-width: 641px) {
@@ -1888,11 +2056,15 @@
     }
 
     .control-item {
-      padding: 16px;
+      padding: 18px;
       border-radius: 18px;
       border: 2px solid #402626;
       background: linear-gradient(180deg, rgba(10,8,8,0.95), rgba(16,10,10,0.95));
       transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
+      min-height: 126px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .control-item:hover {
@@ -1901,13 +2073,13 @@
       box-shadow: 0 10px 22px rgba(0,0,0,0.18), 0 0 16px rgba(202,53,53,0.08);
     }
 
-    .control-key {
-      color: var(--green-soft);
+    .control-title {
+      color: #fff;
       font-family: "Orbitron", sans-serif;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
+      font-size: 0.98rem;
+      margin-bottom: 12px;
       text-transform: uppercase;
-      letter-spacing: 1.3px;
+      letter-spacing: 1px;
     }
 
     .control-desc {
@@ -1998,7 +2170,7 @@
       </div>
 
       <div class="hero-content">
-        <div class="eyebrow">Memory Cube Uplink // Fuji Testnet MVP</div>
+        <div class="eyebrow">Memory Cube Uplink // Fuji Testnet Build</div>
 
         <div class="hero-title-wrap">
           <img class="hero-title-nugget left" src="images/flesh-nugget.png" alt="" />
@@ -2062,10 +2234,6 @@
         </div>
       </div>
 
-      <div class="game-controls-row">
-        <button class="btn secondary" id="deactivateGameBtn" type="button">Return To Page Scroll</button>
-      </div>
-
       <p class="status-line">
         BODY DISPOSABLE // MEMORY STABLE // CLICK ACTIVATE TO PLAY
       </p>
@@ -2080,16 +2248,17 @@
 
       <div class="controls-grid">
         <div class="control-item">
+          <div class="control-title">Move</div>
           <div class="control-keys">
             <span class="keycap">W</span>
             <span class="keycap">A</span>
             <span class="keycap">S</span>
             <span class="keycap">D</span>
           </div>
-          <div class="control-desc">Move</div>
         </div>
 
         <div class="control-item aiming-control">
+          <div class="control-title">Aim & Fire</div>
           <div class="aiming-options">
             <div class="aiming-option">
               <span class="mouse-badge">Mouse</span>
@@ -2103,35 +2272,36 @@
               <span class="keycap">→</span>
             </div>
           </div>
-          <div class="control-desc">Aim & Fire</div>
         </div>
 
         <div class="control-item">
+          <div class="control-title">Reload</div>
           <div class="control-keys">
             <span class="keycap">R</span>
           </div>
-          <div class="control-desc">Reload</div>
         </div>
 
         <div class="control-item">
+          <div class="control-title">Pause</div>
           <div class="control-keys">
             <span class="keycap">ESC</span>
           </div>
-          <div class="control-desc">Pause</div>
         </div>
 
         <div class="control-item">
+          <div class="control-title">Dash</div>
           <div class="control-keys">
             <span class="keycap">SPACE</span>
           </div>
-          <div class="control-desc">Dash (future unlock)</div>
+          <div class="control-desc">Future unlock</div>
         </div>
 
         <div class="control-item">
+          <div class="control-title">Secondary Weapon</div>
           <div class="control-keys">
             <span class="keycap">Q</span>
           </div>
-          <div class="control-desc">Secondary Weapon (future)</div>
+          <div class="control-desc">Future slot</div>
         </div>
       </div>
 
@@ -2274,74 +2444,124 @@
         <p class="tree-caption">The Memory Cube stores long-term unlocks between runs, allowing future abilities to persist beyond a single disposable body.</p>
       </div>
 
-      <div class="leaderboard-preview">
-        <h3>Leaderboard Preview</h3>
-        <div class="leaderboard-subtitle">Future Memory Cube Records</div>
-
-        <div class="leaderboard-head">
-          <div>Rank</div>
-          <div></div>
-          <div>Runner</div>
-          <div>Nuggets</div>
-          <div>Time</div>
-          <div>Deaths</div>
+      <div class="records-panel">
+        <div class="records-tabs">
+          <button class="records-tab active" type="button" data-record-tab="leaderboard">Leaderboard</button>
+          <button class="records-tab" type="button" data-record-tab="tournament">Tournament</button>
         </div>
 
-        <div class="leaderboard-rows">
-          <div class="leaderboard-row top-1">
-            <div class="rank">1</div>
-            <div class="profile">G</div>
-            <div class="name">
-              <span class="primary">@DripCube</span>
-              <span class="secondary">Memory Cube Holder</span>
-            </div>
-            <div class="nuggets">12,450</div>
-            <div class="time">2h 34m</div>
-            <div class="deaths">47</div>
-          </div>
+        <div class="records-view active" data-record-view="leaderboard">
+          <div class="leaderboard-preview" style="margin-top:0; padding-top:0; border:none; background:none;">
+            <h3>Leaderboard Preview</h3>
+            <div class="leaderboard-subtitle">Future Memory Cube Records</div>
 
-          <div class="leaderboard-row top-2">
-            <div class="rank">2</div>
-            <div class="profile">S</div>
-            <div class="name">
-              <span class="primary">@VatRunner</span>
-              <span class="secondary">Top Lab Survivor</span>
+            <div class="leaderboard-head">
+              <div>Rank</div>
+              <div></div>
+              <div>Runner</div>
+              <div>Nuggets</div>
+              <div>Time</div>
+              <div>Deaths</div>
             </div>
-            <div class="nuggets">11,892</div>
-            <div class="time">3h 12m</div>
-            <div class="deaths">52</div>
-          </div>
 
-          <div class="leaderboard-row top-3">
-            <div class="rank">3</div>
-            <div class="profile">B</div>
-            <div class="name">
-              <span class="primary">@NugLord</span>
-              <span class="secondary">Containment Breach</span>
-            </div>
-            <div class="nuggets">10,734</div>
-            <div class="time">1h 58m</div>
-            <div class="deaths">38</div>
-          </div>
+            <div class="leaderboard-rows">
+              <div class="leaderboard-row top-1">
+                <div class="rank">1</div>
+                <div class="profile">G</div>
+                <div class="name">
+                  <span class="primary">@DripCube</span>
+                  <span class="secondary">Memory Cube Holder</span>
+                </div>
+                <div class="nuggets">12,450</div>
+                <div class="time">2h 34m</div>
+                <div class="deaths">47</div>
+              </div>
 
-          <div class="leaderboard-row">
-            <div class="rank">4</div>
-            <div class="profile">W</div>
-            <div class="name">
-              <span class="primary">0x7a91...d3F2</span>
-              <span class="secondary">Wallet-linked Identity</span>
+              <div class="leaderboard-row top-2">
+                <div class="rank">2</div>
+                <div class="profile">S</div>
+                <div class="name">
+                  <span class="primary">@VatRunner</span>
+                  <span class="secondary">Top Lab Survivor</span>
+                </div>
+                <div class="nuggets">11,892</div>
+                <div class="time">3h 12m</div>
+                <div class="deaths">52</div>
+              </div>
+
+              <div class="leaderboard-row top-3">
+                <div class="rank">3</div>
+                <div class="profile">B</div>
+                <div class="name">
+                  <span class="primary">@NugLord</span>
+                  <span class="secondary">Containment Breach</span>
+                </div>
+                <div class="nuggets">10,734</div>
+                <div class="time">1h 58m</div>
+                <div class="deaths">38</div>
+              </div>
+
+              <div class="leaderboard-row">
+                <div class="rank">4</div>
+                <div class="profile">W</div>
+                <div class="name">
+                  <span class="primary">0x7a91...d3F2</span>
+                  <span class="secondary">Wallet-linked Identity</span>
+                </div>
+                <div class="nuggets">9,621</div>
+                <div class="time">4h 21m</div>
+                <div class="deaths">61</div>
+              </div>
             </div>
-            <div class="nuggets">9,621</div>
-            <div class="time">4h 21m</div>
-            <div class="deaths">61</div>
+
+            <p class="leaderboard-caption">Future leaderboard concept showing persistent Memory Cube progression across all players.</p>
           </div>
         </div>
 
-        <p class="leaderboard-caption">Future leaderboard concept showing persistent Memory Cube progression across all players.</p>
+        <div class="records-view" data-record-view="tournament">
+          <div class="tournament-card">
+            <div class="tournament-title">Containment Tournament</div>
+            <div class="tournament-subtitle">Wallet-linked challenge event</div>
+
+            <div class="tournament-grid">
+              <div class="tournament-stat">
+                <div class="tournament-stat-label">Entry</div>
+                <div class="tournament-stat-value">1 AVAX</div>
+              </div>
+              <div class="tournament-stat">
+                <div class="tournament-stat-label">Mode</div>
+                <div class="tournament-stat-value">Solo Run</div>
+              </div>
+              <div class="tournament-stat">
+                <div class="tournament-stat-label">Prize Pool</div>
+                <div class="tournament-stat-value">Live Pot</div>
+              </div>
+              <div class="tournament-stat">
+                <div class="tournament-stat-label">Status</div>
+                <div class="tournament-stat-value">Concept</div>
+              </div>
+            </div>
+
+            <p class="tournament-copy">
+              Future tournament mode would allow players to sign up with a wallet transaction, enter a timed challenge run, and compete using their Memory Cube identity.
+            </p>
+
+            <div class="tournament-actions">
+              <button class="btn" type="button">Sign Up — 1 AVAX</button>
+              <button class="btn secondary" type="button">View Rules</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="avax-badge">
+          <span>Powered by</span>
+          <span class="avax-logo">A</span>
+          <span>AVAX</span>
+        </div>
       </div>
 
       <div class="upgrade-note">
-        <strong>MVP Note:</strong> The combat loop is fully playable. These previews show the planned progression systems stored by the Memory Cube for future development.
+        <strong>Build Note:</strong> The combat loop is fully playable. These previews show the planned progression systems stored by the Memory Cube for future development.
       </div>
     </section>
 
@@ -2516,8 +2736,8 @@
     </section>
 
     <section id="faq">
-      <div class="section-chip">Judge Notes // MVP Scope</div>
-      <h2 class="section-title">FAQ / MVP Notes</h2>
+      <div class="section-chip">Judge Notes // Current Build</div>
+      <h2 class="section-title">FAQ / Build Notes</h2>
 
       <details>
         <summary>What is included in the current MVP?</summary>
@@ -2554,7 +2774,7 @@
       <img class="footer-blood" src="images/blood-splat.png" alt="" />
 
       <div class="footer-brand">Project By MocketDesigns</div>
-      <div class="footer-meta">© 2026 Flesh Nuggets // Memory Cube Lab System // Fuji Testnet MVP</div>
+      <div class="footer-meta">© 2026 Flesh Nuggets // Memory Cube Lab System // Fuji Testnet Build</div>
       <div class="footer-links">
         <a class="footer-link" href="https://x.com/mrmocket" target="_blank" rel="noopener noreferrer">Follow On X / Twitter</a>
       </div>
@@ -2703,9 +2923,24 @@
     activateGameBtn.addEventListener("click", activateGame);
   }
 
-  if (deactivateGameBtn) {
-    deactivateGameBtn.addEventListener("click", deactivateGame);
-  }
+  /* ---------- Records tabs ---------- */
+
+  const recordTabs = document.querySelectorAll("[data-record-tab]");
+  const recordViews = document.querySelectorAll("[data-record-view]");
+
+  recordTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.getAttribute("data-record-tab");
+
+      recordTabs.forEach((t) => t.classList.remove("active"));
+      recordViews.forEach((view) => view.classList.remove("active"));
+
+      tab.classList.add("active");
+
+      const activeView = document.querySelector(`[data-record-view="${target}"]`);
+      if (activeView) activeView.classList.add("active");
+    });
+  });
 
 })();
 </script>
