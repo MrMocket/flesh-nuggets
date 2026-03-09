@@ -321,6 +321,24 @@
       pointer-events: none;
     }
 
+    .mobile-collapsible-chip::after {
+      content: "";
+      display: none;
+      position: absolute;
+      right: 12px;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid var(--green-soft);
+      border-bottom: 2px solid var(--green-soft);
+      transform: rotate(45deg);
+      transition: transform var(--ease-main), opacity var(--ease-main);
+      opacity: 0.9;
+    }
+
+    .mobile-collapsible-chip[aria-expanded="false"]::after {
+      transform: rotate(-135deg);
+    }
+
     .section-chip::before {
       content: "";
       width: 8px;
@@ -2194,6 +2212,12 @@
       .mobile-collapsible-chip {
         cursor: pointer;
         pointer-events: auto;
+        padding-right: 34px;
+        touch-action: manipulation;
+      }
+
+      .mobile-collapsible-chip::after {
+        display: block;
       }
 
       .interface-title::before,
@@ -3630,8 +3654,8 @@
         if (!target) return;
 
         if (isMobileStart) {
-          target.classList.add("collapsed");
-          toggle.setAttribute("aria-expanded", "false");
+          target.classList.remove("collapsed");
+          toggle.setAttribute("aria-expanded", "true");
         } else {
           target.classList.remove("collapsed");
           toggle.setAttribute("aria-expanded", "true");
