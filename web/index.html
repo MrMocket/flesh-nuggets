@@ -317,7 +317,8 @@
       line-height: 1;
       margin: 0;
       box-sizing: border-box;
-      cursor: pointer;
+      cursor: default;
+      pointer-events: none;
     }
 
     .section-chip::before {
@@ -1616,6 +1617,35 @@
       display: block;
     }
 
+    .upgrades-grid {
+      display: block;
+    }
+
+    @media (min-width: 641px) {
+      .upgrades-tabs {
+        display: none;
+      }
+
+      .upgrades-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .upgrades-grid .upgrades-view {
+        display: block;
+      }
+
+      .upgrades-grid .mini-grid-3 {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+      }
+
+      .upgrades-grid .system-card {
+        height: 100%;
+      }
+    }
+
     .records-tab {
       min-width: 150px;
       height: 42px;
@@ -2159,6 +2189,11 @@
 
       .mobile-collapsible-content.collapsed {
         display: none;
+      }
+
+      .mobile-collapsible-chip {
+        cursor: pointer;
+        pointer-events: auto;
       }
 
       .interface-title::before,
@@ -2902,26 +2937,28 @@
         <button class="upgrades-tab" type="button" data-upgrades-tab="upgrades">Upgrades</button>
       </div>
 
-      <div class="upgrades-view active" data-upgrades-view="pickups">
-        <div class="mini-grid-3">
-          <div class="system-card">
-            <div class="mini-label">In-Run Pickup</div>
-            <h3>Flesh Nuggets</h3>
-            <p>
-              Enemies drop Flesh Nuggets during runs. These are the main pickup that powers run progression and rewards combat survival.
-            </p>
+      <div class="upgrades-grid">
+        <div class="upgrades-view active" data-upgrades-view="pickups">
+          <div class="mini-grid-3">
+            <div class="system-card">
+              <div class="mini-label">In-Run Pickup</div>
+              <h3>Flesh Nuggets</h3>
+              <p>
+                Enemies drop Flesh Nuggets during runs. These are the main pickup that powers run progression and rewards combat survival.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="upgrades-view" data-upgrades-view="upgrades">
-        <div class="mini-grid-3">
-          <div class="system-card">
-            <div class="mini-label">In-Run Upgrade</div>
-            <h3>Mutations</h3>
-            <p>
-              Temporary upgrades gained during runs that boost combat power and make each attempt feel progressively stronger.
-            </p>
+        <div class="upgrades-view" data-upgrades-view="upgrades">
+          <div class="mini-grid-3">
+            <div class="system-card">
+              <div class="mini-label">In-Run Upgrade</div>
+              <h3>Mutations</h3>
+              <p>
+                Temporary upgrades gained during runs that boost combat power and make each attempt feel progressively stronger.
+              </p>
+            </div>
           </div>
         </div>
       </div>
