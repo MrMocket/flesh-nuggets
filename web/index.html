@@ -2113,6 +2113,10 @@
     }
 
     @media (max-width: 640px) {
+      body.mint-open-mobile .wallet-zone {
+        display: none !important;
+      }
+
       .container {
         padding: 10px 10px 28px;
       }
@@ -3447,12 +3451,28 @@
   <script>
     (function () {
 
+      function forcePageTop() {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
       }
 
+      if (window.location.hash) {
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      }
+
       window.addEventListener("load", () => {
-        window.scrollTo(0, 0);
+        forcePageTop();
+        setTimeout(forcePageTop, 0);
+        setTimeout(forcePageTop, 120);
+      });
+
+      window.addEventListener("pageshow", () => {
+        forcePageTop();
       });
 
       const track = document.getElementById("carouselTrack");
@@ -3667,6 +3687,7 @@ function resetMintModal() {
 function closeMintModal() {
   if (!mintModal) return;
   mintModal.classList.add("hidden");
+  document.body.classList.remove("mint-open-mobile");
   setTimeout(resetMintModal, 150);
 }
 
@@ -3674,6 +3695,9 @@ if (openMintModalButtons.length && mintModal) {
   openMintModalButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       mintModal.classList.remove("hidden");
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        document.body.classList.add("mint-open-mobile");
+      }
       resetMintModal();
     });
   });
