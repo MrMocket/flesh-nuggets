@@ -1971,6 +1971,36 @@
       .grid-2,
       .about-grid {
         grid-template-columns: 1fr;
+      .mint-modal {
+        align-items: stretch;
+        justify-content: stretch;
+      }
+      .mint-modal-panel {
+        width: 100vw;
+        max-width: none;
+        min-height: 100dvh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 20px;
+        overflow-y: auto;
+      }
+      .mint-close-x {
+        position: sticky;
+        top: 0;
+        right: auto;
+        margin-left: auto;
+        z-index: 20;
+      }
+      .mint-modal-panel h2 {
+        font-size: clamp(1.8rem, 9vw, 2.3rem);
+      }
+      .mint-subtext {
+        font-size: 16px;
+      }
+      .mint-cube-preview {
+        max-width: 220px;
+      }
       }
 
       .mini-grid-4,
