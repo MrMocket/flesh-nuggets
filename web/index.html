@@ -1653,6 +1653,10 @@
       display: block;
     }
 
+    .records-view + .records-view {
+      margin-top: 18px;
+    }
+
     .leaderboard-preview h3 {
       color: #fff;
       font-size: 1.1rem;
@@ -2113,7 +2117,7 @@
     }
 
     @media (max-width: 640px) {
-      body.mint-open-mobile .wallet-zone {
+      body.mint-open-mobile .topbar {
         display: none !important;
       }
 
@@ -3016,11 +3020,6 @@
       </p>
 
       <div class="records-panel">
-        <div class="records-tabs">
-          <button class="records-tab active" type="button" data-record-tab="leaderboard">Leaderboard</button>
-          <button class="records-tab" type="button" data-record-tab="tournament">Tournament</button>
-        </div>
-
         <div class="records-view active" data-record-view="leaderboard">
           <div class="leaderboard-preview" style="margin-top:0; padding-top:0; border:none; background:none;">
             <h3>Leaderboard Preview</h3>
@@ -3089,7 +3088,7 @@
           </div>
         </div>
 
-        <div class="records-view" data-record-view="tournament">
+        <div class="records-view active" data-record-view="tournament">
           <div class="tournament-card">
             <div class="tournament-title">Containment Tournament</div>
             <div class="tournament-subtitle">Wallet-linked competitive challenge</div>
