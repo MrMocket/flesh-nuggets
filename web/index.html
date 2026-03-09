@@ -309,6 +309,17 @@
       animation: chipPulse 2.8s ease-in-out infinite;
     }
 
+    .mobile-collapsible-chip {
+      -webkit-appearance: none;
+      appearance: none;
+      font: inherit;
+      text-align: left;
+      line-height: 1;
+      margin: 0;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+
     .section-chip::before {
       content: "";
       width: 8px;
@@ -1560,6 +1571,51 @@
       flex-wrap: wrap;
     }
 
+    .upgrades-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .upgrades-tab {
+      min-width: 150px;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid #5a3737;
+      background: linear-gradient(180deg, rgba(20,12,12,0.95), rgba(12,8,8,0.95));
+      color: var(--text-dim);
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform var(--ease-main), border-color var(--ease-main), color var(--ease-main), box-shadow var(--ease-main);
+    }
+
+    .upgrades-tab.active {
+      color: #efffe2;
+      border-color: rgba(165,255,118,0.55);
+      box-shadow: 0 0 14px rgba(165,255,118,0.10);
+      background: linear-gradient(180deg, rgba(165,255,118,0.14), rgba(40,60,30,0.20));
+    }
+
+    .upgrades-tab:hover {
+      transform: translateY(-2px);
+    }
+
+    .upgrades-view {
+      display: none;
+    }
+
+    .upgrades-view.active {
+      display: block;
+    }
+
     .records-tab {
       min-width: 150px;
       height: 42px;
@@ -2061,6 +2117,10 @@
       .section-chip {
         left: 16px;
         max-width: calc(100% - 32px);
+      }
+
+      .mobile-collapsible-content.collapsed {
+        display: none;
       }
 
       .interface-title::before,
@@ -2682,7 +2742,8 @@
     </section>
 
     <section id="systems">
-      <div class="section-chip">Run Clarity // Judge Fast Read</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="systemsMobileContent" aria-expanded="true">Run Clarity</button>
+      <div class="mobile-collapsible-content" id="systemsMobileContent">
       <h2 class="section-title">Controls</h2>
 
       <div class="controls-grid">
@@ -2784,40 +2845,59 @@
           <p>The body is disposable. The system learns and the experiment continues.</p>
         </div>
       </div>
+      </div>
     </section>
 
     <section id="upgrades">
-      <div class="section-chip">Pickups // Progression // Unlockables</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="upgradesMobileContent" aria-expanded="true">Pickups // Upgrades</button>
+      <div class="mobile-collapsible-content" id="upgradesMobileContent">
       <h2 class="section-title">Pickups And Upgrade Path</h2>
       <p class="section-intro">
         Flesh Nuggets features clear progression: short-term upgrades during runs, and long-term lab unlocks tied to the Memory Cube.
       </p>
 
-      <div class="mini-grid-3">
-        <div class="system-card">
-          <div class="mini-label">In-Run Pickup</div>
-          <h3>Flesh Nuggets</h3>
-          <p>
-            Enemies drop Flesh Nuggets during runs. These are the main pickup that powers run progression and rewards combat survival.
-          </p>
-        </div>
+      <div class="upgrades-tabs">
+        <button class="upgrades-tab active" type="button" data-upgrades-tab="pickups">Pickups</button>
+        <button class="upgrades-tab" type="button" data-upgrades-tab="upgrades">Upgrades</button>
+      </div>
 
-        <div class="system-card">
-          <div class="mini-label">In-Run Upgrade</div>
-          <h3>Mutations</h3>
-          <p>
-            Temporary upgrades gained during runs that boost combat power and make each attempt feel progressively stronger.
-          </p>
-        </div>
-
-        <div class="system-card">
-          <div class="mini-label">Outside-of-Run Progression</div>
-          <h3>Lab Skill Tree</h3>
-          <p>
-            Persistent unlocks stored by the Memory Cube between runs, allowing long-term lab evolution and skill acquisition.
-          </p>
+      <div class="upgrades-view active" data-upgrades-view="pickups">
+        <div class="mini-grid-3">
+          <div class="system-card">
+            <div class="mini-label">In-Run Pickup</div>
+            <h3>Flesh Nuggets</h3>
+            <p>
+              Enemies drop Flesh Nuggets during runs. These are the main pickup that powers run progression and rewards combat survival.
+            </p>
+          </div>
         </div>
       </div>
+
+      <div class="upgrades-view" data-upgrades-view="upgrades">
+        <div class="mini-grid-3">
+          <div class="system-card">
+            <div class="mini-label">In-Run Upgrade</div>
+            <h3>Mutations</h3>
+            <p>
+              Temporary upgrades gained during runs that boost combat power and make each attempt feel progressively stronger.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="upgrade-note">
+        <strong>Build Note:</strong> The combat loop is fully playable. These previews show the planned progression systems stored by the Memory Cube for future development.
+      </div>
+      </div>
+    </section>
+
+    <section id="lab-skill-tree">
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="labTreeMobileContent" aria-expanded="true">Lab Skill Tree</button>
+      <div class="mobile-collapsible-content" id="labTreeMobileContent">
+      <h2 class="section-title">Lab Skill Tree</h2>
+      <p class="section-intro">
+        Persistent unlocks stored by the Memory Cube between runs, allowing long-term lab evolution and skill acquisition.
+      </p>
 
       <div class="mini-grid-4">
         <div class="upgrade-card">
@@ -2887,6 +2967,16 @@
 
         <p class="tree-caption">The Memory Cube stores long-term unlocks between runs, allowing future abilities to persist beyond a single disposable body.</p>
       </div>
+      </div>
+    </section>
+
+    <section id="records">
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="recordsMobileContent" aria-expanded="true">Records // Competition</button>
+      <div class="mobile-collapsible-content" id="recordsMobileContent">
+      <h2 class="section-title">Leaderboard And Tournament</h2>
+      <p class="section-intro">
+        Competitive run records and tournament format previews live here in a dedicated tabbed area.
+      </p>
 
       <div class="records-panel">
         <div class="records-tabs">
@@ -3039,14 +3129,12 @@
           <span>AVAX</span>
         </div>
       </div>
-
-      <div class="upgrade-note">
-        <strong>Build Note:</strong> The combat loop is fully playable. These previews show the planned progression systems stored by the Memory Cube for future development.
       </div>
     </section>
 
     <section id="cube">
-      <div class="section-chip">Identity System // Pending Mint</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="cubeMobileContent" aria-expanded="true">Memory Cube</button>
+      <div class="mobile-collapsible-content" id="cubeMobileContent">
       <div class="grid-2">
         <div class="info-card">
           <h2 class="section-title">The Memory Cube</h2>
@@ -3071,10 +3159,12 @@
           <img src="images/memory-cube.png" alt="Memory Cube artwork" />
         </div>
       </div>
+      </div>
     </section>
 
     <section id="lore">
-      <div class="section-chip">Biotech Log // Narrative Layer</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="loreMobileContent" aria-expanded="true">Biotech Log // Narrative</button>
+      <div class="mobile-collapsible-content" id="loreMobileContent">
       <h2 class="section-title">Lab Overview</h2>
       <p class="section-intro">
         Flesh Nuggets is built around a strange biotech loop: unstable flesh, repeatable runs, and a core intelligence that keeps learning.
@@ -3091,10 +3181,12 @@
       <div class="quote">
         “The nugget breaks. The memory learns.”
       </div>
+      </div>
     </section>
 
     <section id="screens">
-      <div class="section-chip">Visual Feed // Current Build</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="screensMobileContent" aria-expanded="true">Visual Feed // Current Build</button>
+      <div class="mobile-collapsible-content" id="screensMobileContent">
       <img class="asset-blood-screens" src="images/blood-splat.png" alt="" />
 
       <h2 class="section-title">Game Screens</h2>
@@ -3140,37 +3232,12 @@
           <button class="carousel-dot" aria-label="Go to slide 3"></button>
         </div>
       </div>
-    </section>
-
-    <section id="about">
-      <div class="section-chip">Creator Log // Solo Build</div>
-      <h2 class="section-title">About The Project</h2>
-      <p class="section-intro">
-        Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
-      </p>
-
-      <div class="about-grid">
-        <div class="single-profile">
-          <img src="images/mocket-profile.png" alt="Mocket profile image" />
-        </div>
-
-        <div class="about-copy">
-          <h3>Built By Mocket</h3>
-          <p>
-            Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall build push.
-          </p>
-          <p style="margin-top: 12px;">
-            The goal of this stage is to prove the game loop, present a playable browser build, and establish the Memory Cube as the long-term identity system that can expand into deeper progression, community competition, and Web3 integration over time.
-          </p>
-          <p style="margin-top: 12px;">
-            This build is intentionally lean: playable, readable, and focused on showing the concept clearly.
-          </p>
-        </div>
       </div>
     </section>
 
     <section id="future">
-      <div class="section-chip">Expansion Path // Post Build</div>
+      <button class="section-chip mobile-collapsible-chip" type="button" data-mobile-collapse-target="futureMobileContent" aria-expanded="true">Expansion Path // Post Build</button>
+      <div class="mobile-collapsible-content" id="futureMobileContent">
 
       <div class="floating-asset asset-future-right interactive-asset">
         <img src="images/cube-smug.png" alt="" style="--flip:-1;" />
@@ -3210,6 +3277,34 @@
             <h3>Web3 Expansion</h3>
             <p>Wallet-linked identity, mint flow, future unlocks, and on-chain Memory Cube progression beyond the current state.</p>
           </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-chip">Creator Log // Solo Build</div>
+      <h2 class="section-title">About The Project</h2>
+      <p class="section-intro">
+        Flesh Nuggets is an independent project by Mocket, built to combine game feel, weird biotech worldbuilding, and a future on-chain identity layer through the Memory Cube.
+      </p>
+
+      <div class="about-grid">
+        <div class="single-profile">
+          <img src="images/mocket-profile.png" alt="Mocket profile image" />
+        </div>
+
+        <div class="about-copy">
+          <h3>Built By Mocket</h3>
+          <p>
+            Flesh Nuggets is being developed as a solo-led project, covering the visual identity, world concept, creative direction, and overall build push.
+          </p>
+          <p style="margin-top: 12px;">
+            The goal of this stage is to prove the game loop, present a playable browser build, and establish the Memory Cube as the long-term identity system that can expand into deeper progression, community competition, and Web3 integration over time.
+          </p>
+          <p style="margin-top: 12px;">
+            This build is intentionally lean: playable, readable, and focused on showing the concept clearly.
+          </p>
         </div>
       </div>
     </section>
@@ -3272,7 +3367,7 @@
     <h2>Genesis Mint</h2>
 
     <p class="mint-subtext">
-      Bind your laboratory identity to the system. Disposable bodies may fail, but the Memory Cube preserves identity, progression, and future unlocks.
+      Bind your laboratory identity to the system. Disposable bodies may fail, but the Memory Cube preserves identity and progression.
     </p>
 
     <div class="mint-cube-preview" id="mintCubePreview">
@@ -3434,6 +3529,23 @@
 
       const recordTabs = document.querySelectorAll("[data-record-tab]");
       const recordViews = document.querySelectorAll("[data-record-view]");
+      const upgradesTabs = document.querySelectorAll("[data-upgrades-tab]");
+      const upgradesViews = document.querySelectorAll("[data-upgrades-view]");
+      const mobileSectionToggles = document.querySelectorAll("[data-mobile-collapse-target]");
+
+      mobileSectionToggles.forEach((toggle) => {
+        const targetId = toggle.getAttribute("data-mobile-collapse-target");
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        toggle.addEventListener("click", () => {
+          if (!window.matchMedia("(max-width: 640px)").matches) return;
+
+          target.classList.toggle("collapsed");
+          const expanded = !target.classList.contains("collapsed");
+          toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+        });
+      });
 
       recordTabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -3445,6 +3557,20 @@
           tab.classList.add("active");
 
           const activeView = document.querySelector(`[data-record-view="${target}"]`);
+          if (activeView) activeView.classList.add("active");
+        });
+      });
+
+      upgradesTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-upgrades-tab");
+
+          upgradesTabs.forEach((t) => t.classList.remove("active"));
+          upgradesViews.forEach((view) => view.classList.remove("active"));
+
+          tab.classList.add("active");
+
+          const activeView = document.querySelector(`[data-upgrades-view="${target}"]`);
           if (activeView) activeView.classList.add("active");
         });
       });
