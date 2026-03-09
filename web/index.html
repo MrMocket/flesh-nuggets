@@ -148,10 +148,6 @@
       transition: transform var(--ease-main), text-shadow var(--ease-main);
     }
 
-    .brand:hover {
-      transform: translateY(-1px);
-      text-shadow: 4px 4px 0 rgba(116, 27, 27, 0.92), 0 0 14px rgba(202,53,53,0.18);
-    }
 
     .nav-zone {
       display: flex;
@@ -284,12 +280,6 @@
       transition: border-color 320ms ease, box-shadow 320ms ease, transform 320ms ease;
     }
 
-    section:hover {
-      border-color: #784141;
-      box-shadow:
-        0 0 30px rgba(0,0,0,0.34),
-        0 0 25px rgba(202,53,53,0.16);
-    }
 
     section::after {
       content: "";
@@ -478,6 +468,10 @@
       gap: 14px;
     }
 
+    .cube-mint-row {
+      margin-top: 18px;
+    }
+
     #hero .button-row {
       justify-content: center;
     }
@@ -593,12 +587,6 @@
       transition: transform 260ms ease, box-shadow 260ms ease;
     }
 
-    .run-sequence-shell:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 0 26px rgba(0,0,0,0.58),
-        0 0 24px rgba(202,53,53,0.12);
-    }
 
     .game-interface {
       max-width: 1140px;
@@ -837,23 +825,6 @@
       position: relative;
     }
 
-    .info-card:hover,
-    .about-copy:hover,
-    .future-card:hover,
-    details:hover,
-    .single-profile:hover,
-    .carousel-shell:hover,
-    .mini-card:hover,
-    .system-card:hover,
-    .upgrade-card:hover,
-    .loop-step:hover {
-      transform: translateY(-4px);
-      border-color: #5f3636;
-      box-shadow:
-        inset 0 0 18px rgba(255, 80, 80, 0.02),
-        0 14px 28px rgba(0,0,0,0.16),
-        0 0 18px rgba(202,53,53,0.08);
-    }
 
     .info-card,
     .about-copy {
@@ -922,12 +893,6 @@
       position: relative;
     }
 
-    .cube-image-box:hover,
-    .image-box:hover {
-      transform: translateY(-4px);
-      border-color: #5f3636;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.16), 0 0 18px rgba(202,53,53,0.08);
-    }
 
     .cube-image-box img,
     .image-box img,
@@ -939,12 +904,13 @@
       transition: transform 360ms ease;
     }
 
+    /* Keep a subtle image-only zoom in visual media zones. */
     .cube-image-box:hover img,
     .image-box:hover img,
-    .single-profile:hover img,
     .carousel-shell:hover .carousel-slide img {
-      transform: scale(1.03);
+      transform: scale(1.025);
     }
+
 
     .feature-list {
       display: grid;
@@ -959,10 +925,6 @@
       transition: transform var(--ease-main), color var(--ease-main);
     }
 
-    .feature-tag:hover {
-      transform: translateX(4px);
-      color: #f2e4e4;
-    }
 
     .feature-tag::before {
       content: "";
@@ -1310,11 +1272,6 @@
       justify-content: flex-start;
     }
 
-    .control-item:hover {
-      transform: translateY(-3px);
-      border-color: #5f3636;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18), 0 0 16px rgba(202,53,53,0.08);
-    }
 
     .control-title {
       color: #fff;
@@ -1530,9 +1487,6 @@
       opacity: 0.9;
     }
 
-    .tree-node:hover {
-      transform: translateY(-3px);
-    }
 
     .node-icon {
       width: 36px;
@@ -1696,10 +1650,6 @@
       transition: transform var(--ease-main), border-color var(--ease-main), box-shadow var(--ease-main);
     }
 
-    .leaderboard-row:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
-    }
 
     .leaderboard-row.top-1 {
       border-color: #d8b24a;
@@ -2294,6 +2244,311 @@
         scroll-behavior: auto !important;
       }
     }
+
+/* ============================
+   MEMORY CUBE MINT MODAL
+============================ */
+
+.mint-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.mint-modal.hidden {
+  display: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.mint-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.mint-modal-panel {
+  position: relative;
+  z-index: 1;
+  background: #111;
+  border: 2px solid #5b3a3a;
+  border-radius: 14px;
+  padding: 36px;
+  max-width: 620px;
+  width: min(92vw, 620px);
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255,80,80,0.25);
+}
+
+.mint-modal-panel.minting-active {
+  animation: mintPanelPulse 1.2s ease-in-out infinite;
+}
+
+.mint-modal-panel h2 {
+  font-family: "Orbitron", sans-serif;
+  margin-bottom: 14px;
+  color: #8dff8d;
+  text-shadow: 0 0 12px rgba(165,255,118,0.25);
+  font-size: clamp(2rem, 3.6vw, 2.45rem);
+}
+
+.mint-subtext {
+  max-width: 520px;
+  margin: 0 auto 24px;
+  color: var(--text-dim);
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+.mint-count {
+  margin-bottom: 20px;
+  color: var(--green-soft);
+  font-family: "Orbitron", sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.mint-count strong {
+  color: #fff;
+  font-size: 20px;
+}
+
+.mint-cube-preview {
+  margin: 24px auto 22px;
+  max-width: 250px;
+}
+
+.mint-cube-preview.mint-reveal {
+  animation: mintCubeReveal 0.7s ease forwards;
+}
+
+.mint-cube-preview img {
+  width: 100%;
+  display: block;
+}
+
+@keyframes mintCubeReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.92);
+    filter: brightness(0.65) saturate(0.75);
+    box-shadow: 0 0 0 rgba(123,212,85,0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: brightness(1.05) saturate(1.1);
+    box-shadow: 0 0 26px rgba(123,212,85,0.38);
+  }
+}
+
+.mint-process {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.mint-process-label {
+  color: var(--text-soft);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.wallet-style-mint-btn {
+  background: linear-gradient(180deg, #1f3a1f, #111e11);
+  color: #d4f7c9;
+  border: 1px solid rgba(141,255,141,0.52);
+  border-radius: var(--radius-pill);
+  padding: 14px 26px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform var(--ease-main),
+    box-shadow var(--ease-main),
+    background var(--ease-main);
+  box-shadow:
+    0 0 0 1px rgba(10, 20, 10, 0.92),
+    0 0 12px rgba(165,255,118,0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-style-mint-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.14) 50%, transparent 80%);
+  transform: translateX(-130%);
+  transition: transform 450ms ease;
+}
+
+.wallet-style-mint-btn:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #274727, #153015);
+  box-shadow:
+    0 0 0 1px rgba(10, 20, 10, 0.98),
+    0 0 16px rgba(165,255,118,0.22);
+}
+
+.wallet-style-mint-btn:hover::before {
+  transform: translateX(130%);
+}
+
+.mint-loading-area {
+  margin-top: 22px;
+  text-align: center;
+}
+
+.mint-loading-area.hidden {
+  display: none;
+}
+
+.mint-loading-label {
+  color: var(--green-soft);
+  font-family: "Orbitron", sans-serif;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mint-progress-shell {
+  width: 100%;
+  max-width: 380px;
+  height: 18px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  border: 2px solid #5b3a3a;
+  background: #0d0d0d;
+  overflow: hidden;
+}
+
+.mint-progress-bar {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7bd455, #a5ff76);
+  box-shadow: 0 0 14px rgba(165,255,118,0.35);
+  transition: width 0.2s linear;
+}
+
+.mint-progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  right: -30px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.45), rgba(255,255,255,0));
+  transform: skewX(-18deg);
+  animation: mintProgressSweep 0.9s linear infinite;
+}
+
+.mint-progress-percent {
+  color: #fff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 16px;
+}
+
+.mint-success-area {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.mint-success-area.hidden {
+  display: none;
+}
+
+.mint-success-label {
+  color: var(--green-soft);
+  font-family: "Orbitron", sans-serif;
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mint-success-copy {
+  color: #8dff8d;
+  font-family: "Courier Prime", monospace;
+  font-size: 19px;
+  text-shadow: 0 0 10px rgba(165,255,118,0.2);
+}
+
+.mint-cube-preview.mint-charging img {
+  animation: mintChargingGlow 0.75s ease-in-out infinite;
+}
+
+@keyframes mintPanelPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 25px rgba(255,80,80,0.25), 0 0 0 rgba(165,255,118,0);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(255,80,80,0.25), 0 0 18px rgba(165,255,118,0.18);
+  }
+}
+
+@keyframes mintProgressSweep {
+  from {
+    transform: translateX(-20px) skewX(-18deg);
+  }
+
+  to {
+    transform: translateX(40px) skewX(-18deg);
+  }
+}
+
+@keyframes mintChargingGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(141,255,141,0));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 14px rgba(141,255,141,0.45));
+  }
+}
+
+.mint-cube-preview.mint-finished img {
+  cursor: zoom-in;
+}
+
+.mint-image-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 24px;
+}
+
+.mint-image-lightbox.hidden {
+  display: none;
+}
+
+.mint-image-lightbox img {
+  width: auto;
+  max-width: 95vw;
+  max-height: 92vh;
+  border-radius: 16px;
+  border: 2px solid #8dff8d;
+  box-shadow: 0 0 28px rgba(141,255,141,0.28);
+  background: #0b0b0b;
+}
   </style>
 </head>
 <body>
@@ -2339,9 +2594,8 @@
           Flesh Nuggets is a browser-based roguelike where disposable flesh bodies are sent into dangerous lab runs. Your persistent identity is preserved by the Memory Cube.
         </p>
 
-        <div class="button-row">
-          <a href="#play" class="btn glitch-btn">Enter The Vats</a>
-          <a href="#cube" class="btn secondary">What Is A Memory Cube?</a>
+        <div class="button-row hero-mint-row">
+          <button class="btn secondary" id="openMintModal" data-open-mint-modal type="button">Mint Memory Cube!</button>
         </div>
       </div>
     </section>
@@ -2407,10 +2661,7 @@
 
     <section id="systems">
       <div class="section-chip">Run Clarity // Judge Fast Read</div>
-      <h2 class="section-title">How The Run Works</h2>
-      <p class="section-intro">
-        Flesh Nuggets is a room-based roguelike where disposable flesh bodies are sent into hostile lab runs. The Memory Cube preserves your persistent identity across runs—without it, death is permanent.
-      </p>
+      <h2 class="section-title">Controls</h2>
 
       <div class="controls-grid">
         <div class="control-item">
@@ -2476,6 +2727,9 @@
       </div>
 
       <h3 class="game-loop-title">Game Loop</h3>
+      <p class="section-intro">
+        Flesh Nuggets is a room-based roguelike where disposable flesh bodies are sent into hostile lab runs. The Memory Cube preserves your persistent identity across runs, without it death is permanent.
+      </p>
 
       <div class="loop-grid">
         <div class="loop-step">
@@ -2784,11 +3038,10 @@
           <div class="feature-list">
             <div class="feature-tag"><strong>Persistent identity:</strong> your Cube is what survives.</div>
             <div class="feature-tag"><strong>Disposable runs:</strong> each body is expendable.</div>
-            <div class="feature-tag"><strong>Future Web3 layer:</strong> wallet connection and minting live on the website for a cleaner build flow.</div>
           </div>
 
-          <div class="button-row" style="justify-content: flex-start;">
-            <button class="btn secondary">Mint Memory Cube</button>
+          <div class="button-row cube-mint-row" style="justify-content: flex-start;">
+            <button class="btn secondary" data-open-mint-modal type="button">Mint Memory Cube</button>
           </div>
         </div>
 
@@ -2984,6 +3237,59 @@
       </div>
     </footer>
 
+<!-- Memory Cube Mint Modal -->
+
+<div id="mintModal" class="mint-modal hidden">
+
+  <div class="mint-modal-backdrop" id="mintModalBackdrop"></div>
+
+  <div class="mint-modal-panel">
+
+    <h2>Genesis Mint</h2>
+
+    <p class="mint-subtext">
+      Bind your laboratory identity to the system. Disposable bodies may fail, but the Memory Cube preserves identity, progression, and future unlocks.
+    </p>
+
+    <div class="mint-cube-preview" id="mintCubePreview">
+      <img src="images/memory-cube.png" alt="Genesis Memory Cube">
+    </div>
+
+    <div class="mint-count">
+      <strong>200 / 1000</strong>
+    </div>
+
+    <div class="mint-process" id="mintProcess">
+      <div class="mint-process-label">Lab Minting Process Ready</div>
+      <button id="simulateMintBtn" class="wallet-style-mint-btn" type="button">
+        Mint Cube
+      </button>
+    </div>
+
+    <div id="mintLoadingArea" class="mint-loading-area hidden">
+      <div class="mint-loading-label" id="mintLoadingLabel">Initializing Cube Shell...</div>
+
+      <div class="mint-progress-shell">
+        <div class="mint-progress-bar" id="mintProgressBar"></div>
+      </div>
+
+      <div class="mint-progress-percent" id="mintProgressPercent">0%</div>
+    </div>
+
+    <div id="mintSuccessArea" class="mint-success-area hidden">
+      <div class="mint-success-copy" id="mintSuccessCopy">
+        Genesis Memory Cube #253
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="mintImageLightbox" class="mint-image-lightbox hidden">
+  <img src="images/memory-cube.png" alt="Genesis Memory Cube enlarged preview" />
+</div>
+
   </div>
 
   <script>
@@ -3119,8 +3425,167 @@
         });
       });
 
+const openMintModalButtons = document.querySelectorAll("[data-open-mint-modal]");
+const mintModal = document.getElementById("mintModal");
+const mintModalBackdrop = document.getElementById("mintModalBackdrop");
+const simulateMintBtn = document.getElementById("simulateMintBtn");
+const mintLoadingArea = document.getElementById("mintLoadingArea");
+const mintLoadingLabel = document.getElementById("mintLoadingLabel");
+const mintProgressBar = document.getElementById("mintProgressBar");
+const mintProgressPercent = document.getElementById("mintProgressPercent");
+const mintSuccessArea = document.getElementById("mintSuccessArea");
+const mintProcess = document.getElementById("mintProcess");
+const mintCount = document.querySelector("#mintModal .mint-count");
+const mintCubePreview = document.getElementById("mintCubePreview");
+const mintModalPanel = document.querySelector("#mintModal .mint-modal-panel");
+
+let mintInterval = null;
+
+function resetMintModal() {
+  if (mintInterval) {
+    clearInterval(mintInterval);
+    mintInterval = null;
+  }
+
+  if (mintProcess) mintProcess.classList.remove("hidden");
+  if (mintCount) mintCount.classList.remove("hidden");
+  if (mintLoadingArea) mintLoadingArea.classList.add("hidden");
+  if (mintSuccessArea) mintSuccessArea.classList.add("hidden");
+  if (mintModalPanel) mintModalPanel.classList.remove("minting-active");
+  if (mintCubePreview) {
+    mintCubePreview.classList.remove("hidden");
+    mintCubePreview.classList.remove("mint-reveal");
+    mintCubePreview.classList.remove("mint-finished");
+    mintCubePreview.classList.remove("mint-charging");
+  }
+
+  if (mintProgressBar) mintProgressBar.style.width = "0%";
+  if (mintProgressPercent) mintProgressPercent.textContent = "0%";
+  if (mintLoadingLabel) mintLoadingLabel.textContent = "Initializing Cube Shell...";
+}
+
+function closeMintModal() {
+  if (!mintModal) return;
+  mintModal.classList.add("hidden");
+  setTimeout(resetMintModal, 150);
+}
+
+if (openMintModalButtons.length && mintModal) {
+  openMintModalButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      mintModal.classList.remove("hidden");
+      resetMintModal();
+    });
+  });
+}
+
+if (mintModalBackdrop) {
+  mintModalBackdrop.addEventListener("click", () => {
+    closeMintModal();
+  });
+}
+
+if (mintModalPanel) {
+  mintModalPanel.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+}
+
+if (simulateMintBtn) {
+  simulateMintBtn.addEventListener("click", () => {
+    if (mintProcess) mintProcess.classList.add("hidden");
+    if (mintCount) mintCount.classList.add("hidden");
+    if (mintLoadingArea) mintLoadingArea.classList.remove("hidden");
+    if (mintSuccessArea) mintSuccessArea.classList.add("hidden");
+    if (mintCubePreview) mintCubePreview.classList.remove("mint-finished");
+    if (mintModalPanel) mintModalPanel.classList.add("minting-active");
+    if (mintCubePreview) mintCubePreview.classList.add("mint-charging");
+    
+    const mintPreviewImage = document.querySelector("#mintCubePreview img");
+
+    let progress = 0;
+
+    if (mintPreviewImage) {
+      mintPreviewImage.style.clipPath = "inset(0 0 100% 0)";
+    }
+
+    mintInterval = setInterval(() => {
+      progress += 4;
+
+      if (mintProgressBar) mintProgressBar.style.width = `${progress}%`;
+      if (mintProgressPercent) mintProgressPercent.textContent = `${progress}%`;
+
+      if (mintPreviewImage) {
+        const hiddenAmount = 100 - progress;
+        mintPreviewImage.style.clipPath = `inset(0 0 ${hiddenAmount}% 0)`;
+      }
+
+      if (mintLoadingLabel) {
+        if (progress < 28) {
+          mintLoadingLabel.textContent = "Initializing Cube Shell...";
+        } else if (progress < 56) {
+          mintLoadingLabel.textContent = "Binding Lab Identity...";
+        } else if (progress < 84) {
+          mintLoadingLabel.textContent = "Writing Genesis Memory...";
+        } else {
+          mintLoadingLabel.textContent = "Finalizing Mint...";
+        }
+      }
+
+      if (progress >= 100) {
+        clearInterval(mintInterval);
+        mintInterval = null;
+
+        if (mintLoadingArea) mintLoadingArea.classList.add("hidden");
+        if (mintSuccessArea) mintSuccessArea.classList.remove("hidden");
+        if (mintProcess) mintProcess.classList.add("hidden");
+        if (mintCount) mintCount.classList.add("hidden");
+        if (mintModalPanel) mintModalPanel.classList.remove("minting-active");
+        if (mintCubePreview) {
+          mintCubePreview.classList.add("mint-finished");
+          mintCubePreview.classList.remove("mint-charging");
+        }
+
+        const mintSuccessCopy = document.getElementById("mintSuccessCopy");
+        const successText = "Genesis Memory Cube #253";
+
+        if (mintSuccessCopy) {
+          mintSuccessCopy.textContent = "";
+          let i = 0;
+
+          const typeInterval = setInterval(() => {
+            mintSuccessCopy.textContent += successText.charAt(i);
+            i++;
+
+            if (i >= successText.length) {
+              clearInterval(typeInterval);
+            }
+          }, 45);
+        }
+      }
+    }, 120);
+  });
+}
+
+const mintImageLightbox = document.getElementById("mintImageLightbox");
+
+if (mintCubePreview && mintImageLightbox) {
+  mintCubePreview.addEventListener("click", () => {
+    if (mintCubePreview.classList.contains("mint-finished")) {
+      mintImageLightbox.classList.remove("hidden");
+    }
+  });
+}
+
+if (mintImageLightbox) {
+  mintImageLightbox.addEventListener("click", () => {
+    mintImageLightbox.classList.add("hidden");
+  });
+}
+
     })();
   </script>
   <script type="module" src="/src/main.js"></script>
+
 </body>
 </html>
