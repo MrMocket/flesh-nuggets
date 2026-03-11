@@ -17,6 +17,7 @@ enum State { ACQUIRE, CHASE, WINDUP, LUNGE, RECOVERY, EVADE }
 # Engagement
 # ----------------------------
 @export var wake_delay := 0.6
+@export var web_wake_jitter := 0.5
 @export var aggro_range := 900.0
 @export var disengage_range := 1400.0
 var wake_timer := 0.0
@@ -189,7 +190,10 @@ func _ready() -> void:
 	health.died.connect(_on_died)
 	health.damaged.connect(_on_damaged)
 
-	wake_timer = wake_delay
+	if OS.has_feature("web"):
+		wake_timer = wake_delay + randf_range(0.0, web_wake_jitter)
+	else:
+		wake_timer = wake_delay
 	player = get_tree().get_first_node_in_group("player") as Node2D
 
 	damage_hitbox.area_entered.connect(_on_damage_area_entered)
@@ -201,6 +205,7 @@ func _ready() -> void:
 	lunge_cd = randf_range(0.0, lunge_cooldown * 0.75)
 	evade_cd = randf_range(0.0, evade_cooldown * 0.75)
 	lunge_retry_timer = randf_range(0.0, 0.25)
+	_walk_step_timer = randf_range(0.0, walk_puff_step_interval * (web_walk_puff_interval_scale if OS.has_feature("web") else 1.0))
 	_visual_base_scale = visual.scale
 
 	state = State.ACQUIRE
