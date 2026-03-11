@@ -17,11 +17,13 @@ class_name RoomController
 @export var starting_enemies := 2
 @export var enemies_per_room := 1
 @export var max_enemies := 12
+@export var web_spawn_batch_size := 2
 
 # Spawn behaviour
 @export var min_spawn_dist_from_player := 180.0
 @export var min_spawn_dist_between_enemies := 90.0
 @export var spawn_attempts_per_enemy := 20
+@export var web_cleanup_batch_size := 8
 
 # Random spread around room center (tweak to change spawn zone)
 @export var spawn_range_x := 260.0
@@ -205,7 +207,7 @@ func _on_door_trigger_entered(body: Node, door_name: StringName) -> void:
 	print("RunState room_index now: ", RunState.room_index)
 	RunState.entered_from = entered_from
 
-	_reset_room_for_new_entry(entered_from)
+	await _reset_room_for_transition(entered_from)
 	_teleport_player_to_spawn(entered_from)
 
 	await _fade_to(0.0, 0.12)
@@ -274,6 +276,20 @@ func _clear_world_decals_and_drops() -> void:
 		for c in decals.get_children():
 			c.queue_free()
 
+
+func _clear_world_decals_and_drops_batched(batch_size: int) -> void:
+	var world := get_tree().current_scene.get_node_or_null("World")
+	if world == null:
+		return
+
+	var drops := world.get_node_or_null("Drops")
+	if drops:
+		await _queue_free_children_batched(drops, batch_size)
+
+	var decals := world.get_node_or_null("Decals")
+	if decals:
+		await _queue_free_children_batched(decals, batch_size)
+
 # -------------------------------------------------
 # Enemies
 # -------------------------------------------------
@@ -282,6 +298,57 @@ func clear_enemies() -> void:
 		if is_instance_valid(e):
 			e.queue_free()
 	live_enemies.clear()
+
+
+func _clear_enemies_batched(batch_size: int) -> void:
+	var processed := 0
+	for e in live_enemies:
+		if is_instance_valid(e):
+			e.queue_free()
+			processed += 1
+
+			if batch_size > 0 and processed % batch_size == 0:
+				await get_tree().process_frame
+	live_enemies.clear()
+
+
+func _queue_free_children_batched(parent: Node, batch_size: int) -> void:
+	if parent == null:
+		return
+
+	var processed := 0
+	for c in parent.get_children():
+		(c as Node).queue_free()
+		processed += 1
+
+		if batch_size > 0 and processed % batch_size == 0:
+			await get_tree().process_frame
+
+
+func _reset_room_for_transition(entered_from: StringName) -> void:
+	entered_from_current = entered_from
+	rooms_entered += 1
+
+	close_all_doors()
+	reroll_decals()
+
+	if _is_web_build():
+		await _clear_world_decals_and_drops_batched(web_cleanup_batch_size)
+		_suppress_enemy_callbacks = true
+		await _clear_enemies_batched(web_cleanup_batch_size)
+		enemies_alive = 0
+		_suppress_enemy_callbacks = false
+		await spawn_enemies_mvp()
+	else:
+		_clear_world_decals_and_drops()
+		_suppress_enemy_callbacks = true
+		clear_enemies()
+		enemies_alive = 0
+		_suppress_enemy_callbacks = false
+		spawn_enemies_mvp()
+
+	if Engine.has_singleton("RunState"):
+		RunState.entered_from = entered_from_current
 
 # NEW: calculates how many enemies to spawn this room
 func _get_enemy_spawn_count() -> int:
@@ -337,21 +404,34 @@ func spawn_enemies_mvp() -> void:
 			spawn_pos = candidate
 			break
 
-		var enemy := enemy_scene.instantiate()
-
-		# Force sane z so container decides layering
-		if enemy is CanvasItem:
-			(enemy as CanvasItem).z_index = 0
-			(enemy as CanvasItem).z_as_relative = true
-			(enemy as CanvasItem).y_sort_enabled = false
-
-		live_enemies.append(enemy)
-		_register_enemy(enemy)
-
-		enemies_container.call_deferred("add_child", enemy)
-		(enemy as Node2D).set_deferred("global_position", spawn_pos)
-
 		chosen_positions.append(spawn_pos)
+
+	var do_stagger := _is_web_build() and web_spawn_batch_size > 0
+	for i in range(chosen_positions.size()):
+		_spawn_enemy_at(chosen_positions[i])
+
+		if do_stagger and (i + 1) % web_spawn_batch_size == 0 and i + 1 < chosen_positions.size():
+			await get_tree().process_frame
+
+
+func _spawn_enemy_at(spawn_pos: Vector2) -> void:
+	var enemy := enemy_scene.instantiate()
+
+	# Force sane z so container decides layering
+	if enemy is CanvasItem:
+		(enemy as CanvasItem).z_index = 0
+		(enemy as CanvasItem).z_as_relative = true
+		(enemy as CanvasItem).y_sort_enabled = false
+
+	live_enemies.append(enemy)
+	_register_enemy(enemy)
+
+	enemies_container.call_deferred("add_child", enemy)
+	(enemy as Node2D).set_deferred("global_position", spawn_pos)
+
+
+func _is_web_build() -> bool:
+	return OS.has_feature("web")
 
 # -------------------------------------------------
 # Enemy clear detection

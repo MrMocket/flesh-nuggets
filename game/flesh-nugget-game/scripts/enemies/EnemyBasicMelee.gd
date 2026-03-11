@@ -37,6 +37,10 @@ var aggroed := false
 
 # Enemy walk puffs
 @export var enable_walk_puffs := true
+@export var disable_walk_puffs_on_web := false
+@export var web_walk_puff_amount_scale := 0.5
+@export var web_walk_puff_lifetime_scale := 0.75
+@export var web_walk_puff_interval_scale := 1.35
 @export var walk_puff_color := Color(0.92, 0.92, 0.92, 0.92)
 @export var walk_puff_step_interval := 0.17
 @export var walk_puff_speed_threshold := 40.0
@@ -168,8 +172,14 @@ var _move_blend := 0.0
 var _visual_base_scale := Vector2.ONE
 var _walk_step_timer := 0.0
 
+static var _enemies_cache_frame: int = -1
+static var _enemies_cache: Array = []
+
 
 func _ready() -> void:
+	if disable_walk_puffs_on_web and OS.has_feature("web"):
+		enable_walk_puffs = false
+
 	add_to_group("enemies")
 	randomize()
 
@@ -321,7 +331,7 @@ func _process_chase(delta: float) -> void:
 func _compute_separation() -> Vector2:
 	var sum := Vector2.ZERO
 	var count := 0
-	var enemies := get_tree().get_nodes_in_group("enemies")
+	var enemies := _get_enemies_group_cached()
 
 	for e in enemies:
 		if e == self:
@@ -354,7 +364,7 @@ func is_pack_lunging() -> bool:
 
 func _pack_lunge_slots_used() -> int:
 	var used := 0
-	var enemies := get_tree().get_nodes_in_group("enemies")
+	var enemies := _get_enemies_group_cached()
 
 	for e in enemies:
 		if e == self:
@@ -372,6 +382,14 @@ func _pack_lunge_slots_used() -> int:
 				break
 
 	return used
+
+
+func _get_enemies_group_cached() -> Array:
+	var frame := Engine.get_process_frames()
+	if _enemies_cache_frame != frame:
+		_enemies_cache_frame = frame
+		_enemies_cache = get_tree().get_nodes_in_group("enemies")
+	return _enemies_cache
 
 
 # ----------------------------
@@ -686,15 +704,20 @@ func _handle_walk_puffs(delta: float) -> void:
 
 	_spawn_walk_puff()
 	var speed_ratio: float = clampf(velocity.length() / maxf(1.0, max_speed), 0.0, 1.0)
-	_walk_step_timer = lerpf(walk_puff_step_interval * 1.2, walk_puff_step_interval * 0.7, speed_ratio)
+	var interval_scale := web_walk_puff_interval_scale if OS.has_feature("web") else 1.0
+	_walk_step_timer = lerpf(walk_puff_step_interval * 1.2, walk_puff_step_interval * 0.7, speed_ratio) * interval_scale
 
 
 func _spawn_walk_puff() -> void:
 	var puff := GPUParticles2D.new()
+	var is_web := OS.has_feature("web")
+	var amount_scale := web_walk_puff_amount_scale if is_web else 1.0
+	var life_scale := web_walk_puff_lifetime_scale if is_web else 1.0
+	var puff_amount: int = maxi(4, int(round(16.0 * amount_scale)))
 	puff.one_shot = true
 	puff.emitting = false
-	puff.amount = 16
-	puff.lifetime = 0.42
+	puff.amount = puff_amount
+	puff.lifetime = 0.42 * life_scale
 	puff.explosiveness = 0.95
 	puff.preprocess = 0.0
 	puff.local_coords = false

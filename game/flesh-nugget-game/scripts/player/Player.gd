@@ -52,6 +52,7 @@ signal damaged_feedback
 # Walk puff particles (procedural)
 # ----------------------------
 @export var enable_walk_puffs := true
+@export var disable_walk_puffs_on_web := true
 @export var walk_puff_color := Color(0.92, 0.92, 0.92, 0.96)
 @export var walk_puff_step_interval := 0.14
 @export var walk_puff_speed_threshold := 45.0
@@ -109,6 +110,9 @@ func add_nuggets(amount: int) -> void:
 
 
 func _ready() -> void:
+	if disable_walk_puffs_on_web and OS.has_feature("web"):
+		enable_walk_puffs = false
+
 	ammo = mag_size
 	emit_signal("ammo_changed", ammo, mag_size)
 
