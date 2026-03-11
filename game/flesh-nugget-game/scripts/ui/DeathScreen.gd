@@ -6,6 +6,8 @@ extends Control
 @onready var menu_btn: Button = %MenuButton
 
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
 	var flesh := RunState.flesh_collected
 	var rooms := RunState.room_index
 	stats_label.text = "Flesh Collected: %d\nRooms Cleared: %d" % [flesh, rooms]

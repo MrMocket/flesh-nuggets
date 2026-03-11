@@ -29,6 +29,18 @@ var aggroed := false
 @export var acceleration := 1100.0
 @export var friction := 900.0
 
+# Subtle squash while idle/moving
+@export var squash_pulse_hz := 1.6
+@export var idle_squash_amount := 0.020
+@export var move_squash_amount := 0.010
+@export var squash_move_smoothing := 8.0
+
+# Enemy walk puffs
+@export var enable_walk_puffs := true
+@export var walk_puff_color := Color(0.92, 0.92, 0.92, 0.92)
+@export var walk_puff_step_interval := 0.17
+@export var walk_puff_speed_threshold := 40.0
+
 @export var close_bump_range := 55.0
 @export var orbit_strength := 0.75
 @export var approach_bias := 0.35
@@ -135,6 +147,7 @@ var lunge_bounces_left := 0
 
 @onready var health := $Health as HealthComponent
 @onready var damage_hitbox: Area2D = $DamageHitbox
+@onready var visual: Node2D = $Visual
 @onready var anim: AnimatedSprite2D = $Visual/AnimatedSprite2D
 @onready var shadow: Sprite2D = $Shadow
 
@@ -144,6 +157,10 @@ var player_hurtbox: Hurtbox = null
 var state: State = State.ACQUIRE
 var state_timer := 0.0
 var _current_anim := ""
+var _squash_time := 0.0
+var _move_blend := 0.0
+var _visual_base_scale := Vector2.ONE
+var _walk_step_timer := 0.0
 
 
 func _ready() -> void:
@@ -168,21 +185,26 @@ func _ready() -> void:
 	lunge_cd = randf_range(0.0, lunge_cooldown * 0.75)
 	evade_cd = randf_range(0.0, evade_cooldown * 0.75)
 	lunge_retry_timer = randf_range(0.0, 0.25)
+	_visual_base_scale = visual.scale
 
 	state = State.ACQUIRE
 	_play_anim("idle")
 
 
 func _physics_process(delta: float) -> void:
+	_squash_time += delta
+
 	if wake_timer > 0.0:
 		wake_timer -= delta
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		move_and_slide()
+		_update_movement_fx(delta)
 		return
 
 	if player == null:
 		player = get_tree().get_first_node_in_group("player") as Node2D
 		if player == null:
+			_update_movement_fx(delta)
 			return
 
 	# cooldown timers
@@ -207,6 +229,7 @@ func _physics_process(delta: float) -> void:
 	# pre-aggro behaviour
 	if not aggroed:
 		_process_roam(delta)
+		_update_movement_fx(delta)
 		return
 
 	# main state machine
@@ -221,6 +244,8 @@ func _physics_process(delta: float) -> void:
 	# bump damage always, obey contact_interval
 	if player_hurtbox != null and hit_cd <= 0.0:
 		_apply_contact_hit(player_hurtbox)
+
+	_update_movement_fx(delta)
 
 
 # ----------------------------
@@ -613,3 +638,78 @@ func _play_anim(anim_name: String) -> void:
 	_current_anim = anim_name
 	if anim.sprite_frames and anim.sprite_frames.has_animation(anim_name):
 		anim.play(anim_name)
+
+
+func _update_visual_squash(delta: float) -> void:
+	if visual == null:
+		return
+
+	var speed_ratio: float = clampf(velocity.length() / maxf(1.0, max_speed), 0.0, 1.0)
+	_move_blend = move_toward(_move_blend, speed_ratio, squash_move_smoothing * delta)
+
+	var pulse: float = sin(TAU * squash_pulse_hz * _squash_time)
+	var amount: float = lerpf(idle_squash_amount, move_squash_amount, _move_blend) * pulse
+	var sy: float = 1.0 - amount
+	var sx: float = 1.0 + (amount * 0.35)
+	visual.scale = Vector2(_visual_base_scale.x * sx, _visual_base_scale.y * sy)
+
+
+func _handle_walk_puffs(delta: float) -> void:
+	if not enable_walk_puffs:
+		return
+
+	if velocity.length() < walk_puff_speed_threshold:
+		_walk_step_timer = 0.0
+		return
+
+	if _walk_step_timer > 0.0:
+		_walk_step_timer -= delta
+		return
+
+	_spawn_walk_puff()
+	var speed_ratio: float = clampf(velocity.length() / maxf(1.0, max_speed), 0.0, 1.0)
+	_walk_step_timer = lerpf(walk_puff_step_interval * 1.2, walk_puff_step_interval * 0.7, speed_ratio)
+
+
+func _spawn_walk_puff() -> void:
+	var puff := GPUParticles2D.new()
+	puff.one_shot = true
+	puff.emitting = false
+	puff.amount = 14
+	puff.lifetime = 0.42
+	puff.explosiveness = 0.95
+	puff.preprocess = 0.0
+	puff.local_coords = false
+	puff.draw_order = GPUParticles2D.DRAW_ORDER_LIFETIME
+	puff.modulate = walk_puff_color
+	puff.global_position = global_position + Vector2(0.0, 10.0)
+
+	var mat := ParticleProcessMaterial.new()
+	mat.direction = Vector3(0.0, -0.2, 0.0)
+	mat.spread = 60.0
+	mat.initial_velocity_min = 20.0
+	mat.initial_velocity_max = 54.0
+	mat.gravity = Vector3(0.0, 40.0, 0.0)
+	mat.scale_min = 2.7
+	mat.scale_max = 4.3
+	mat.damping_min = 14.0
+	mat.damping_max = 22.0
+	mat.angular_velocity_min = -180.0
+	mat.angular_velocity_max = 180.0
+	mat.color = walk_puff_color
+	puff.process_material = mat
+
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+
+	parent.add_child(puff)
+	puff.emitting = true
+	get_tree().create_timer(0.70).timeout.connect(puff.queue_free)
+
+
+func _update_movement_fx(delta: float) -> void:
+	_update_visual_squash(delta)
+	_handle_walk_puffs(delta)

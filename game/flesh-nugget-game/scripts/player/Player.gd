@@ -40,6 +40,22 @@ signal damaged_feedback
 @export var crosshair_distance := 40.0
 @export var crosshair_fire_hold := 0.08
 
+# ----------------------------
+# Idle/Walk feel (no new art needed)
+# ----------------------------
+@export var move_blend_smoothing := 10.0
+@export var idle_pulse_hz := 1.7
+@export var idle_squash_amount := 0.025
+@export var move_squash_amount := 0.012
+
+# ----------------------------
+# Walk puff particles (procedural)
+# ----------------------------
+@export var enable_walk_puffs := true
+@export var walk_puff_color := Color(0.92, 0.92, 0.92, 0.96)
+@export var walk_puff_step_interval := 0.14
+@export var walk_puff_speed_threshold := 45.0
+
 var aim_dir := Vector2.RIGHT
 var facing_right := true
 var using_mouse_aim := true
@@ -61,6 +77,10 @@ var shoot_anim_timer := 0.0
 var reload_anim_delay_timer := 0.0
 var reload_anim_speed_restore := 1.0
 var crosshair_fire_timer := 0.0
+var move_blend := 0.0
+var idle_pulse_time := 0.0
+var walk_step_timer := 0.0
+var visual_base_scale := Vector2.ONE
 
 # Nodes
 @onready var visual: Node2D = $Visual
@@ -104,6 +124,7 @@ func _ready() -> void:
 	health.died.connect(_on_died)
 
 	reload_anim_speed_restore = anim.speed_scale
+	visual_base_scale = visual.scale
 	play_anim("idle")
 	_set_crosshair_idle()
 
@@ -128,6 +149,8 @@ func _physics_process(delta: float) -> void:
 	# ----------------------------
 	# Tick animation timers
 	# ----------------------------
+	idle_pulse_time += delta
+
 	if shoot_anim_timer > 0.0:
 		shoot_anim_timer = max(0.0, shoot_anim_timer - delta)
 
@@ -152,6 +175,12 @@ func _physics_process(delta: float) -> void:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
 	move_and_slide()
+
+	# Smoothly blend movement feel between idle and moving.
+	var speed_ratio: float = clampf(velocity.length() / maxf(1.0, max_speed), 0.0, 1.0)
+	move_blend = move_toward(move_blend, speed_ratio, move_blend_smoothing * delta)
+	_update_visual_squash()
+	_handle_walk_puffs(delta)
 
 	# ----------------------------
 	# 2) Aim input (arrow keys + mouse fallback)
@@ -251,7 +280,10 @@ func _update_animation() -> void:
 
 	# Default: idle
 	_set_anim_speed_default()
-	play_anim("idle")
+	if move_blend > 0.08 and anim != null and anim.sprite_frames != null and anim.sprite_frames.has_animation("walk"):
+		play_anim("walk")
+	else:
+		play_anim("idle")
 
 
 func update_facing(dir: Vector2) -> void:
@@ -385,6 +417,73 @@ func _fit_reload_anim_to_reload_time() -> void:
 
 func _set_anim_speed_default() -> void:
 	anim.speed_scale = reload_anim_speed_restore
+
+
+func _update_visual_squash() -> void:
+	if visual == null:
+		return
+
+	var pulse: float = sin(TAU * idle_pulse_hz * idle_pulse_time)
+	var amount: float = lerpf(idle_squash_amount, move_squash_amount, move_blend) * pulse
+	var sy: float = 1.0 - amount
+	var sx: float = 1.0 + (amount * 0.35)
+	visual.scale = Vector2(visual_base_scale.x * sx, visual_base_scale.y * sy)
+
+
+func _handle_walk_puffs(delta: float) -> void:
+	if not enable_walk_puffs:
+		return
+
+	if velocity.length() < walk_puff_speed_threshold:
+		walk_step_timer = 0.0
+		return
+
+	if walk_step_timer > 0.0:
+		walk_step_timer -= delta
+		return
+
+	_spawn_walk_puff()
+	var speed_ratio: float = clampf(velocity.length() / maxf(1.0, max_speed), 0.0, 1.0)
+	walk_step_timer = lerpf(walk_puff_step_interval * 1.2, walk_puff_step_interval * 0.7, speed_ratio)
+
+
+func _spawn_walk_puff() -> void:
+	var puff := GPUParticles2D.new()
+	puff.one_shot = true
+	puff.emitting = false
+	puff.amount = 16
+	puff.lifetime = 0.40
+	puff.explosiveness = 0.95
+	puff.preprocess = 0.0
+	puff.local_coords = false
+	puff.draw_order = GPUParticles2D.DRAW_ORDER_LIFETIME
+	puff.modulate = walk_puff_color
+	puff.global_position = global_position + Vector2(0.0, 10.0)
+
+	var mat := ParticleProcessMaterial.new()
+	mat.direction = Vector3(0.0, -0.2, 0.0)
+	mat.spread = 60.0
+	mat.initial_velocity_min = 22.0
+	mat.initial_velocity_max = 58.0
+	mat.gravity = Vector3(0.0, 40.0, 0.0)
+	mat.scale_min = 2.8
+	mat.scale_max = 4.4
+	mat.damping_min = 14.0
+	mat.damping_max = 22.0
+	mat.angular_velocity_min = -180.0
+	mat.angular_velocity_max = 180.0
+	mat.color = walk_puff_color
+	puff.process_material = mat
+
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+
+	parent.add_child(puff)
+	puff.emitting = true
+	get_tree().create_timer(0.65).timeout.connect(puff.queue_free)
 
 
 func _update_crosshair_transform() -> void:
