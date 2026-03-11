@@ -24,6 +24,7 @@ class_name RoomController
 @export var min_spawn_dist_between_enemies := 90.0
 @export var spawn_attempts_per_enemy := 20
 @export var web_cleanup_batch_size := 8
+@export var web_cleanup_settle_frames := 2
 
 # Random spread around room center (tweak to change spawn zone)
 @export var spawn_range_x := 260.0
@@ -338,6 +339,8 @@ func _reset_room_for_transition(entered_from: StringName) -> void:
 		await _clear_enemies_batched(web_cleanup_batch_size)
 		enemies_alive = 0
 		_suppress_enemy_callbacks = false
+		for _i in range(web_cleanup_settle_frames):
+			await get_tree().process_frame
 		await spawn_enemies_mvp()
 	else:
 		_clear_world_decals_and_drops()
@@ -426,8 +429,8 @@ func _spawn_enemy_at(spawn_pos: Vector2) -> void:
 	live_enemies.append(enemy)
 	_register_enemy(enemy)
 
-	enemies_container.call_deferred("add_child", enemy)
-	(enemy as Node2D).set_deferred("global_position", spawn_pos)
+	enemies_container.add_child(enemy)
+	(enemy as Node2D).global_position = spawn_pos
 
 
 func _is_web_build() -> bool:

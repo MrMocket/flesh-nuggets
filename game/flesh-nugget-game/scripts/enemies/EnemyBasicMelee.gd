@@ -17,7 +17,8 @@ enum State { ACQUIRE, CHASE, WINDUP, LUNGE, RECOVERY, EVADE }
 # Engagement
 # ----------------------------
 @export var wake_delay := 0.6
-@export var web_wake_jitter := 0.5
+@export var web_wake_jitter := 1.5
+@export var web_spawn_grace_time := 1.1
 @export var aggro_range := 900.0
 @export var disengage_range := 1400.0
 var wake_timer := 0.0
@@ -172,6 +173,7 @@ var _squash_time := 0.0
 var _move_blend := 0.0
 var _visual_base_scale := Vector2.ONE
 var _walk_step_timer := 0.0
+var _life_time := 0.0
 
 static var _enemies_cache_frame: int = -1
 static var _enemies_cache: Array = []
@@ -214,6 +216,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_squash_time += delta
+	_life_time += delta
 
 	if wake_timer > 0.0:
 		wake_timer -= delta
@@ -305,6 +308,15 @@ func _process_chase(delta: float) -> void:
 	var to_player := player.global_position - global_position
 	var dist := to_player.length()
 	var chase_dir := to_player.normalized() if dist > 0.001 else Vector2.ZERO
+	var is_web_grace := OS.has_feature("web") and _life_time < web_spawn_grace_time
+
+	if is_web_grace:
+		velocity = velocity.move_toward(chase_dir * max_speed, acceleration * delta)
+		move_and_slide()
+		_update_facing(velocity.normalized() if velocity.length() > 0.001 else chase_dir)
+		_play_anim("idle")
+		return
+
 	var perp := Vector2(-chase_dir.y, chase_dir.x) * strafe_sign
 
 	var sep := _compute_separation()
