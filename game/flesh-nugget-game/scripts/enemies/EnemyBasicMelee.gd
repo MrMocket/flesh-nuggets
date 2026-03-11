@@ -116,6 +116,7 @@ var evade_timer := 0.0
 # ----------------------------
 @export var flash_time := 0.08
 @export var flash_alpha := 0.5
+@export var hit_flash_color := Color(1.0, 0.45, 0.45, 1.0)
 var _flash_token := 0
 
 # ----------------------------
@@ -540,9 +541,7 @@ func _on_damaged(info: DamageInfo) -> void:
 	_flash_token += 1
 	var t := _flash_token
 
-	var m := anim.modulate
-	m.a = flash_alpha
-	anim.modulate = m
+	anim.modulate = hit_flash_color
 
 	if info != null and info.direction != Vector2.ZERO:
 		_try_evade(info.direction)
@@ -551,9 +550,7 @@ func _on_damaged(info: DamageInfo) -> void:
 	if t != _flash_token:
 		return
 
-	m = anim.modulate
-	m.a = 1.0
-	anim.modulate = m
+	anim.modulate = Color(1, 1, 1, 1)
 
 
 func _on_died(_info: DamageInfo) -> void:

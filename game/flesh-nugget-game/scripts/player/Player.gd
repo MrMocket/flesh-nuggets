@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal ammo_changed(current: int, max: int)
+signal damaged_feedback
 
 # ----------------------------
 # Movement feel
@@ -17,6 +18,7 @@ signal ammo_changed(current: int, max: int)
 
 @export var flash_time := 0.08
 @export var flash_alpha := 0.5
+@export var hit_flash_color := Color(1.0, 0.45, 0.45, 1.0)
 
 # ----------------------------
 # Weapon / firing
@@ -455,17 +457,19 @@ func _on_damaged(info: DamageInfo) -> void:
 	can_attack = false
 	hit_timer.wait_time = hit_stutter_time
 	hit_timer.start()
+	emit_signal("damaged_feedback")
+	get_tree().call_group("hud", "show_damage_feedback")
 
 	flash_token += 1
 	var t := flash_token
 
-	anim.modulate.a = flash_alpha
+	anim.modulate = hit_flash_color
 
 	await get_tree().create_timer(flash_time).timeout
 	if t != flash_token:
 		return
 
-	anim.modulate.a = 1.0
+	anim.modulate = Color(1, 1, 1, 1)
 
 
 func _on_died(_info: DamageInfo) -> void:

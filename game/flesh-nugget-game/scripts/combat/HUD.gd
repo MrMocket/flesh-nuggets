@@ -15,6 +15,9 @@ class_name HUD
 @export var heart_spacing := 12
 @export var ammo_spacing := 12
 @export var nugget_spacing := 8
+@export var damage_pulse_in_time := 0.04
+@export var damage_pulse_out_time := 0.10
+@export var damage_flash_color := Color(1.0, 0.65, 0.65, 1.0)
 
 @onready var hearts_row: HBoxContainer = $Hearts
 @onready var ammo_row: HBoxContainer = $Ammo
@@ -29,6 +32,7 @@ var _max_hearts := 0
 var _max_ammo := 0
 
 var nugget_count := 0
+var _damage_fx_token := 0
 
 func _ready() -> void:
 	add_to_group("hud") # so NuggetDrop can find us
@@ -121,3 +125,20 @@ func _update_row(row: HBoxContainer, current: int, maxv: int, full_tex: Texture2
 		var t := row.get_child(i) as TextureRect
 		if t:
 			t.texture = full_tex if i < current else empty_tex
+
+
+func show_damage_feedback() -> void:
+	if hearts_row == null:
+		return
+
+	_damage_fx_token += 1
+	var token := _damage_fx_token
+
+	hearts_row.modulate = damage_flash_color
+
+	await get_tree().create_timer(damage_pulse_in_time).timeout
+	if token != _damage_fx_token:
+		return
+
+	var tw := create_tween()
+	tw.tween_property(hearts_row, "modulate", Color(1, 1, 1, 1), damage_pulse_out_time)
