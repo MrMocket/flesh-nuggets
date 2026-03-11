@@ -18,11 +18,12 @@ enum State { ACQUIRE, CHASE, WINDUP, LUNGE, RECOVERY, EVADE }
 # ----------------------------
 @export var wake_delay := 0.6
 @export var web_wake_jitter := 1.5
-@export var web_spawn_grace_time := 1.1
+@export var spawn_protection_alpha := 0.45
 @export var aggro_range := 900.0
 @export var disengage_range := 1400.0
 var wake_timer := 0.0
 var aggroed := false
+var _spawn_ready := false
 
 # ----------------------------
 # Movement feel
@@ -38,11 +39,13 @@ var aggroed := false
 @export var squash_move_smoothing := 8.0
 
 # Enemy walk puffs
-@export var enable_walk_puffs := true
+@export var enable_walk_puffs := false
 @export var disable_walk_puffs_on_web := false
 @export var web_walk_puff_amount_scale := 0.5
 @export var web_walk_puff_lifetime_scale := 0.75
 @export var web_walk_puff_interval_scale := 1.35
+@export var prewarm_walk_puffs_on_web := true
+@export var enable_lunge_dash_puff := true
 @export var walk_puff_color := Color(0.92, 0.92, 0.92, 0.92)
 @export var walk_puff_step_interval := 0.17
 @export var walk_puff_speed_threshold := 40.0
@@ -158,6 +161,7 @@ var _flash_token := 0
 var lunge_bounces_left := 0
 
 @onready var health := $Health as HealthComponent
+@onready var hurtbox: Area2D = $Hurtbox
 @onready var damage_hitbox: Area2D = $DamageHitbox
 @onready var visual: Node2D = $Visual
 @onready var anim: AnimatedSprite2D = $Visual/AnimatedSprite2D
@@ -173,7 +177,7 @@ var _squash_time := 0.0
 var _move_blend := 0.0
 var _visual_base_scale := Vector2.ONE
 var _walk_step_timer := 0.0
-var _life_time := 0.0
+var _walk_puff_material: ParticleProcessMaterial = null
 
 static var _enemies_cache_frame: int = -1
 static var _enemies_cache: Array = []
@@ -196,6 +200,7 @@ func _ready() -> void:
 		wake_timer = wake_delay + randf_range(0.0, web_wake_jitter)
 	else:
 		wake_timer = wake_delay
+	_set_spawn_ready(false)
 	player = get_tree().get_first_node_in_group("player") as Node2D
 
 	damage_hitbox.area_entered.connect(_on_damage_area_entered)
@@ -208,6 +213,9 @@ func _ready() -> void:
 	evade_cd = randf_range(0.0, evade_cooldown * 0.75)
 	lunge_retry_timer = randf_range(0.0, 0.25)
 	_walk_step_timer = randf_range(0.0, walk_puff_step_interval * (web_walk_puff_interval_scale if OS.has_feature("web") else 1.0))
+	_setup_walk_puff_material()
+	if OS.has_feature("web") and prewarm_walk_puffs_on_web:
+		_prewarm_walk_puff_fx()
 	_visual_base_scale = visual.scale
 
 	state = State.ACQUIRE
@@ -216,14 +224,15 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_squash_time += delta
-	_life_time += delta
 
 	if wake_timer > 0.0:
 		wake_timer -= delta
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		move_and_slide()
-		_update_movement_fx(delta)
+		_update_visual_squash(delta)
 		return
+	elif not _spawn_ready:
+		_set_spawn_ready(true)
 
 	if player == null:
 		player = get_tree().get_first_node_in_group("player") as Node2D
@@ -308,15 +317,6 @@ func _process_chase(delta: float) -> void:
 	var to_player := player.global_position - global_position
 	var dist := to_player.length()
 	var chase_dir := to_player.normalized() if dist > 0.001 else Vector2.ZERO
-	var is_web_grace := OS.has_feature("web") and _life_time < web_spawn_grace_time
-
-	if is_web_grace:
-		velocity = velocity.move_toward(chase_dir * max_speed, acceleration * delta)
-		move_and_slide()
-		_update_facing(velocity.normalized() if velocity.length() > 0.001 else chase_dir)
-		_play_anim("idle")
-		return
-
 	var perp := Vector2(-chase_dir.y, chase_dir.x) * strafe_sign
 
 	var sep := _compute_separation()
@@ -527,6 +527,8 @@ func _enter_lunge() -> void:
 	lunge_cd = lunge_cooldown + randf_range(0.0, 0.3)
 
 	lunge_bounces_left = lunge_max_bounces
+	if enable_lunge_dash_puff:
+		_spawn_dash_puff()
 
 	_update_facing(lunge_direction)
 	_play_anim("lunge")
@@ -726,6 +728,9 @@ func _handle_walk_puffs(delta: float) -> void:
 
 
 func _spawn_walk_puff() -> void:
+	if _walk_puff_material == null:
+		_setup_walk_puff_material()
+
 	var puff := GPUParticles2D.new()
 	var is_web := OS.has_feature("web")
 	var amount_scale := web_walk_puff_amount_scale if is_web else 1.0
@@ -741,27 +746,105 @@ func _spawn_walk_puff() -> void:
 	puff.draw_order = GPUParticles2D.DRAW_ORDER_LIFETIME
 	puff.modulate = walk_puff_color
 	puff.global_position = global_position + Vector2(0.0, 10.0)
-
-	var mat := ParticleProcessMaterial.new()
-	mat.direction = Vector3(0.0, -0.2, 0.0)
-	mat.spread = 60.0
-	mat.initial_velocity_min = 20.0
-	mat.initial_velocity_max = 54.0
-	mat.gravity = Vector3(0.0, 40.0, 0.0)
-	mat.scale_min = 3.2
-	mat.scale_max = 4.9
-	mat.damping_min = 14.0
-	mat.damping_max = 22.0
-	mat.angular_velocity_min = -180.0
-	mat.angular_velocity_max = 180.0
-	mat.color = walk_puff_color
-	puff.process_material = mat
+	puff.process_material = _walk_puff_material
 
 	var parent := get_tree().current_scene
 	if parent == null:
 		parent = get_parent()
 	if parent == null:
 		return
+
+	parent.add_child(puff)
+	if not puff.finished.is_connected(puff.queue_free):
+		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
+	puff.emitting = true
+
+
+func _spawn_dash_puff() -> void:
+	if _walk_puff_material == null:
+		_setup_walk_puff_material()
+
+	var puff := GPUParticles2D.new()
+	puff.one_shot = true
+	puff.emitting = false
+	puff.amount = 12
+	puff.lifetime = 0.22
+	puff.explosiveness = 0.95
+	puff.preprocess = 0.0
+	puff.local_coords = false
+	puff.draw_order = GPUParticles2D.DRAW_ORDER_LIFETIME
+	puff.modulate = walk_puff_color
+	puff.global_position = global_position + Vector2(0.0, 10.0)
+	puff.process_material = _walk_puff_material
+
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+
+	parent.add_child(puff)
+	if not puff.finished.is_connected(puff.queue_free):
+		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
+	puff.emitting = true
+
+
+func _set_spawn_ready(ready: bool) -> void:
+	_spawn_ready = ready
+
+	if damage_hitbox:
+		damage_hitbox.set_deferred("monitoring", ready)
+
+	if hurtbox:
+		hurtbox.set_deferred("monitorable", ready)
+
+	if not ready:
+		player_hurtbox = null
+
+	if visual:
+		visual.modulate.a = 1.0 if ready else spawn_protection_alpha
+
+	if shadow:
+		shadow.modulate.a = 1.0 if ready else spawn_protection_alpha
+
+
+func _setup_walk_puff_material() -> void:
+	if _walk_puff_material != null:
+		return
+
+	_walk_puff_material = ParticleProcessMaterial.new()
+	_walk_puff_material.direction = Vector3(0.0, -0.2, 0.0)
+	_walk_puff_material.spread = 60.0
+	_walk_puff_material.initial_velocity_min = 20.0
+	_walk_puff_material.initial_velocity_max = 54.0
+	_walk_puff_material.gravity = Vector3(0.0, 40.0, 0.0)
+	_walk_puff_material.scale_min = 3.2
+	_walk_puff_material.scale_max = 4.9
+	_walk_puff_material.damping_min = 14.0
+	_walk_puff_material.damping_max = 22.0
+	_walk_puff_material.angular_velocity_min = -180.0
+	_walk_puff_material.angular_velocity_max = 180.0
+	_walk_puff_material.color = walk_puff_color
+
+
+func _prewarm_walk_puff_fx() -> void:
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+
+	var puff := GPUParticles2D.new()
+	puff.one_shot = true
+	puff.emitting = false
+	puff.amount = 4
+	puff.lifetime = 0.08
+	puff.explosiveness = 1.0
+	puff.preprocess = 0.0
+	puff.local_coords = false
+	puff.draw_order = GPUParticles2D.DRAW_ORDER_LIFETIME
+	puff.visible = false
+	puff.process_material = _walk_puff_material
 
 	parent.add_child(puff)
 	if not puff.finished.is_connected(puff.queue_free):

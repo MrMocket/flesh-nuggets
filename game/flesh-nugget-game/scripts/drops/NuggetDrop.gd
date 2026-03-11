@@ -76,6 +76,11 @@ func _on_body_entered(body: Node) -> void:
 	if col:
 		col.set_deferred("disabled", true)
 	set_deferred("monitoring", false)
+	set_process(false)
+
+	# Hide world sprite immediately so it does not overlap with HUD fly icon.
+	if anim:
+		anim.visible = false
 
 	# Give value to player (optional)
 	if body.has_method("add_nuggets"):
@@ -84,11 +89,6 @@ func _on_body_entered(body: Node) -> void:
 	# Send screen-space pickup point so the fly animation lands consistently in HUD space.
 	var pickup_screen_pos := get_global_transform_with_canvas().origin
 	get_tree().call_group("hud", "collect_nugget_from_screen", pickup_screen_pos, value)
-
-	# Play pickup anim if it exists
-	if anim and anim.sprite_frames and anim.sprite_frames.has_animation("pickup"):
-		anim.play("pickup")
-		await anim.animation_finished
 
 	# Defer freeing too (safe)
 	call_deferred("queue_free")
