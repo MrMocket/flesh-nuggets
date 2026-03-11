@@ -5,6 +5,7 @@ class_name RoomController
 # Debug (temporary)
 # ----------------------------
 @export var debug_open_doors_key := true # remove later (dash will use space)
+@export var debug_transition_logs := false
 @export var min_open_doors := 1
 @export var max_open_doors := 3
 
@@ -203,9 +204,11 @@ func _on_door_trigger_entered(body: Node, door_name: StringName) -> void:
 
 	await _fade_to(1.0, 0.12)
 
-	print("DOOR TRIGGERED:", door_name)
+	if debug_transition_logs:
+		print("DOOR TRIGGERED:", door_name)
 	RunState.next_room(door_name)
-	print("RunState room_index now: ", RunState.room_index)
+	if debug_transition_logs:
+		print("RunState room_index now: ", RunState.room_index)
 	RunState.entered_from = entered_from
 
 	await _reset_room_for_transition(entered_from)

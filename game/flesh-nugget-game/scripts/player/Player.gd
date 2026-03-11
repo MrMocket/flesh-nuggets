@@ -486,8 +486,9 @@ func _spawn_walk_puff() -> void:
 		return
 
 	parent.add_child(puff)
+	if not puff.finished.is_connected(puff.queue_free):
+		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
 	puff.emitting = true
-	get_tree().create_timer(0.65).timeout.connect(puff.queue_free)
 
 
 func _update_crosshair_transform() -> void:
