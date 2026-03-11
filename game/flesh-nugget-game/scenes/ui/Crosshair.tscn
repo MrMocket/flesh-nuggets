@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://d1hb0xhoa02ft"]
+
+[ext_resource type="Texture2D" uid="uid://bjs7cq0c086v7" path="res://assets/ui/x.2.png" id="1_twvey"]
+[ext_resource type="Texture2D" uid="uid://ca3sq63bjen58" path="res://assets/ui/x.png" id="2_07io7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rvg0c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_twvey")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_07io7")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Crosshair" type="Node2D" unique_id=994184633]
+z_index = 100
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1081763621]
+scale = Vector2(0.15, 0.15)
+sprite_frames = SubResource("SpriteFrames_rvg0c")
+animation = &"fire"
+
+[node name="HitFlashTimer" type="Timer" parent="." unique_id=1473429284]
+
+[node name="StateTimer" type="Timer" parent="." unique_id=158617018]

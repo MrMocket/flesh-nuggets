@@ -35,9 +35,14 @@ signal ammo_changed(current: int, max: int)
 # ----------------------------
 @export var shoot_anim_hold := 0.12
 @export var reload_anim_delay := 0.10
+@export var crosshair_distance := 40.0
+@export var crosshair_fire_hold := 0.08
 
 var aim_dir := Vector2.RIGHT
 var facing_right := true
+var using_mouse_aim := true
+var last_mouse_pos := Vector2.ZERO
+var was_paused_last_frame := false
 
 # Keyboard aim support
 var keyboard_aim: Vector2 = Vector2.RIGHT
@@ -53,11 +58,14 @@ var current_anim := ""
 var shoot_anim_timer := 0.0
 var reload_anim_delay_timer := 0.0
 var reload_anim_speed_restore := 1.0
+var crosshair_fire_timer := 0.0
 
 # Nodes
 @onready var visual: Node2D = $Visual
 @onready var shadow: Sprite2D = $Shadow
 @onready var muzzle: Marker2D = $Muzzle
+@onready var crosshair: Node2D = $Crosshair
+@onready var crosshair_sprite: AnimatedSprite2D = $Crosshair/AnimatedSprite2D
 
 @onready var shot_timer: Timer = $ShotTimer
 @onready var reload_timer: Timer = $ReloadTimer
@@ -95,9 +103,26 @@ func _ready() -> void:
 
 	reload_anim_speed_restore = anim.speed_scale
 	play_anim("idle")
+	_set_crosshair_idle()
+
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	last_mouse_pos = get_global_mouse_position()
 
 
 func _physics_process(delta: float) -> void:
+	if get_tree().paused:
+		if not was_paused_last_frame:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			was_paused_last_frame = true
+
+		if crosshair != null:
+			crosshair.visible = false
+		return
+	else:
+		if was_paused_last_frame:
+			Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+			was_paused_last_frame = false
+
 	# ----------------------------
 	# Tick animation timers
 	# ----------------------------
@@ -106,6 +131,9 @@ func _physics_process(delta: float) -> void:
 
 	if reloading and reload_anim_delay_timer > 0.0:
 		reload_anim_delay_timer = max(0.0, reload_anim_delay_timer - delta)
+
+	if crosshair_fire_timer > 0.0:
+		crosshair_fire_timer = max(0.0, crosshair_fire_timer - delta)
 
 	# ----------------------------
 	# 1) Movement (360)
@@ -127,20 +155,25 @@ func _physics_process(delta: float) -> void:
 	# 2) Aim input (arrow keys + mouse fallback)
 	# ----------------------------
 	var arrow_input := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+	var mouse_pos := get_global_mouse_position()
+	var mouse_moved := mouse_pos.distance_to(last_mouse_pos) > 0.5
 
 	if arrow_input != Vector2.ZERO:
 		keyboard_aim = arrow_input.normalized()
 		using_keyboard_aim = true
-	else:
+		using_mouse_aim = false
+		aim_dir = keyboard_aim
+	elif mouse_moved:
+		using_mouse_aim = true
 		using_keyboard_aim = false
 
-	if using_keyboard_aim:
-		aim_dir = keyboard_aim
-	else:
-		var mouse_pos := get_global_mouse_position()
 		var mouse_dir := mouse_pos - global_position
 		if mouse_dir.length() > 0.001:
 			aim_dir = mouse_dir.normalized()
+
+	last_mouse_pos = mouse_pos
+
+	_update_crosshair_transform()
 
 	var is_keyboard_shooting := using_keyboard_aim and arrow_input != Vector2.ZERO
 	var is_mouse_shooting := Input.is_action_pressed("attack")
@@ -174,15 +207,17 @@ func _physics_process(delta: float) -> void:
 	# Mouse = normal fire
 	# Arrow aim = auto-fire while held
 	# ----------------------------
+	var fired_this_frame := false
 	if Input.is_action_pressed("attack"):
-		try_attack()
+		fired_this_frame = try_attack()
 	elif using_keyboard_aim and arrow_input != Vector2.ZERO:
-		try_attack()
+		fired_this_frame = try_attack()
 
 	# ----------------------------
 	# 6) Animation priority
 	# ----------------------------
 	_update_animation()
+	_update_crosshair_state(fired_this_frame)
 
 
 func _update_animation() -> void:
@@ -230,21 +265,21 @@ func update_facing(dir: Vector2) -> void:
 	shadow.flip_h = not facing_right
 
 
-func try_attack() -> void:
+func try_attack() -> bool:
 	if reloading or not can_attack:
-		return
+		return false
 
 	# Auto reload when empty
 	if ammo <= 0:
 		start_reload(true)
-		return
+		return false
 
-	attack()
+	return attack()
 
 
-func attack() -> void:
+func attack() -> bool:
 	if projectile_scene == null:
-		return
+		return false
 
 	ammo -= 1
 	emit_signal("ammo_changed", ammo, mag_size)
@@ -260,10 +295,13 @@ func attack() -> void:
 
 	# Keep shoot visible for a moment
 	shoot_anim_timer = shoot_anim_hold
+	crosshair_fire_timer = crosshair_fire_hold
 
 	# If we just emptied the mag, start reload immediately
 	if ammo <= 0:
 		start_reload(true)
+
+	return true
 
 
 # force_delay:
@@ -345,6 +383,63 @@ func _fit_reload_anim_to_reload_time() -> void:
 
 func _set_anim_speed_default() -> void:
 	anim.speed_scale = reload_anim_speed_restore
+
+
+func _update_crosshair_transform() -> void:
+	if crosshair == null:
+		return
+
+	if get_tree().paused:
+		crosshair.visible = false
+		return
+
+	crosshair.visible = using_mouse_aim
+	if not crosshair.visible:
+		return
+
+	crosshair.global_position = get_global_mouse_position()
+
+
+func _update_crosshair_state(_fired_this_frame: bool) -> void:
+	if crosshair_sprite == null:
+		return
+	if crosshair_sprite.sprite_frames == null:
+		return
+
+	if not using_mouse_aim:
+		_set_crosshair_idle()
+		return
+
+	if crosshair_fire_timer > 0.0:
+		_set_crosshair_fire()
+	else:
+		_set_crosshair_idle()
+
+
+func _set_crosshair_idle() -> void:
+	if crosshair_sprite == null:
+		return
+	if crosshair_sprite.sprite_frames == null:
+		return
+	if not crosshair_sprite.sprite_frames.has_animation("idle"):
+		return
+
+	if crosshair_sprite.animation != "idle":
+		crosshair_sprite.play("idle")
+		crosshair_sprite.stop()
+
+
+func _set_crosshair_fire() -> void:
+	if crosshair_sprite == null:
+		return
+	if crosshair_sprite.sprite_frames == null:
+		return
+	if not crosshair_sprite.sprite_frames.has_animation("fire"):
+		return
+
+	if crosshair_sprite.animation != "fire":
+		crosshair_sprite.play("fire")
+		crosshair_sprite.stop()
 
 
 # ----------------------------

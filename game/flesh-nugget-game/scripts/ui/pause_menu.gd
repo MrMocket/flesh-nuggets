@@ -29,6 +29,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func open_menu() -> void:
 	_closing_intentionally = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	popup_centered(Vector2i(320, 220))
 	resume_button.grab_focus()
 
@@ -38,6 +39,7 @@ func close_menu() -> void:
 	_set_overlay_visible(false)
 
 func _resume_game() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	get_tree().paused = false
 	close_menu()
 
@@ -45,6 +47,7 @@ func _on_resume_pressed() -> void:
 	_resume_game()
 
 func _on_restart_pressed() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	get_tree().paused = false
 	close_menu()
 	Router.retry_run()
