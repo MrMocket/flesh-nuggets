@@ -280,6 +280,11 @@
       transition: border-color 320ms ease, box-shadow 320ms ease, transform 320ms ease;
     }
 
+    #play,
+    .game-frame-shell {
+      overflow-anchor: none;
+    }
+
 
     section::after {
       content: "";
@@ -2823,7 +2828,8 @@
 
               <iframe
                 id="gameFrame"
-                src="game/index.html"
+                src="about:blank"
+                data-src="game/index.html"
                 title="Flesh Nuggets Game"
                 loading="eager"
                 allow="autoplay; fullscreen *; gamepad; xr-spatial-tracking"
@@ -3628,12 +3634,17 @@
       function activateGame() {
         if (!gameFrameWrap || !gameOverlay) return;
 
+        if (gameFrame) {
+          const gameSrc = gameFrame.getAttribute("data-src");
+          const currentSrc = gameFrame.getAttribute("src");
+
+          if (gameSrc && (!currentSrc || currentSrc === "about:blank")) {
+            gameFrame.setAttribute("src", gameSrc);
+          }
+        }
+
         gameFrameWrap.classList.add("active");
         gameOverlay.classList.add("hidden");
-
-        try {
-          gameFrame.focus();
-        } catch (err) {}
       }
 
       if (activateGameBtn) {
