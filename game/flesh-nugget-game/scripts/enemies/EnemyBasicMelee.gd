@@ -131,6 +131,12 @@ var evade_timer := 0.0
 @export var hit_flash_color := Color(1.0, 0.45, 0.45, 1.0)
 var _flash_token := 0
 
+# Death pop (visual only, does not move root/drop spawn point)
+@export var death_pop_in_scale := 1.18
+@export var death_pop_out_scale := 0.88
+@export var death_pop_in_time := 0.055
+@export var death_pop_out_time := 0.08
+
 # ----------------------------
 # Lunge bounce + anti-tunneling
 # ----------------------------
@@ -581,7 +587,21 @@ func _on_damaged(info: DamageInfo) -> void:
 func _on_died(_info: DamageInfo) -> void:
 	_spawn_blood()
 	_spawn_drop()
+	await _play_death_pop()
 	queue_free()
+
+
+func _play_death_pop() -> void:
+	if visual == null:
+		return
+
+	var base_scale := _visual_base_scale if _visual_base_scale != Vector2.ZERO else visual.scale
+	var tw := create_tween()
+	tw.set_trans(Tween.TRANS_BACK)
+	tw.set_ease(Tween.EASE_OUT)
+	tw.tween_property(visual, "scale", base_scale * death_pop_in_scale, death_pop_in_time)
+	tw.tween_property(visual, "scale", base_scale * death_pop_out_scale, death_pop_out_time)
+	await tw.finished
 	
 	
 # ----------------------------
@@ -617,8 +637,6 @@ func _spawn_blood() -> void:
 	decals.add_child(b)
 
 	b.global_position = global_position
-	b.global_rotation = 0.0
-	b.scale = Vector2.ONE * 0.7  # tweak size here
 
 
 # ----------------------------
@@ -675,7 +693,7 @@ func _spawn_walk_puff() -> void:
 	var puff := GPUParticles2D.new()
 	puff.one_shot = true
 	puff.emitting = false
-	puff.amount = 14
+	puff.amount = 16
 	puff.lifetime = 0.42
 	puff.explosiveness = 0.95
 	puff.preprocess = 0.0
@@ -690,8 +708,8 @@ func _spawn_walk_puff() -> void:
 	mat.initial_velocity_min = 20.0
 	mat.initial_velocity_max = 54.0
 	mat.gravity = Vector3(0.0, 40.0, 0.0)
-	mat.scale_min = 2.7
-	mat.scale_max = 4.3
+	mat.scale_min = 3.2
+	mat.scale_max = 4.9
 	mat.damping_min = 14.0
 	mat.damping_max = 22.0
 	mat.angular_velocity_min = -180.0

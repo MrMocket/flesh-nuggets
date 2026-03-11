@@ -451,7 +451,7 @@ func _spawn_walk_puff() -> void:
 	var puff := GPUParticles2D.new()
 	puff.one_shot = true
 	puff.emitting = false
-	puff.amount = 16
+	puff.amount = 18
 	puff.lifetime = 0.40
 	puff.explosiveness = 0.95
 	puff.preprocess = 0.0
@@ -466,8 +466,8 @@ func _spawn_walk_puff() -> void:
 	mat.initial_velocity_min = 22.0
 	mat.initial_velocity_max = 58.0
 	mat.gravity = Vector3(0.0, 40.0, 0.0)
-	mat.scale_min = 2.8
-	mat.scale_max = 4.4
+	mat.scale_min = 3.3
+	mat.scale_max = 5.0
 	mat.damping_min = 14.0
 	mat.damping_max = 22.0
 	mat.angular_velocity_min = -180.0
