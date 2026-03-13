@@ -98,6 +98,7 @@ script = ExtResource("4_qu4a1")
 collision_layer = 8
 collision_mask = 192
 script = ExtResource("5_70d11")
+invuln_time = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=237232439]
 position = Vector2(2, -1)
