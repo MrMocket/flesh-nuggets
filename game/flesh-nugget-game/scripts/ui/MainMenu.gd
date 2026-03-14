@@ -17,15 +17,13 @@ func _on_start_pressed() -> void:
 	await Router.start_run()
 
 func _on_lab_pressed() -> void:
-	# Placeholder for MVP
-	print("Lab placeholder")
+	push_warning("MainMenu: Lab is not implemented yet.")
 
 func _on_settings_pressed() -> void:
-	print("Settings coming soon")
+	push_warning("MainMenu: Settings is not implemented yet.")
 
 func _on_quit_pressed() -> void:
 	Router.quit_game()
 
 func _on_wallet_pressed() -> void:
-	# MVP placeholder indicator only
-	print("Connect Wallet placeholder")
+	push_warning("MainMenu: Wallet connect is not implemented yet.")

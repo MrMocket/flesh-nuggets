@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b1fiwnhqvqc6t"]
+
+[ext_resource type="Texture2D" uid="uid://cubh6ptsgofj1" path="res://assets/level designs/props/ContainmentBottom.png" id="1_46vbd"]
+[ext_resource type="Texture2D" uid="uid://dnn24kcirwemo" path="res://assets/level designs/props/ContainmentTop.png" id="2_c42cp"]
+
+[node name="ContainmentBlocker" type="StaticBody2D" unique_id=1535642472]
+
+[node name="BottomSprite" type="Sprite2D" parent="." unique_id=960824993]
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("1_46vbd")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1195017083]
+position = Vector2(-100.59507, 69.60724)
+polygon = PackedVector2Array(86.59507, -48.60724, 72.59507, -46.60724, 56.59507, -40.60724, 49.59507, -36.60724, 42.59507, -30.607239, 41.59507, -17.607239, 41.59507, -6.607239, 47.59507, 0.39276123, 58.59507, 10.392761, 80.59507, 14.392761, 104.59507, 15.392761, 128.59506, 13.392761, 148.59506, 7.392761, 160.59506, -3.6072388, 160.59506, -23.607239, 152.59506, -35.60724, 143.59506, -40.60724, 132.59506, -45.60724, 114.59507, -48.60724, 100.59507, -48.60724)
+
+[node name="TopLayer" type="Node2D" parent="." unique_id=131764855]
+z_index = 500
+z_as_relative = false
+
+[node name="TopSprite" type="Sprite2D" parent="TopLayer" unique_id=1719530093]
+z_index = 2
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_c42cp")

@@ -17,7 +17,7 @@ func _ready() -> void:
 	menu_btn.pressed.connect(_on_menu_pressed)
 
 func _on_mint_pressed() -> void:
-	print("Mint Memory Cube placeholder")
+	push_warning("DeathScreen: Mint Memory Cube is not implemented yet.")
 
 func _on_retry_pressed() -> void:
 	Router.retry_run()

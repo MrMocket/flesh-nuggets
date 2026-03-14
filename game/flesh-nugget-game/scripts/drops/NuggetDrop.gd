@@ -17,15 +17,15 @@ var _base_rot := 0.0
 
 
 func _ready() -> void:
-	# (optional) useful for debugging / organization
 	add_to_group("drops")
 	if anim:
 		_base_sprite_pos = anim.position
 		_base_rot = anim.rotation
 
-	body_entered.connect(_on_body_entered)
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 
-	# Optional spawn anim
+	# Play a short spawn settle when available.
 	if play_spawn and anim and anim.sprite_frames and anim.sprite_frames.has_animation("spawn"):
 		_play_spawn_settle()
 		anim.play("spawn")
@@ -72,23 +72,21 @@ func _on_body_entered(body: Node) -> void:
 
 	_picked = true
 
-	# IMPORTANT: defer changes to avoid "Can't change this state while flushing queries"
+	# Defer state changes to avoid physics query flush warnings.
 	if col:
 		col.set_deferred("disabled", true)
 	set_deferred("monitoring", false)
-	set_process(false)
 
-	# Hide world sprite immediately so it does not overlap with HUD fly icon.
-	if anim:
-		anim.visible = false
-
-	# Give value to player (optional)
 	if body.has_method("add_nuggets"):
 		body.add_nuggets(value)
 
-	# Send screen-space pickup point so the fly animation lands consistently in HUD space.
+	# Send screen-space pickup position so HUD fly-to animation lands consistently.
 	var pickup_screen_pos := get_global_transform_with_canvas().origin
 	get_tree().call_group("hud", "collect_nugget_from_screen", pickup_screen_pos, value)
 
-	# Defer freeing too (safe)
+	if anim and anim.sprite_frames and anim.sprite_frames.has_animation("pickup"):
+		anim.play("pickup")
+		await anim.animation_finished
+
+	# Defer free for safety in signal callbacks.
 	call_deferred("queue_free")

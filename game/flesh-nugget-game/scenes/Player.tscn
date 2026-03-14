@@ -67,6 +67,8 @@ texture = ExtResource("3_khinc")
 position = Vector2(20, 9.6)
 
 [node name="Visual" type="Node2D" parent="." unique_id=611896182]
+z_index = 1
+z_as_relative = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=1506666442]
 position = Vector2(0.9999981, -1.9073486e-06)

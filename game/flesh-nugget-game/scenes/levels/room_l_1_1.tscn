@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://gtnrluhaqnga" path="res://scenes/EnemyBasicMelee.tscn" id="2_84e5n"]
 [ext_resource type="Texture2D" uid="uid://b0kt6djv87g6r" path="res://assets/level designs/level1/OverlayOilStains.png" id="2_wcy51"]
 [ext_resource type="Texture2D" uid="uid://blsr8heuytbbe" path="res://assets/level designs/level1/OverlayLightBloodStains.png" id="3_84e5n"]
+[ext_resource type="PackedScene" uid="uid://b1fiwnhqvqc6t" path="res://scenes/levels/containment_blocker.tscn" id="3_u4p2i"]
 [ext_resource type="Texture2D" uid="uid://cycjcg5m7s0g1" path="res://assets/level designs/level1/OverlayWindows.png" id="4_u4p2i"]
 [ext_resource type="Texture2D" uid="uid://ddupdc1k0f1w7" path="res://assets/level designs/level1/OverlayWires.png" id="5_3vmoi"]
 [ext_resource type="Texture2D" uid="uid://beslvka4nto3d" path="res://assets/level designs/level1/OverlayFlesh.png" id="6_8uon6"]
@@ -35,6 +36,7 @@ size = Vector2(254, 30)
 script = ExtResource("1_wcy51")
 debug_open_doors_key = false
 enemy_scene = ExtResource("2_84e5n")
+blocker_scene = ExtResource("3_u4p2i")
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1448229332]
 layer = 200
@@ -48,6 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Fade" type="ColorRect" parent="TransitionLayer/UI" unique_id=329626371]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -106,6 +109,22 @@ position = Vector2(1048, 349)
 
 [node name="SpawnBottom" type="Marker2D" parent="Gameplay/SpawnPoints" unique_id=9080907]
 position = Vector2(640, 647)
+
+[node name="BlockerSlots" type="Node2D" parent="Gameplay" unique_id=57446015]
+
+[node name="Slot_01" type="Marker2D" parent="Gameplay/BlockerSlots" unique_id=1611931663]
+position = Vector2(496, 288)
+
+[node name="Slot_02" type="Marker2D" parent="Gameplay/BlockerSlots" unique_id=1024797850]
+position = Vector2(472, 536)
+
+[node name="Slot_03" type="Marker2D" parent="Gameplay/BlockerSlots" unique_id=1206243976]
+position = Vector2(832, 536)
+
+[node name="Slot_04" type="Marker2D" parent="Gameplay/BlockerSlots" unique_id=2055503966]
+position = Vector2(808, 288)
+
+[node name="Blockers" type="Node2D" parent="Gameplay" unique_id=903731665]
 
 [node name="Walls" type="StaticBody2D" parent="Gameplay" unique_id=120604848]
 

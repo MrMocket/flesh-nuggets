@@ -60,7 +60,7 @@ script = ExtResource("1_o44b6")
 blood_splat_scene = ExtResource("2_0jgx6")
 nugget_drop_scene = ExtResource("3_u4x3f")
 lunge_speed = 580.0
-debug_lunge_hits = true
+debug_lunge_hits = false
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=182940595]
 position = Vector2(-0.3999988, 4.000002)
@@ -68,6 +68,8 @@ scale = Vector2(0.1921875, 0.159375)
 texture = ExtResource("4_o4exj")
 
 [node name="Visual" type="Node2D" parent="." unique_id=411833311]
+z_index = 1
+z_as_relative = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=1321086958]
 scale = Vector2(0.15234375, 0.15234375)

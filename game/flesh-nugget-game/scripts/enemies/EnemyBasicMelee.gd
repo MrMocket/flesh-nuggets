@@ -789,23 +789,23 @@ func _spawn_dash_puff() -> void:
 	puff.emitting = true
 
 
-func _set_spawn_ready(ready: bool) -> void:
-	_spawn_ready = ready
+func _set_spawn_ready(is_ready: bool) -> void:
+	_spawn_ready = is_ready
 
 	if damage_hitbox:
-		damage_hitbox.set_deferred("monitoring", ready)
+		damage_hitbox.set_deferred("monitoring", is_ready)
 
 	if hurtbox:
-		hurtbox.set_deferred("monitorable", ready)
+		hurtbox.set_deferred("monitorable", is_ready)
 
-	if not ready:
+	if not is_ready:
 		player_hurtbox = null
 
 	if visual:
-		visual.modulate.a = 1.0 if ready else spawn_protection_alpha
+		visual.modulate.a = 1.0 if is_ready else spawn_protection_alpha
 
 	if shadow:
-		shadow.modulate.a = 1.0 if ready else spawn_protection_alpha
+		shadow.modulate.a = 1.0 if is_ready else spawn_protection_alpha
 
 
 func _setup_walk_puff_material() -> void:

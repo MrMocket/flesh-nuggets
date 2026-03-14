@@ -13,6 +13,8 @@ class_name RoomController
 # Content spawns (MVP)
 # ----------------------------
 @export var enemy_scene: PackedScene
+@export var blocker_scene: PackedScene
+@export var max_blockers := 2
 
 # NEW: scaling settings
 @export var starting_enemies := 2
@@ -42,6 +44,8 @@ class_name RoomController
 
 @onready var doors_root: Node = $Gameplay/Doors
 @onready var spawn_points: Node = $Gameplay/SpawnPoints
+@onready var blocker_slots: Node = $Gameplay/BlockerSlots
+@onready var blockers_root: Node = $Gameplay/Blockers
 @onready var decals_root: Node = $Decals
 
 var _fade_tween: Tween = null
@@ -136,6 +140,9 @@ func _reset_room_for_new_entry(entered_from: StringName) -> void:
 	clear_enemies()
 	enemies_alive = 0
 	_suppress_enemy_callbacks = false
+
+	clear_blockers()
+	spawn_blockers()
 
 	spawn_enemies_mvp()
 
@@ -329,12 +336,49 @@ func _queue_free_children_batched(parent: Node, batch_size: int) -> void:
 			await get_tree().process_frame
 
 
+func clear_blockers() -> void:
+	if blockers_root == null:
+		return
+
+	for c in blockers_root.get_children():
+		(c as Node).queue_free()
+
+
+func spawn_blockers() -> void:
+	if blocker_scene == null:
+		return
+	if blocker_slots == null or blockers_root == null:
+		return
+
+	clear_blockers()
+
+	var slots := blocker_slots.get_children()
+	if slots.is_empty():
+		return
+
+	slots.shuffle()
+	var count := randi_range(0, min(max_blockers, slots.size()))
+
+	for i in range(count):
+		var slot := slots[i] as Node2D
+		if slot == null:
+			continue
+
+		var blocker := blocker_scene.instantiate()
+		blockers_root.add_child(blocker)
+
+		if blocker is Node2D:
+			(blocker as Node2D).global_position = slot.global_position
+
+
 func _reset_room_for_transition(entered_from: StringName) -> void:
 	entered_from_current = entered_from
 	rooms_entered += 1
 
 	close_all_doors()
 	reroll_decals()
+	clear_blockers()
+	spawn_blockers()
 
 	if _is_web_build():
 		await _clear_world_decals_and_drops_batched(web_cleanup_batch_size)
