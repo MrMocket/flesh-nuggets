@@ -41,6 +41,8 @@ var _spawn_ready := false
 # Enemy walk puffs
 @export var enable_walk_puffs := false
 @export var disable_walk_puffs_on_web := false
+@export var web_particle_cleanup_enabled := true
+@export var web_particle_hard_cap := 120
 @export var web_walk_puff_amount_scale := 0.5
 @export var web_walk_puff_lifetime_scale := 0.75
 @export var web_walk_puff_interval_scale := 1.35
@@ -755,6 +757,10 @@ func _spawn_walk_puff() -> void:
 		return
 
 	parent.add_child(puff)
+	if is_web and web_particle_cleanup_enabled:
+		puff.add_to_group("fx_web_particles")
+		_apply_web_particle_cleanup(puff)
+		_enforce_web_particle_cap()
 	if not puff.finished.is_connected(puff.queue_free):
 		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
 	puff.emitting = true
@@ -784,6 +790,10 @@ func _spawn_dash_puff() -> void:
 		return
 
 	parent.add_child(puff)
+	if OS.has_feature("web") and web_particle_cleanup_enabled:
+		puff.add_to_group("fx_web_particles")
+		_apply_web_particle_cleanup(puff)
+		_enforce_web_particle_cap()
 	if not puff.finished.is_connected(puff.queue_free):
 		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
 	puff.emitting = true
@@ -847,6 +857,10 @@ func _prewarm_walk_puff_fx() -> void:
 	puff.process_material = _walk_puff_material
 
 	parent.add_child(puff)
+	if OS.has_feature("web") and web_particle_cleanup_enabled:
+		puff.add_to_group("fx_web_particles")
+		_apply_web_particle_cleanup(puff)
+		_enforce_web_particle_cap()
 	if not puff.finished.is_connected(puff.queue_free):
 		puff.finished.connect(puff.queue_free, CONNECT_ONE_SHOT)
 	puff.emitting = true
@@ -855,3 +869,27 @@ func _prewarm_walk_puff_fx() -> void:
 func _update_movement_fx(delta: float) -> void:
 	_update_visual_squash(delta)
 	_handle_walk_puffs(delta)
+
+
+func _apply_web_particle_cleanup(puff: GPUParticles2D) -> void:
+	if not OS.has_feature("web"):
+		return
+
+	# Safety net for browsers: always free one-shot particles even if "finished" is delayed.
+	var fallback_ttl := maxf(0.12, puff.lifetime + 0.25)
+	get_tree().create_timer(fallback_ttl).timeout.connect(puff.queue_free, CONNECT_ONE_SHOT)
+
+
+func _enforce_web_particle_cap() -> void:
+	if not OS.has_feature("web"):
+		return
+
+	var nodes := get_tree().get_nodes_in_group("fx_web_particles")
+	var overflow := nodes.size() - maxi(8, web_particle_hard_cap)
+	if overflow <= 0:
+		return
+
+	for i in range(overflow):
+		var n := nodes[i]
+		if n != null and is_instance_valid(n):
+			n.queue_free()
