@@ -13,6 +13,11 @@ func _ready() -> void:
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
+
+	var _no_focus := StyleBoxEmpty.new()
+	main_menu_button.add_theme_stylebox_override("focus", _no_focus)
+	resume_button.add_theme_stylebox_override("focus", _no_focus)
+	restart_button.add_theme_stylebox_override("focus", _no_focus)
 	popup_hide.connect(_on_popup_hidden)
 
 	if title_label:

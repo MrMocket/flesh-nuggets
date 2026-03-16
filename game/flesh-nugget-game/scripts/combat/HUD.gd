@@ -35,6 +35,22 @@ class_name HUD
 @onready var nugget_row: HBoxContainer = $NuggetRow
 @onready var nugget_icon_rect: TextureRect = $NuggetRow/NuggetIcon
 @onready var nugget_label: Label = $NuggetRow/NuggetLabel
+@onready var xp_bar_fill: TextureProgressBar = $XPBar/BarFill
+@onready var level_label: Label = $XPBar/LevelLabel
+@onready var level_panel = $LevelUpPanel
+
+@onready var choice_a = $LevelUpPanel/ChoiceA
+@onready var choice_b = $LevelUpPanel/ChoiceB
+
+@onready var choice_a_name = $LevelUpPanel/ChoiceA/NameLabel
+@onready var choice_a_desc = $LevelUpPanel/ChoiceA/DescLabel
+
+@onready var choice_b_name = $LevelUpPanel/ChoiceB/NameLabel
+@onready var choice_b_desc = $LevelUpPanel/ChoiceB/DescLabel
+@onready var level_up_panel: Control = get_node_or_null("LevelUpPanel")
+@onready var choice_a_button: BaseButton = get_node_or_null("LevelUpPanel/ChoiceA")
+@onready var choice_b_button: BaseButton = get_node_or_null("LevelUpPanel/ChoiceB")
+@onready var level_up_title_label: Label = get_node_or_null("LevelUpPanel/TitleLabel")
 
 var _player: Node = null
 var _max_hearts := 0
@@ -47,12 +63,52 @@ var _nugget_icon_base_scale := Vector2.ONE
 var _nugget_label_base_scale := Vector2.ONE
 
 var _nugget_fly_overlay: Control = null
+var _level_up_player: Node = null
+var _choice_a_upgrade_id := ""
+var _choice_b_upgrade_id := ""
+var _choice_a_press_cb: Callable
+var _choice_b_press_cb: Callable
+
+var _upgrade_pool = [
+	{ "id":"move_speed", "name":"Leg Day", "desc":"+15% Move Speed", "value":0.15, "category":"utility" },
+	{ "id":"reload_speed", "name":"Grease Feed", "desc":"+20% Reload Speed", "value":0.20, "category":"utility" },
+	{ "id":"damage_up", "name":"Dense Meat", "desc":"+50% Damage", "value":0.50, "category":"attack" },
+	{ "id":"burst_dump", "name":"Burst Dump", "desc":"Fire your whole clip at once", "value":0, "category":"mutation" }
+]
+
+var _category_colors := {
+	"attack":   Color(1.0,  0.3,  0.3),
+	"defense":  Color(0.3,  0.55, 1.0),
+	"recovery": Color(0.3,  0.9,  0.5),
+	"utility":  Color(1.0,  0.85, 0.3),
+	"mutation": Color(0.75, 0.4,  1.0)
+}
 
 func _ready() -> void:
 	add_to_group("hud") # so NuggetDrop can find us
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_apply_row_settings()
 	_setup_nugget_ui()
 	_ensure_nugget_fly_overlay()
+	if level_up_panel:
+		level_up_panel.visible = false
+		level_up_panel.process_mode = Node.PROCESS_MODE_ALWAYS
+		level_up_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var _no_focus_style := StyleBoxEmpty.new()
+	if choice_a_button:
+		choice_a_button.process_mode = Node.PROCESS_MODE_ALWAYS
+		choice_a_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		choice_a_button.add_theme_stylebox_override("focus", _no_focus_style)
+		if not choice_a_button.pressed.is_connected(_on_choice_a_pressed):
+			choice_a_button.pressed.connect(_on_choice_a_pressed)
+	if choice_b_button:
+		choice_b_button.process_mode = Node.PROCESS_MODE_ALWAYS
+		choice_b_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		choice_b_button.add_theme_stylebox_override("focus", _no_focus_style)
+		if not choice_b_button.pressed.is_connected(_on_choice_b_pressed):
+			choice_b_button.pressed.connect(_on_choice_b_pressed)
+	if level_up_title_label:
+		level_up_title_label.process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _apply_row_settings() -> void:
 	hearts_row.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
@@ -252,6 +308,100 @@ func _update_row(row: HBoxContainer, current: int, maxv: int, full_tex: Texture2
 			t.texture = full_tex if i < current else empty_tex
 
 
+func update_xp(current_xp: int, xp_to_next: int, level: int) -> void:
+	if xp_bar_fill:
+		xp_bar_fill.max_value = max(1, xp_to_next)
+		xp_bar_fill.value = clamp(current_xp, 0, xp_bar_fill.max_value)
+	if level_label:
+		level_label.text = "LV %d" % level
+
+
+func show_level_up_choices(player: Node) -> void:
+	if level_up_panel == null or choice_a_button == null or choice_b_button == null:
+		return
+
+	_level_up_player = player
+
+	var choices := _upgrade_pool.duplicate()
+	choices.shuffle()
+	if choices.size() < 2:
+		return
+
+	var a = choices[0]
+	var b = choices[1]
+
+	_choice_a_upgrade_id = a["id"]
+	_choice_b_upgrade_id = b["id"]
+
+	choice_a_name.text = a["name"]
+	choice_a_name.add_theme_color_override("font_color", _category_colors.get(a.get("category", ""), Color.WHITE))
+	choice_a_desc.text = a["desc"]
+
+	choice_b_name.text = b["name"]
+	choice_b_name.add_theme_color_override("font_color", _category_colors.get(b.get("category", ""), Color.WHITE))
+	choice_b_desc.text = b["desc"]
+
+	if choice_a.pressed.is_connected(_on_choice_a_pressed):
+		choice_a.pressed.disconnect(_on_choice_a_pressed)
+	if choice_b.pressed.is_connected(_on_choice_b_pressed):
+		choice_b.pressed.disconnect(_on_choice_b_pressed)
+
+	if _choice_a_press_cb.is_valid() and choice_a.pressed.is_connected(_choice_a_press_cb):
+		choice_a.pressed.disconnect(_choice_a_press_cb)
+	if _choice_b_press_cb.is_valid() and choice_b.pressed.is_connected(_choice_b_press_cb):
+		choice_b.pressed.disconnect(_choice_b_press_cb)
+
+	_choice_a_press_cb = func():
+		_player.apply_upgrade(a["id"])
+		level_panel.hide()
+		get_tree().paused = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+	_choice_b_press_cb = func():
+		_player.apply_upgrade(b["id"])
+		level_panel.hide()
+		get_tree().paused = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+	choice_a.pressed.connect(_choice_a_press_cb)
+	choice_b.pressed.connect(_choice_b_press_cb)
+	if level_up_title_label:
+		level_up_title_label.text = "Choose one."
+		level_up_title_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
+
+	# Defer actual show+pause to idle time so this doesn't run mid-physics-callback
+	call_deferred("_show_level_up_panel")
+
+
+func _show_level_up_panel() -> void:
+	if level_up_panel == null:
+		return
+	level_up_panel.visible = true
+	level_up_panel.show()
+	print("Level-up panel opening")
+	choice_a_button.grab_focus()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	get_tree().paused = true
+
+
+func _input(event: InputEvent) -> void:
+	if level_up_panel == null or not level_up_panel.visible:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	if choice_a_button != null and choice_a_button.get_global_rect().has_point(mb.position):
+		accept_event()
+		print("ChoiceA clicked via _input")
+		choice_a.emit_signal("pressed")
+	elif choice_b_button != null and choice_b_button.get_global_rect().has_point(mb.position):
+		accept_event()
+		print("ChoiceB clicked via _input")
+		choice_b.emit_signal("pressed")
+
+
 func show_damage_feedback() -> void:
 	if hearts_row == null:
 		return
@@ -267,3 +417,27 @@ func show_damage_feedback() -> void:
 
 	var tw := create_tween()
 	tw.tween_property(hearts_row, "modulate", Color(1, 1, 1, 1), damage_pulse_out_time)
+
+
+func _on_choice_a_pressed() -> void:
+	print("ChoiceA pressed")
+	_apply_level_up_choice(_choice_a_upgrade_id)
+
+
+func _on_choice_b_pressed() -> void:
+	print("ChoiceB pressed")
+	_apply_level_up_choice(_choice_b_upgrade_id)
+
+
+func _apply_level_up_choice(upgrade_id: String) -> void:
+	if _level_up_player != null and is_instance_valid(_level_up_player) and _level_up_player.has_method("apply_upgrade"):
+		_level_up_player.apply_upgrade(upgrade_id)
+
+	if level_up_panel:
+		level_up_panel.visible = false
+
+	_level_up_player = null
+	_choice_a_upgrade_id = ""
+	_choice_b_upgrade_id = ""
+	get_tree().paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)

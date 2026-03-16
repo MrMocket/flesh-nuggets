@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://c64cx3pir1atq" path="res://assets/ui/EmptyBullet.png" id="5_8cuoo"]
 [ext_resource type="Texture2D" uid="uid://bhbirp11unds4" path="res://assets/drops/FleshNugget.png" id="6_f6qnu"]
 [ext_resource type="FontFile" uid="uid://by1kol50p463" path="res://fonts/Oxanium-SemiBold.ttf" id="7_k4w17"]
+[ext_resource type="Texture2D" uid="uid://c8ms56ojmm26t" path="res://assets/ui/BarLower.png" id="8_cf6ij"]
+[ext_resource type="Texture2D" uid="uid://cv012rjo7lbvo" path="res://assets/ui/BarInner.png" id="9_meimr"]
+[ext_resource type="Texture2D" uid="uid://cv72y66ifaw0w" path="res://assets/ui/BarBoarder.png" id="10_rve7n"]
 
-[node name="HUD" type="Control" unique_id=1321197801]
+[node name="HUD" type="Control" unique_id=1321197801 groups=["hud"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,9 +51,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -120.0
-offset_right = 526.0
-offset_bottom = 392.0
+offset_top = -141.99994
+offset_right = 661.0
+offset_bottom = 370.0
 grow_vertical = 0
 scale = Vector2(0.2, 0.2)
 
@@ -64,3 +67,156 @@ theme_override_fonts/font = ExtResource("7_k4w17")
 theme_override_font_sizes/font_size = 250
 text = "0
 "
+
+[node name="XPBar" type="Control" parent="." unique_id=386860471]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 24.0
+offset_top = 174.0
+offset_right = 64.0
+offset_bottom = 214.0
+grow_vertical = 2
+scale = Vector2(0.6, 0.6)
+
+[node name="BarLower" type="TextureRect" parent="XPBar" unique_id=826760774]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("8_cf6ij")
+
+[node name="BarFill" type="TextureProgressBar" parent="XPBar" unique_id=2098378655]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture_progress = ExtResource("9_meimr")
+
+[node name="BarBoarder" type="TextureRect" parent="XPBar" unique_id=1270120852]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("10_rve7n")
+
+[node name="LevelLabel" type="Label" parent="XPBar" unique_id=232846360]
+layout_mode = 0
+offset_left = 533.3334
+offset_top = 234.66663
+offset_right = 573.3334
+offset_bottom = 257.66663
+
+[node name="LevelUpPanel" type="Control" parent="." unique_id=1381213153]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="LevelUpPanel" unique_id=236851922]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 380.0
+offset_bottom = 44.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_k4w17")
+theme_override_font_sizes/font_size = 28
+text = "Choose one."
+horizontal_alignment = 1
+
+[node name="ChoiceA" type="Button" parent="LevelUpPanel" unique_id=1015948311]
+unique_name_in_owner = true
+z_index = 501
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -140.0
+offset_right = 190.0
+grow_vertical = 0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("7_k4w17")
+theme_override_font_sizes/font_size = 22
+
+[node name="NameLabel" type="Label" parent="LevelUpPanel/ChoiceA" unique_id=629303462]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 16.0
+offset_right = 20.0
+offset_bottom = 39.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("7_k4w17")
+theme_override_font_sizes/font_size = 22
+
+[node name="DescLabel" type="Label" parent="LevelUpPanel/ChoiceA" unique_id=869435260]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -11.5
+offset_right = 75.0
+offset_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_k4w17")
+autowrap_mode = 2
+
+[node name="ChoiceB" type="Button" parent="LevelUpPanel" unique_id=1315437033]
+unique_name_in_owner = true
+z_index = 501
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -190.0
+offset_top = -140.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_mode = 0
+theme_override_fonts/font = ExtResource("7_k4w17")
+theme_override_font_sizes/font_size = 22
+
+[node name="NameLabel" type="Label" parent="LevelUpPanel/ChoiceB" unique_id=772014671]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 16.0
+offset_right = 20.0
+offset_bottom = 39.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("7_k4w17")
+theme_override_font_sizes/font_size = 22
+
+[node name="DescLabel" type="Label" parent="LevelUpPanel/ChoiceB" unique_id=493617383]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -11.5
+offset_right = 75.0
+offset_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("7_k4w17")
+autowrap_mode = 2

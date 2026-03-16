@@ -104,9 +104,64 @@ var is_dashing := false
 
 # Nugget counter
 var nuggets: int = 0
+var xp := 0
+var level := 1
+var xp_to_next := 3
+var _hud: Node = null
+var projectile_damage_bonus := 0
+var projectile_damage_multiplier := 1.0
+var burst_dump_enabled := false
 
 func add_nuggets(amount: int) -> void:
 	nuggets += amount
+
+
+func add_xp(amount: int) -> void:
+	xp += amount
+	while xp >= xp_to_next:
+		level_up()
+	_update_hud_xp()
+
+
+func _find_hud_with_method(method_name: String) -> Node:
+	for n in get_tree().get_nodes_in_group("hud"):
+		if n != null and is_instance_valid(n) and n.has_method(method_name):
+			return n
+	return null
+
+
+func _update_hud_xp() -> void:
+	if _hud == null or not is_instance_valid(_hud) or not _hud.has_method("update_xp"):
+		_hud = _find_hud_with_method("update_xp")
+	if _hud != null and _hud.has_method("update_xp"):
+		_hud.update_xp(xp, xp_to_next, level)
+
+
+func level_up() -> void:
+	xp -= xp_to_next
+	level += 1
+	xp_to_next += 2
+	print("Level up! New level: %d" % level)
+
+	var hud := _find_hud_with_method("show_level_up_choices")
+	if hud != null and hud.has_method("show_level_up_choices"):
+		hud.show_level_up_choices(self)
+
+
+func apply_upgrade(upgrade_id: String) -> void:
+	match upgrade_id:
+		"move_speed":
+			max_speed *= 1.15
+			print("[upgrade] move_speed applied — max_speed: %.1f" % max_speed)
+		"reload_speed":
+			reload_time = max(0.25, reload_time * 0.80)
+			print("[upgrade] reload_speed applied — reload_time: %.2f" % reload_time)
+		"damage_up":
+			projectile_damage_multiplier *= 1.5
+			print("[upgrade] damage_up applied — projectile_damage_multiplier: %.2f" % projectile_damage_multiplier)
+		"burst_dump":
+			burst_dump_enabled = true
+			print("[upgrade] burst_dump enabled")
 
 
 func _ready() -> void:
@@ -134,6 +189,7 @@ func _ready() -> void:
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	last_mouse_pos = get_global_mouse_position()
+	call_deferred("_update_hud_xp")
 
 
 func _physics_process(delta: float) -> void:
@@ -315,29 +371,44 @@ func try_attack() -> bool:
 	return attack()
 
 
+func _spawn_projectile(direction: Vector2) -> void:
+	var p := projectile_scene.instantiate()
+	get_tree().current_scene.add_child(p)
+	p.global_position = muzzle.global_position
+	p.call("fire", direction, self)
+
+
 func attack() -> bool:
 	if projectile_scene == null:
 		return false
 
-	ammo -= 1
-	emit_signal("ammo_changed", ammo, mag_size)
 	can_attack = false
-
 	shot_timer.wait_time = shot_cooldown
 	shot_timer.start()
-
-	var p := projectile_scene.instantiate()
-	get_tree().current_scene.add_child(p)
-	p.global_position = muzzle.global_position
-	p.call("fire", aim_dir, self)
-
-	# Keep shoot visible for a moment
 	shoot_anim_timer = shoot_anim_hold
 	crosshair_fire_timer = crosshair_fire_hold
 
-	# If we just emptied the mag, start reload immediately
-	if ammo <= 0:
+	if burst_dump_enabled:
+		var count := ammo
+		print("[burst_dump] firing %d projectiles (ammo before: %d)" % [count, ammo])
+		if count <= 1:
+			_spawn_projectile(aim_dir)
+		else:
+			var total_spread := 20.0
+			var step := total_spread / float(count - 1)
+			for i in count:
+				var angle := deg_to_rad(-total_spread * 0.5 + step * i)
+				_spawn_projectile(aim_dir.rotated(angle))
+		ammo = 0
+		emit_signal("ammo_changed", ammo, mag_size)
+		print("[burst_dump] ammo after: %d" % ammo)
 		start_reload(true)
+	else:
+		ammo -= 1
+		emit_signal("ammo_changed", ammo, mag_size)
+		_spawn_projectile(aim_dir)
+		if ammo <= 0:
+			start_reload(true)
 
 	return true
 

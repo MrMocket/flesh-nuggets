@@ -79,6 +79,8 @@ func _on_body_entered(body: Node) -> void:
 
 	if body.has_method("add_nuggets"):
 		body.add_nuggets(value)
+	if body.has_method("add_xp"):
+		body.add_xp(1)
 
 	# Send screen-space pickup position so HUD fly-to animation lands consistently.
 	var pickup_screen_pos := get_global_transform_with_canvas().origin

@@ -32,6 +32,7 @@ position = Vector2(929.99994, 448.99997)
 [node name="Enemies" type="Node2D" parent="Actors" unique_id=1611402032 groups=["Enemies", "enemies_root"]]
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=750495234]
+process_mode = 2
 layer = 0
 
 [node name="HUD" parent="UI" unique_id=1321197801 instance=ExtResource("2_rvslj")]

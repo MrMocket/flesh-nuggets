@@ -2,7 +2,7 @@ extends Area2D
 
 @export var speed := 800.0
 @export var max_distance := 280.0
-@export var damage := 1
+var damage: float = 1.0
 @export var knockback := 120.0
 @export var hitstun := 0.0
 @export var impact_backstep := 6.0
@@ -47,6 +47,18 @@ func fire(direction: Vector2, shooter_node: Node) -> void:
 	dir = direction.normalized()
 	shooter = shooter_node
 
+	var base := 1.0
+	if shooter != null:
+		if "projectile_damage_bonus" in shooter:
+			base += float(shooter.projectile_damage_bonus)
+		if "projectile_damage_multiplier" in shooter:
+			damage = base * shooter.projectile_damage_multiplier
+		else:
+			damage = base
+	else:
+		damage = base
+	print("[projectile] damage: %.2f" % damage)
+
 	traveled = 0.0
 	active = true
 	impacting = false
@@ -84,7 +96,7 @@ func _on_area_entered(area: Area2D) -> void:
 		var hb := area as Hurtbox
 
 		var info := DamageInfo.new()
-		info.amount = damage
+		info.amount = ceili(damage)
 		info.knockback = knockback
 		info.hitstun = hitstun
 		info.source = shooter
