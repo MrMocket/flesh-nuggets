@@ -113,6 +113,12 @@ var _hud: Node = null
 var projectile_damage_bonus := 0
 var projectile_damage_multiplier := 1.0
 var burst_dump_enabled := false
+var acquired_upgrades := {}
+
+const ONE_TIME_UPGRADES := {
+	"burst_dump": true,
+	"full_clip": true
+}
 
 func add_nuggets(amount: int) -> void:
 	nuggets += amount
@@ -151,6 +157,10 @@ func level_up() -> void:
 
 
 func apply_upgrade(upgrade_id: String) -> void:
+	if not is_upgrade_available(upgrade_id):
+		print("[upgrade] %s already acquired; skipping" % upgrade_id)
+		return
+
 	match upgrade_id:
 		"move_speed":
 			max_speed *= 1.15
@@ -163,7 +173,26 @@ func apply_upgrade(upgrade_id: String) -> void:
 			print("[upgrade] damage_up applied — projectile_damage_multiplier: %.2f" % projectile_damage_multiplier)
 		"burst_dump":
 			burst_dump_enabled = true
+			_mark_upgrade_acquired(upgrade_id)
 			print("[upgrade] burst_dump enabled")
+		"full_clip":
+			# Keep this one-time so it cannot roll again once taken in a run.
+			_mark_upgrade_acquired(upgrade_id)
+			print("[upgrade] full_clip acquired")
+
+
+func has_upgrade(upgrade_id: String) -> bool:
+	return acquired_upgrades.has(upgrade_id)
+
+
+func is_upgrade_available(upgrade_id: String) -> bool:
+	if not ONE_TIME_UPGRADES.has(upgrade_id):
+		return true
+	return not has_upgrade(upgrade_id)
+
+
+func _mark_upgrade_acquired(upgrade_id: String) -> void:
+	acquired_upgrades[upgrade_id] = true
 
 
 func _ready() -> void:
@@ -401,6 +430,7 @@ func attack() -> bool:
 			for i in count:
 				var angle := deg_to_rad(-total_spread * 0.5 + step * i)
 				_spawn_projectile(aim_dir.rotated(angle))
+		AudioManager.play_player_shoot()
 		ammo = 0
 		emit_signal("ammo_changed", ammo, mag_size)
 		print("[burst_dump] ammo after: %d" % ammo)
@@ -409,6 +439,7 @@ func attack() -> bool:
 		ammo -= 1
 		emit_signal("ammo_changed", ammo, mag_size)
 		_spawn_projectile(aim_dir)
+		AudioManager.play_player_shoot()
 		if ammo <= 0:
 			start_reload(true)
 

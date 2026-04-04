@@ -15,6 +15,8 @@ var _world_base_pos := Vector2.ZERO
 var _actors_base_pos := Vector2.ZERO
 
 func _ready() -> void:
+	AudioManager.play_game_music()
+
 	if player == null:
 		push_error("Main.gd: Player not found at $Actors/Player")
 		return

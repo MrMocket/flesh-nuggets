@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://c48iilxp4cto2"]
+
+[ext_resource type="Script" uid="uid://v168h0r80efx" path="res://scripts/ui/SettingsContent.gd" id="1_lugq5"]
+[ext_resource type="FontFile" uid="uid://by1kol50p463" path="res://fonts/Oxanium-SemiBold.ttf" id="1_quvyc"]
+
+[node name="SettingsContent" type="VBoxContainer" unique_id=1106811950]
+theme_override_constants/separation = 10
+script = ExtResource("1_lugq5")
+
+[node name="TitleLabel" type="Label" parent="." unique_id=2135510854]
+layout_mode = 2
+theme_override_constants/line_spacing = 3
+theme_override_constants/paragraph_spacing = 0
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 28
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="SoundLabel" type="Label" parent="." unique_id=801089998]
+layout_mode = 2
+theme_override_constants/line_spacing = 3
+theme_override_constants/paragraph_spacing = 0
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 22
+text = "Sound"
+horizontal_alignment = 1
+
+[node name="MasterLabel" type="Label" parent="." unique_id=2050616827]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 20
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="." unique_id=375307534]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicLabel" type="Label" parent="." unique_id=9495551]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 20
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="." unique_id=622563838]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SfxLabel" type="Label" parent="." unique_id=480716850]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 20
+text = "SFX Volume"
+
+[node name="SfxSlider" type="HSlider" parent="." unique_id=1330912640]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ControlsTitleLabel" type="Label" parent="." unique_id=1611269069]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 22
+text = "Controls"
+horizontal_alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="." unique_id=837429524]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 20
+text = "Move: WASD
+Aim: Mouse
+Shoot: Left Click
+Alt Aim / Shoot: Arrow Keys
+Reload: R
+Dash: Space
+Pause: ESC"
+
+[node name="CloseButton" type="Button" parent="." unique_id=1278521334]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_quvyc")
+theme_override_font_sizes/font_size = 20
+text = "Close"

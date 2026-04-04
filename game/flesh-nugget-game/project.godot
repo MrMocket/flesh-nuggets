@@ -14,10 +14,15 @@ config/name="FleshNugget_game"
 run/main_scene="uid://byqmfwdyme6ce"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
+[audio]
+
+buses/default_bus_layout="uid://cxsk0oognt1w5"
+
 [autoload]
 
 RunState="*uid://drlnbrhlrrkeu"
 Router="*uid://dq8h4bc1e1x48"
+AudioManager="*uid://dpilcrn5ubwbm"
 
 [display]
 

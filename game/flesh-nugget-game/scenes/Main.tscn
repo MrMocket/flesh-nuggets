@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://bwblet875ea1g" path="res://scripts/core/RunFlow.gd" id="5_c01mt"]
 [ext_resource type="PackedScene" uid="uid://xy338l7kwdka" path="res://scenes/ui/PauseMenu.tscn" id="5_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://d14kj025hke8j" path="res://scenes/levels/room_l_1_1.tscn" id="5_vcsgt"]
-[ext_resource type="Script" uid="uid://dkch1ryw60jgt" path="res://scripts/ui/pause_menu.gd" id="6_nxtc6"]
 
 [node name="Main" type="Node2D" unique_id=1999105900 groups=["hud"]]
 y_sort_enabled = true
@@ -52,7 +51,6 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.47058824)
 
 [node name="PauseMenu" parent="PauseUI" unique_id=1635872653 instance=ExtResource("5_nxtc6")]
-script = ExtResource("6_nxtc6")
 
 [node name="RunFlow" type="Node" parent="." unique_id=765455515]
 script = ExtResource("5_c01mt")

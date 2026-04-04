@@ -322,9 +322,13 @@ func show_level_up_choices(player: Node) -> void:
 
 	_level_up_player = player
 
-	var choices := _upgrade_pool.duplicate()
+	var choices: Array = []
+	for upgrade in _upgrade_pool:
+		if _is_upgrade_available_for_player(upgrade, player):
+			choices.append(upgrade)
 	choices.shuffle()
 	if choices.size() < 2:
+		print("Not enough available upgrades to present choices")
 		return
 
 	var a = choices[0]
@@ -371,6 +375,16 @@ func show_level_up_choices(player: Node) -> void:
 
 	# Defer actual show+pause to idle time so this doesn't run mid-physics-callback
 	call_deferred("_show_level_up_panel")
+
+
+func _is_upgrade_available_for_player(upgrade: Dictionary, player: Node) -> bool:
+	if not upgrade.has("id"):
+		return true
+	if player == null or not is_instance_valid(player):
+		return true
+	if player.has_method("is_upgrade_available"):
+		return player.is_upgrade_available(str(upgrade["id"]))
+	return true
 
 
 func _show_level_up_panel() -> void:

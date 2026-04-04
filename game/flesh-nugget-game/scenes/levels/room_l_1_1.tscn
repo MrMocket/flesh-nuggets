@@ -30,7 +30,7 @@ size = Vector2(132, 112.6875)
 size = Vector2(252, 52)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hy4dw"]
-size = Vector2(254, 30)
+size = Vector2(254, 38)
 
 [node name="Room_L1_1" type="Node2D" unique_id=736369620]
 script = ExtResource("1_wcy51")
@@ -258,7 +258,7 @@ shape = SubResource("RectangleShape2D_tkkth")
 [node name="Blocker" type="StaticBody2D" parent="Gameplay/Doors/Bottom" unique_id=1857029514]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Gameplay/Doors/Bottom/Blocker" unique_id=1950360205]
-position = Vector2(640, 722)
+position = Vector2(640, 718)
 shape = SubResource("RectangleShape2D_hy4dw")
 
 [node name="DoorFrames" type="Node2D" parent="." unique_id=1882011798]

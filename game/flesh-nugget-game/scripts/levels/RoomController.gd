@@ -70,8 +70,7 @@ func _ready() -> void:
 	_connect_triggers()
 
 	entered_from_current = &"Bottom"
-	if Engine.has_singleton("RunState"):
-		entered_from_current = RunState.entered_from
+	entered_from_current = RunState.entered_from
 
 	_reset_room_for_new_entry(entered_from_current)
 	_teleport_player_to_spawn(entered_from_current)
@@ -145,9 +144,7 @@ func _reset_room_for_new_entry(entered_from: StringName) -> void:
 	spawn_blockers()
 
 	spawn_enemies_mvp()
-
-	if Engine.has_singleton("RunState"):
-		RunState.entered_from = entered_from_current
+	RunState.entered_from = entered_from_current
 
 func close_all_doors() -> void:
 	for door_name in doors.keys():
@@ -396,9 +393,7 @@ func _reset_room_for_transition(entered_from: StringName) -> void:
 		enemies_alive = 0
 		_suppress_enemy_callbacks = false
 		spawn_enemies_mvp()
-
-	if Engine.has_singleton("RunState"):
-		RunState.entered_from = entered_from_current
+	RunState.entered_from = entered_from_current
 
 # NEW: calculates how many enemies to spawn this room
 func _get_enemy_spawn_count() -> int:

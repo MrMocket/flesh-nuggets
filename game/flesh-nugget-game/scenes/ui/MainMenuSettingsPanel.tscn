@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://4pc31mdgl14b"]
+
+[ext_resource type="PackedScene" uid="uid://c48iilxp4cto2" path="res://scenes/ui/SettingsContent.tscn" id="1_t0w3l"]
+[ext_resource type="Script" uid="uid://bpw54e7yxjnt5" path="res://scripts/ui/MainMenuSettingsPanel.gd" id="2_r8xjv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nl4ev"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.16206557, 0.1620656, 0.16206548, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.023521306, 0.4484346, 2.8878452e-07, 1)
+
+[node name="MainMenuSettingsPanel" type="Control" unique_id=564722370]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_r8xjv")
+
+[node name="DarkenBG" type="ColorRect" parent="." unique_id=2103992140]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.007843138, 0.007843138, 0.007843138, 0.1764706)
+
+[node name="Panel" type="Panel" parent="." unique_id=1605975486]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -250.0
+offset_right = 150.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_nl4ev")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=725829897]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="SettingsContent" parent="Panel/MarginContainer" unique_id=1106811950 instance=ExtResource("1_t0w3l")]
+layout_mode = 2
+alignment = 1
