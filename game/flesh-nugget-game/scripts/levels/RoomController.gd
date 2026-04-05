@@ -54,6 +54,7 @@ var _is_transitioning := false
 
 var doors: Dictionary = {}
 var live_enemies: Array[Node] = []
+var pooled_enemies: Array[Node] = []
 
 var enemies_alive: int = 0
 var _suppress_enemy_callbacks := false
@@ -302,17 +303,17 @@ func _clear_world_decals_and_drops_batched(batch_size: int) -> void:
 # Enemies
 # -------------------------------------------------
 func clear_enemies() -> void:
-	for e in live_enemies:
+	for e in live_enemies.duplicate():
 		if is_instance_valid(e):
-			e.queue_free()
+			_release_enemy_to_pool(e)
 	live_enemies.clear()
 
 
 func _clear_enemies_batched(batch_size: int) -> void:
 	var processed := 0
-	for e in live_enemies:
+	for e in live_enemies.duplicate():
 		if is_instance_valid(e):
-			e.queue_free()
+			_release_enemy_to_pool(e)
 			processed += 1
 
 			if batch_size > 0 and processed % batch_size == 0:
@@ -460,19 +461,66 @@ func spawn_enemies_mvp() -> void:
 
 
 func _spawn_enemy_at(spawn_pos: Vector2) -> void:
-	var enemy := enemy_scene.instantiate()
+	var enemy := _acquire_enemy_for_spawn()
+	if enemy == null:
+		return
 
-	# Force sane z so container decides layering
-	if enemy is CanvasItem:
-		(enemy as CanvasItem).z_index = 0
-		(enemy as CanvasItem).z_as_relative = true
-		(enemy as CanvasItem).y_sort_enabled = false
+	if enemy.has_method("reactivate_for_room_spawn"):
+		enemy.call("reactivate_for_room_spawn", spawn_pos)
+	else:
+		enemy.global_position = spawn_pos
+		enemy.visible = true
+		enemy.set_process(true)
+		enemy.set_physics_process(true)
 
-	live_enemies.append(enemy)
-	_register_enemy(enemy)
+	enemies_alive += 1
 
-	enemies_container.add_child(enemy)
-	(enemy as Node2D).global_position = spawn_pos
+
+func _acquire_enemy_for_spawn() -> Node2D:
+	var enemy: Node = null
+
+	while not pooled_enemies.is_empty() and enemy == null:
+		var candidate: Node = pooled_enemies.pop_back()
+		if is_instance_valid(candidate):
+			enemy = candidate
+
+	if enemy == null:
+		enemy = enemy_scene.instantiate()
+
+		# Force sane z so container decides layering
+		if enemy is CanvasItem:
+			(enemy as CanvasItem).z_index = 0
+			(enemy as CanvasItem).z_as_relative = true
+			(enemy as CanvasItem).y_sort_enabled = false
+
+		enemies_container.add_child(enemy)
+		_register_enemy(enemy)
+
+	if enemy == null or not (enemy is Node2D):
+		return null
+
+	if not live_enemies.has(enemy):
+		live_enemies.append(enemy)
+
+	return enemy as Node2D
+
+
+func _release_enemy_to_pool(enemy: Node) -> void:
+	if enemy == null or not is_instance_valid(enemy):
+		return
+
+	live_enemies.erase(enemy)
+	if pooled_enemies.has(enemy):
+		return
+
+	if enemy.has_method("deactivate_for_pool"):
+		enemy.call("deactivate_for_pool")
+	else:
+		enemy.visible = false
+		enemy.set_process(false)
+		enemy.set_physics_process(false)
+
+	pooled_enemies.append(enemy)
 
 
 func _is_web_build() -> bool:
@@ -482,26 +530,34 @@ func _is_web_build() -> bool:
 # Enemy clear detection
 # -------------------------------------------------
 func _register_enemy(enemy: Node) -> void:
-	enemies_alive += 1
-
 	if enemy.has_signal("died"):
-		var c := Callable(self, "_on_enemy_died")
+		var c := Callable(self, "_on_enemy_died").bind(enemy)
 		if not enemy.is_connected("died", c):
 			enemy.connect("died", c)
 		return
 
-	if not enemy.tree_exited.is_connected(_on_enemy_tree_exited):
-		enemy.tree_exited.connect(_on_enemy_tree_exited)
+	var exit_c := Callable(self, "_on_enemy_tree_exited").bind(enemy)
+	if not enemy.tree_exited.is_connected(exit_c):
+		enemy.tree_exited.connect(exit_c)
 
-func _on_enemy_died() -> void:
+func _on_enemy_died(enemy: Node) -> void:
 	if _suppress_enemy_callbacks:
 		return
+
+	if enemy != null and is_instance_valid(enemy):
+		_release_enemy_to_pool(enemy)
+
 	enemies_alive -= 1
 	_check_room_clear()
 
-func _on_enemy_tree_exited() -> void:
+func _on_enemy_tree_exited(enemy: Node) -> void:
 	if _suppress_enemy_callbacks:
 		return
+
+	if enemy != null:
+		live_enemies.erase(enemy)
+		pooled_enemies.erase(enemy)
+
 	enemies_alive -= 1
 	_check_room_clear()
 

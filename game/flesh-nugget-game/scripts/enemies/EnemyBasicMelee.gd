@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal died
+
 enum State { ACQUIRE, CHASE, WINDUP, LUNGE, RECOVERY, EVADE }
 
 # ----------------------------
@@ -168,6 +170,9 @@ var lunge_bounces_left := 0
 @onready var visual: Node2D = $Visual
 @onready var anim: AnimatedSprite2D = $Visual/AnimatedSprite2D
 @onready var shadow: Sprite2D = $Shadow
+@onready var body_shape: CollisionShape2D = $CollisionShape2D
+@onready var hurtbox_shape: CollisionShape2D = $Hurtbox/CollisionShape2D
+@onready var damage_hitbox_shape: CollisionShape2D = $DamageHitbox/CollisionShape2D
 
 var player: Node2D = null
 var player_hurtbox: Hurtbox = null
@@ -180,6 +185,14 @@ var _move_blend := 0.0
 var _visual_base_scale := Vector2.ONE
 var _walk_step_timer := 0.0
 var _walk_puff_material: ParticleProcessMaterial = null
+var _is_pooled_inactive := false
+
+var _base_body_collision_layer := 0
+var _base_body_collision_mask := 0
+var _base_hurtbox_collision_layer := 0
+var _base_hurtbox_collision_mask := 0
+var _base_damage_collision_layer := 0
+var _base_damage_collision_mask := 0
 
 static var _enemies_cache_frame: int = -1
 static var _enemies_cache: Array = []
@@ -219,12 +232,21 @@ func _ready() -> void:
 	if OS.has_feature("web") and prewarm_walk_puffs_on_web:
 		_prewarm_walk_puff_fx()
 	_visual_base_scale = visual.scale
+	_base_body_collision_layer = collision_layer
+	_base_body_collision_mask = collision_mask
+	_base_hurtbox_collision_layer = hurtbox.collision_layer
+	_base_hurtbox_collision_mask = hurtbox.collision_mask
+	_base_damage_collision_layer = damage_hitbox.collision_layer
+	_base_damage_collision_mask = damage_hitbox.collision_mask
 
 	state = State.ACQUIRE
 	_play_anim("idle")
 
 
 func _physics_process(delta: float) -> void:
+	if _is_pooled_inactive:
+		return
+
 	_squash_time += delta
 
 	if wake_timer > 0.0:
@@ -624,10 +646,136 @@ func _on_damaged(info: DamageInfo) -> void:
 
 
 func _on_died(_info: DamageInfo) -> void:
+	if _is_pooled_inactive:
+		return
+
+	_set_spawn_ready(false)
+	velocity = Vector2.ZERO
+	set_physics_process(false)
+
 	_spawn_blood()
 	_spawn_drop()
 	await _play_death_pop()
-	queue_free()
+	emit_signal("died")
+
+
+func deactivate_for_pool() -> void:
+	if _is_pooled_inactive:
+		return
+
+	_is_pooled_inactive = true
+	_flash_token += 1
+	velocity = Vector2.ZERO
+	player_hurtbox = null
+	aggroed = false
+	state = State.ACQUIRE
+	anim.modulate = Color(1, 1, 1, 1)
+	visual.scale = _visual_base_scale
+
+	if is_in_group("enemies"):
+		remove_from_group("enemies")
+
+	if body_shape:
+		body_shape.disabled = true
+		body_shape.set_deferred("disabled", true)
+
+	if hurtbox:
+		hurtbox.set_deferred("monitoring", false)
+		hurtbox.set_deferred("monitorable", false)
+		hurtbox.collision_layer = 0
+		hurtbox.collision_mask = 0
+		hurtbox.set("_invulnerable", false)
+		var hurtbox_timer := hurtbox.get_node_or_null("Timer") as Timer
+		if hurtbox_timer:
+			hurtbox_timer.stop()
+
+	if hurtbox_shape:
+		hurtbox_shape.set_deferred("disabled", true)
+
+	if damage_hitbox:
+		damage_hitbox.set_deferred("monitoring", false)
+		damage_hitbox.set_deferred("monitorable", false)
+		damage_hitbox.collision_layer = 0
+		damage_hitbox.collision_mask = 0
+
+	if damage_hitbox_shape:
+		damage_hitbox_shape.set_deferred("disabled", true)
+
+	visible = false
+	set_process(false)
+	set_physics_process(false)
+
+
+func reactivate_for_room_spawn(spawn_pos: Vector2) -> void:
+	_is_pooled_inactive = false
+	global_position = spawn_pos
+	visible = true
+
+	if not is_in_group("enemies"):
+		add_to_group("enemies")
+
+	if body_shape:
+		body_shape.disabled = false
+		body_shape.set_deferred("disabled", false)
+
+	if hurtbox:
+		hurtbox.collision_layer = _base_hurtbox_collision_layer
+		hurtbox.collision_mask = _base_hurtbox_collision_mask
+		hurtbox.set_deferred("monitoring", true)
+		hurtbox.set_deferred("monitorable", true)
+
+	if hurtbox_shape:
+		hurtbox_shape.set_deferred("disabled", false)
+
+	if damage_hitbox:
+		damage_hitbox.collision_layer = _base_damage_collision_layer
+		damage_hitbox.collision_mask = _base_damage_collision_mask
+		damage_hitbox.set_deferred("monitoring", false)
+		damage_hitbox.set_deferred("monitorable", true)
+
+	if damage_hitbox_shape:
+		damage_hitbox_shape.set_deferred("disabled", false)
+
+	if health:
+		health.containers = health.max_containers
+		health.emit_signal("containers_changed", health.containers, health.max_containers)
+
+	player = get_tree().get_first_node_in_group("player") as Node2D
+	player_hurtbox = null
+	state = State.ACQUIRE
+	state_timer = 0.0
+	post_slide_timer = 0.0
+	windup_backstepped = 0.0
+	lunge_bounces_left = 0
+	aggroed = false
+	velocity = Vector2.ZERO
+
+	if OS.has_feature("web"):
+		wake_timer = wake_delay + randf_range(0.0, web_wake_jitter)
+	else:
+		wake_timer = wake_delay
+
+	roam_timer = randf_range(0.0, roam_change_time)
+	roam_dir = Vector2.RIGHT.rotated(randf() * TAU)
+	strafe_sign = -1.0 if randi() % 2 == 0 else 1.0
+	strafe_timer = randf_range(0.0, strafe_change_time)
+	lunge_cd = randf_range(0.0, lunge_cooldown * 0.75)
+	evade_cd = randf_range(0.0, evade_cooldown * 0.75)
+	lunge_retry_timer = randf_range(0.0, 0.25)
+	hit_cd = 0.0
+	_walk_step_timer = randf_range(0.0, walk_puff_step_interval * (web_walk_puff_interval_scale if OS.has_feature("web") else 1.0))
+
+	_flash_token += 1
+	if anim:
+		anim.modulate = Color(1, 1, 1, 1)
+	if visual:
+		visual.scale = _visual_base_scale
+	if anim:
+		_play_anim("idle")
+	_set_spawn_ready(false)
+
+	set_process(true)
+	set_physics_process(true)
 
 
 func _play_death_pop() -> void:
