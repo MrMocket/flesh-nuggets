@@ -649,6 +649,8 @@ func _on_died(_info: DamageInfo) -> void:
 	if _is_pooled_inactive:
 		return
 
+	AudioManager.play_enemy_dog_death()
+
 	_set_spawn_ready(false)
 	velocity = Vector2.ZERO
 	set_physics_process(false)

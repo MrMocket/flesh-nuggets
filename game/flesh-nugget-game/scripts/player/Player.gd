@@ -685,6 +685,8 @@ func _set_crosshair_fire() -> void:
 # HEALTH-DRIVEN REACTIONS
 # ----------------------------
 func _on_damaged(info: DamageInfo) -> void:
+	AudioManager.play_player_hit()
+
 	var kb_dir: Vector2 = info.direction
 	if kb_dir == Vector2.ZERO:
 		kb_dir = (global_position - info.world_pos).normalized()

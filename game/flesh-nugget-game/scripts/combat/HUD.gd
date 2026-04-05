@@ -98,12 +98,14 @@ func _ready() -> void:
 	if choice_a_button:
 		choice_a_button.process_mode = Node.PROCESS_MODE_ALWAYS
 		choice_a_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		choice_a_button.focus_mode = Control.FOCUS_ALL
 		choice_a_button.add_theme_stylebox_override("focus", _no_focus_style)
 		if not choice_a_button.pressed.is_connected(_on_choice_a_pressed):
 			choice_a_button.pressed.connect(_on_choice_a_pressed)
 	if choice_b_button:
 		choice_b_button.process_mode = Node.PROCESS_MODE_ALWAYS
 		choice_b_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		choice_b_button.focus_mode = Control.FOCUS_ALL
 		choice_b_button.add_theme_stylebox_override("focus", _no_focus_style)
 		if not choice_b_button.pressed.is_connected(_on_choice_b_pressed):
 			choice_b_button.pressed.connect(_on_choice_b_pressed)
@@ -393,7 +395,9 @@ func _show_level_up_panel() -> void:
 	level_up_panel.visible = true
 	level_up_panel.show()
 	print("Level-up panel opening")
-	choice_a_button.grab_focus()
+	if choice_a_button:
+		choice_a_button.focus_mode = Control.FOCUS_ALL
+		choice_a_button.grab_focus()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	get_tree().paused = true
 

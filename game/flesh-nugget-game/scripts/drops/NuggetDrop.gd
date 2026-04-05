@@ -79,6 +79,9 @@ func _on_body_entered(body: Node) -> void:
 
 	if body.has_method("add_nuggets"):
 		body.add_nuggets(value)
+		var am := get_node_or_null("/root/AudioManager")
+		if am and am.has_method("play_flesh_nugget_pickup"):
+			am.play_flesh_nugget_pickup()
 	if body.has_method("add_xp"):
 		body.add_xp(1)
 
