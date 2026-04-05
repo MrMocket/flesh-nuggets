@@ -456,6 +456,7 @@ func _process_windup(delta: float) -> void:
 
 func _process_lunge(delta: float) -> void:
 	state_timer -= delta
+	var did_bounce_this_tick := false
 
 	# Move in small steps so we can't tunnel through walls/enemies
 	var total_move := lunge_direction * lunge_speed * delta
@@ -487,11 +488,13 @@ func _process_lunge(delta: float) -> void:
 				lunge_speed *= lunge_bounce_damping_world
 				lunge_bounces_left -= 1
 				global_position += n * lunge_bounce_pushout
+				AudioManager.play_enemy_dog_wallbounce()
+				did_bounce_this_tick = true
 
 			break
 
 	# Fallback: if we slid into a wall, still bounce
-	if lunge_bounce_enabled and lunge_bounces_left > 0 and get_slide_collision_count() > 0:
+	if not did_bounce_this_tick and lunge_bounce_enabled and lunge_bounces_left > 0 and get_slide_collision_count() > 0:
 		var c := get_slide_collision(0)
 		var n2 := c.get_normal()
 		if n2 != Vector2.ZERO:
@@ -504,6 +507,7 @@ func _process_lunge(delta: float) -> void:
 				lunge_speed *= lunge_bounce_damping_world
 				lunge_bounces_left -= 1
 				global_position += n2 * lunge_bounce_pushout
+				AudioManager.play_enemy_dog_wallbounce()
 
 	velocity = lunge_direction * lunge_speed
 	_update_facing(lunge_direction)

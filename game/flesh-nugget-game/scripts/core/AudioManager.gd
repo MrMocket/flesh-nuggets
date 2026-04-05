@@ -10,14 +10,17 @@ var game_tracks: Array[AudioStream] = []
 var _music_player: AudioStreamPlayer
 var _last_menu_index := -1
 var _last_game_index := -1
+var _bus_max_linear := {}
 
 var _shoot_streams: Array[AudioStream] = []
 var _player_hit_streams: Array[AudioStream] = []
 var _enemy_dog_death_streams: Array[AudioStream] = []
+var _enemy_dog_wallbounce_streams: Array[AudioStream] = []
 var _flesh_nugget_pickup_streams: Array[AudioStream] = []
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_cache_bus_max_levels()
 
 	_music_player = AudioStreamPlayer.new()
 	_music_player.name = "MusicPlayer"
@@ -27,6 +30,11 @@ func _ready() -> void:
 
 	_load_music()
 	_load_sfx()
+
+func _cache_bus_max_levels() -> void:
+	_bus_max_linear[BUS_MASTER] = _get_current_bus_linear(BUS_MASTER)
+	_bus_max_linear[BUS_MUSIC] = _get_current_bus_linear(BUS_MUSIC)
+	_bus_max_linear[BUS_SFX] = _get_current_bus_linear(BUS_SFX)
 
 func _load_music() -> void:
 	menu_tracks.clear()
@@ -60,6 +68,7 @@ func _load_sfx() -> void:
 	_shoot_streams.clear()
 	_player_hit_streams.clear()
 	_enemy_dog_death_streams.clear()
+	_enemy_dog_wallbounce_streams.clear()
 	_flesh_nugget_pickup_streams.clear()
 
 	var shoot_paths := [
@@ -109,6 +118,20 @@ func _load_sfx() -> void:
 			_enemy_dog_death_streams.append(stream)
 		else:
 			push_warning("AudioManager: Failed to load enemy dog death SFX: %s" % path)
+
+	var enemy_dog_wallbounce_paths := [
+		"res://sound/sfx/enemy/dog/wallbounce/enemy-dog-wallbounce-1.mp3",
+		"res://sound/sfx/enemy/dog/wallbounce/enemy-dog-wallbounce-2.mp3",
+		"res://sound/sfx/enemy/dog/wallbounce/enemy-dog-wallbounce-3.mp3",
+		"res://sound/sfx/enemy/dog/wallbounce/enemy-dog-wallbounce-4.mp3",
+	]
+
+	for path in enemy_dog_wallbounce_paths:
+		var stream := load(path) as AudioStream
+		if stream:
+			_enemy_dog_wallbounce_streams.append(stream)
+		else:
+			push_warning("AudioManager: Failed to load enemy dog wallbounce SFX: %s" % path)
 
 	var flesh_nugget_pickup_paths := [
 		"res://sound/sfx/player/pickup/fleshnugget-1.mp3",
@@ -210,6 +233,20 @@ func play_enemy_dog_death() -> void:
 	add_child(player)
 	player.play()
 
+func play_enemy_dog_wallbounce() -> void:
+	if _enemy_dog_wallbounce_streams.is_empty():
+		push_warning("AudioManager: No enemy dog wallbounce SFX loaded.")
+		return
+
+	var chosen := _enemy_dog_wallbounce_streams[randi_range(0, _enemy_dog_wallbounce_streams.size() - 1)]
+
+	var player := AudioStreamPlayer.new()
+	player.bus = BUS_SFX
+	player.stream = chosen
+	player.finished.connect(player.queue_free)
+	add_child(player)
+	player.play()
+
 func play_flesh_nugget_pickup() -> void:
 	if _flesh_nugget_pickup_streams.is_empty():
 		push_warning("AudioManager: No flesh nugget pickup SFX loaded.")
@@ -249,11 +286,13 @@ func _set_bus_volume_linear(bus_name: String, linear_value: float) -> void:
 		return
 
 	var safe_value: float = clampf(linear_value, 0.0, 1.0)
+	var max_linear: float = _get_bus_max_linear(bus_name)
+	var target_linear: float = max_linear * safe_value
 
 	if safe_value <= 0.001:
 		AudioServer.set_bus_volume_db(bus_index, -80.0)
 	else:
-		AudioServer.set_bus_volume_db(bus_index, linear_to_db(safe_value))
+		AudioServer.set_bus_volume_db(bus_index, linear_to_db(target_linear))
 
 func _get_bus_volume_linear(bus_name: String) -> float:
 	var bus_index := AudioServer.get_bus_index(bus_name)
@@ -265,4 +304,26 @@ func _get_bus_volume_linear(bus_name: String) -> float:
 	if db <= -79.0:
 		return 0.0
 
+	var current_linear := db_to_linear(db)
+	var max_linear := _get_bus_max_linear(bus_name)
+	if max_linear <= 0.001:
+		return 0.0
+
+	return clampf(current_linear / max_linear, 0.0, 1.0)
+
+func _get_current_bus_linear(bus_name: String) -> float:
+	var bus_index := AudioServer.get_bus_index(bus_name)
+	if bus_index == -1:
+		push_warning("AudioManager: Bus not found: %s" % bus_name)
+		return 1.0
+
+	var db := AudioServer.get_bus_volume_db(bus_index)
+	if db <= -79.0:
+		return 0.001
+
 	return db_to_linear(db)
+
+func _get_bus_max_linear(bus_name: String) -> float:
+	if _bus_max_linear.has(bus_name):
+		return maxf(0.001, float(_bus_max_linear[bus_name]))
+	return 1.0
